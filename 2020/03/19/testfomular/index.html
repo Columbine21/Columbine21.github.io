@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="leetcode20-3-19, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="Layer Normalization, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>leetcode20-3-19 | Jason Yuan&#39;s Blog</title>
+    <title>Layer Normalization | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -284,12 +284,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">leetcode20-3-19</h1>
+                    <h1 class="description center-align post-title">Layer Normalization</h1>
                 </div>
             </div>
         </div>
@@ -406,8 +406,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/leetcode-C-C/">
-                                <span class="chip bg-color">leetcode, C/C++</span>
+                            <a href="/tags/Blogs-Skill-Deep-Learning/">
+                                <span class="chip bg-color">Blogs, Skill, Deep Learning</span>
                             </a>
                         
                     </div>
@@ -418,8 +418,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Algorithms/" class="post-category">
-                                Algorithms
+                            <a href="/categories/Deep-Learning-Basis/" class="post-category">
+                                Deep Learning Basis
                             </a>
                         
                     </div>
@@ -440,7 +440,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    75
+                    1k
                 </div>
                 
 
@@ -453,45 +453,135 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="面试题09-用两个栈实现队列"><a href="#面试题09-用两个栈实现队列" class="headerlink" title="面试题09. 用两个栈实现队列"></a>面试题09. 用两个栈实现队列</h2><ul>
-<li>Used for test inserting images and codes.</li>
+                <h1 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h1><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><ol>
+<li>使用 Batch Normalization 存在问题: The effect of batch normalization is dependent on the mini-batch size and it is not obvious how to apply it to recurrent neural networks</li>
+<li>Notice that changes in the output of one layer will tend to cause highly correlated changes in the summed inputs to the next layer. This suggests the “covariate shift” problem can be reduced by fixing the mean and the variance of the summed inputs within each layer.</li>
+</ol>
+<h3 id="Layer-Normalization-1"><a href="#Layer-Normalization-1" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h3><p>我们对同一层的所有 hidden units 计算层 normalization statistics:</p>
+<script type="math/tex; mode=display">
+\mu^l = \frac{1}{H}\sum_{i=1}^H a_i^l \tag{1}</script><script type="math/tex; mode=display">
+\sigma^l = \sqrt{\frac{1}{H}\sum_{i=1}^H(a_i^l-\mu^l)^2} \tag{2}</script><p>其中，<script type="math/tex">H</script> 表示层中的 hidden units 总数。与 Batch Normalization 不同，对于层中所有的 units 服从相同的 <script type="math/tex">\mu, \sigma</script> 的分布，而不同训练样本层的单元使用不同的 <script type="math/tex">\mu,\sigma</script> 进行规范化。这样。layer normalization 对于 mini-batch 的大小不再有约束，并且可以在pure online regime（mini-batch size = 1）中使用。</p>
+<h3 id="Implementation-from-scratch"><a href="#Implementation-from-scratch" class="headerlink" title="Implementation from scratch"></a>Implementation from scratch</h3><ul>
+<li>Forward pass:<ul>
+<li>Input:<ul>
+<li><script type="math/tex">X</script> : data of shape (N, D)</li>
+<li><script type="math/tex">\gamma</script> : Scale parameter of shape (D,)  </li>
+<li><script type="math/tex">\beta</script> : Shift parameter of shape (D,)</li>
 </ul>
-<p><img src="/2020/03/19/leetcode20-3-19/leetcode_1.png" alt></p>
-<ul>
-<li>题解：</li>
+</li>
+<li>Step one : <ul>
+<li>计算 layer_mean : mean value of each sample in shape (N, 1)</li>
+<li>计算 layer_var : variance of each sample in shape (N, 1)</li>
 </ul>
-<pre class=" language-lang-c"><code class="language-lang-c">class CQueue {
-public:
-    stack<int> Astack, Bstack;
-    int size = 0;
-    CQueue() {
+</li>
+<li>Step two : <ul>
+<li>计算 <script type="math/tex">\hat{X} = \frac{X - layer\_mean}{\epsilon+ \sqrt{layer\_var}}</script> .</li>
+</ul>
+</li>
+<li>Step three:<ul>
+<li>计算 <script type="math/tex">out = \gamma * \hat{X} + \beta</script> </li>
+<li>Note : 这里我很疑惑为什么 <script type="math/tex">\gamma, \beta</script> 是(D)维向量而不是 (N) 维向量。因为直觉上和Batch Normalization 相似的应该能使Layer Normalization 成为恒等变换。而(N) 维的  <script type="math/tex">\gamma, \beta</script> 更符合常理。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>def layernorm_forward(x, gamma, beta, ln_param):
+    &quot;&quot;&quot;
+    Forward pass for layer normalization.
 
-    }
+    During both training and test-time, the incoming data is normalized per data-point,
+    before being scaled by gamma and beta parameters identical to that of batch normalization.
 
-    void appendTail(int value) {
-        Astack.push(value);
-        size += 1;
-    }
+    Note that in contrast to batch normalization, the behavior during train and test-time for
+    layer normalization are identical, and we do not need to keep track of running averages
+    of any sort.
 
-    int deleteHead() {
-        if(size == 0) 
-            return -1;
-        while(!Astack.empty()) {
-            Bstack.push(Astack.top());
-            Astack.pop();
-        }
-        int ans = Bstack.top();
-        Bstack.pop();
-        while(!Bstack.empty()){
-            Astack.push(Bstack.top());
-            Bstack.pop();
-        }
-        size -= 1;
-        return ans;
-    }
-}
+    Input:
+    - x: Data of shape (N, D)
+    - gamma: Scale parameter of shape (D,)
+    - beta: Shift paremeter of shape (D,)
+    - ln_param: Dictionary with the following keys:
+        - eps: Constant for numeric stability
+
+    Returns a tuple of:
+    - out: of shape (N, D)
+    - cache: A tuple of values needed in the backward pass
+    &quot;&quot;&quot;
+    out, cache = None, None
+    eps = ln_param.get(&#39;eps&#39;, 1e-5)
+    ###########################################################################
+    # TODO: Implement the training-time forward pass for layer norm.          #
+    # Normalize the incoming data, and scale and  shift the normalized data   #
+    #  using gamma and beta.                                                  #
+    # HINT: this can be done by slightly modifying your training-time         #
+    # implementation of  batch normalization, and inserting a line or two of  #
+    # well-placed code. In particular, can you think of any matrix            #
+    # transformations you could perform, that would enable you to copy over   #
+    # the batch norm code and leave it almost unchanged?                      #
+    ###########################################################################
+
+    layer_mean = np.mean(x, axis=1, keepdims=True)
+    layer_var = np.var(x, axis=1, keepdims=True)
+    # print(layer_mean.shape, layer_var.shape)
+    hat_x = (x - layer_mean) / np.sqrt(layer_var + eps)
+    # print(hat_x.shape, x.shape)
+    out = gamma * hat_x + beta
+    cache = (x, gamma, beta, hat_x, layer_mean, layer_var, eps)
+
+    return out, cache
+</code></pre><ul>
+<li><p>Backward pass:</p>
+<p>完全类似于Batch Normalization : 这里给出代码和求导公式：</p>
+<script type="math/tex; mode=display">
+\frac{\partial l}{\partial \hat{x}_i} = \frac{\partial l}{\partial y} \cdot \gamma \tag{3}</script><script type="math/tex; mode=display">
+\frac{\partial l}{\partial \sigma_{\beta}^2} = \sum_{i=1}^{D}\frac{\partial l}{\partial \hat{x}_i} \cdot (x_i - \mu_\beta) \cdot \frac{-1}2 (\sigma_{\beta}^2 + \epsilon)^{-3/2} \tag{4}</script><script type="math/tex; mode=display">
+\frac{\partial l}{\partial \mu_\beta} = (\sum_{i=1}^{D} \frac{\partial l}{\partial  \hat{x}_i } ) \cdot \frac{-1}{\sqrt{\sigma_{\beta}^2 + \epsilon}} + \frac{\partial l}{\partial \sigma_{\beta}^2}\cdot\frac{\sum_{i=1}^D-2(x_i-\mu_\beta)}{D} \tag{5}</script><script type="math/tex; mode=display">
+\frac{\partial l}{\partial x_i} = \frac{\partial l}{\partial \hat{x}_i} \cdot \frac{1}{\sqrt{\sigma_{\beta}^2 + \epsilon}} + \frac{\partial l}{\partial \sigma_{\beta}^2} \cdot \frac{2(x_i-\mu_\beta)}{m} + \frac{\partial l}{\partial \mu_\beta} \cdot \frac{1}{m} \tag{6}</script><script type="math/tex; mode=display">
+\frac{\partial l}{\partial \gamma} = \sum_{i=1}^D\frac{\partial l}{\partial y_i}\cdot \hat{x}_i \tag{7}</script><script type="math/tex; mode=display">
+\frac{\partial l}{\partial \beta} =\sum_{i=1}^D\frac{\partial l}{\partial y_i} \tag{8}</script></li>
+</ul>
+<pre><code>def layernorm_backward(dout, cache):
+    &quot;&quot;&quot;
+    Backward pass for layer normalization.
+
+    For this implementation, you can heavily rely on the work you&#39;ve done already
+    for batch normalization.
+
+    Inputs:
+    - dout: Upstream derivatives, of shape (N, D)
+    - cache: Variable of intermediates from layernorm_forward.
+
+    Returns a tuple of:
+    - dx: Gradient with respect to inputs x, of shape (N, D)
+    - dgamma: Gradient with respect to scale parameter gamma, of shape (D,)
+    - dbeta: Gradient with respect to shift parameter beta, of shape (D,)
+    &quot;&quot;&quot;
+    dx, dgamma, dbeta = None, None, None
+    ###########################################################################
+    # TODO: Implement the backward pass for layer norm.                       #
+    #                                                                         #
+    # HINT: this can be done by slightly modifying your training-time         #
+    # implementation of batch normalization. The hints to the forward pass    #
+    # still apply!                                                            #
+    ###########################################################################
+
+    x, gamma, beta, hat_x, layer_mean, layer_var, eps = cache
+    num_sample, num_depth = x.shape
+
+    dhat_x = dout * gamma
+
+    dvar = np.sum(dhat_x * (x - layer_mean), axis=1, keepdims=True) * (-1/2) * (layer_var+eps) ** (-3/2)
+    dmean = -np.sum(dhat_x, axis=1, keepdims=True) / np.sqrt(layer_var+eps) + \
+            dvar * np.sum(x-layer_mean, axis=1, keepdims=True) * (-2/num_depth)
+
+    dx = dhat_x / np.sqrt(layer_var+eps) + dvar * (2/num_depth) * (x-layer_mean) + dmean / num_depth
+
+    dgamma = np.sum(dout * hat_x, axis=0)
+    dbeta = np.sum(dout, axis=0)
+
+    return dx, dgamma, dbeta
 </code></pre>
-
             </div>
             <hr/>
 
@@ -516,7 +606,7 @@ public:
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/03/19/leetcode20-3-19/">http://Columbine21.github.io/2020/03/19/leetcode20-3-19/</a>
+                    <a href="http://Columbine21.github.io/2020/03/19/testfomular/">http://Columbine21.github.io/2020/03/19/testfomular/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -554,8 +644,8 @@ public:
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/leetcode-C-C/">
-                                    <span class="chip bg-color">leetcode, C/C++</span>
+                                <a href="/tags/Blogs-Skill-Deep-Learning/">
+                                    <span class="chip bg-color">Blogs, Skill, Deep Learning</span>
                                 </a>
                             
                         </div>
@@ -596,9 +686,10 @@ public:
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/03/19/testfomular/">
                     <div class="card-image">
@@ -617,9 +708,9 @@ public:
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-19
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-19
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -632,6 +723,7 @@ public:
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -650,32 +742,41 @@ public:
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/03/18/hello-my-blog/">
+                <a href="/2020/03/19/leetcode20-3-19/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Hello-My-Blog">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="leetcode20-3-19">
                         
-                        <span class="card-title">Hello-My-Blog</span>
+                        <span class="card-title">leetcode20-3-19</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Hello My BlogThis is my first blog which was created in 18th March.
- I think it is the time to start my personal blog cu
+                            面试题09. 用两个栈实现队列
+Used for test inserting images and codes.
+
+
+
+题解：
+
+class CQueue {
+public:
+    stack Astack, Bstack;
+    i
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-18
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-19
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" class="post-category">
-                                    软件安装与配置
+                            <a href="/categories/Algorithms/" class="post-category">
+                                    Algorithms
                                 </a>
                             
                             
@@ -685,16 +786,8 @@ public:
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Github/">
-                        <span class="chip bg-color">Github</span>
-                    </a>
-                    
-                    <a href="/tags/Blogs/">
-                        <span class="chip bg-color">Blogs</span>
-                    </a>
-                    
-                    <a href="/tags/Skills/">
-                        <span class="chip bg-color">Skills</span>
+                    <a href="/tags/leetcode-C-C/">
+                        <span class="chip bg-color">leetcode, C/C++</span>
                     </a>
                     
                 </div>
