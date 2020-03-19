@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    75
+                    301
                 </div>
                 
 
@@ -496,6 +496,109 @@ public:
         return ans;
     }
 }
+</code></pre>
+<h2 id="2020-3-19-每日一题"><a href="#2020-3-19-每日一题" class="headerlink" title="2020.3.19 每日一题"></a>2020.3.19 每日一题</h2><p><img src="/2020/03/19/leetcode20-3-19/leetcode_2.png" alt></p>
+<ul>
+<li>题解：</li>
+</ul>
+<pre class=" language-lang-c"><code class="language-lang-c">class Solution {
+public:
+    map<char, int> counter;
+    int res = 0;
+    int longestPalindrome(string s) {
+        for(int i = 0; i < s.size(); ++i) {
+            if(counter.find(s.at(i)) == counter.end()) {
+                counter.insert(map<char, int>::value_type(s.at(i), 1));
+            }else {
+                counter[s.at(i)] += 1;
+            }
+        }
+        for(auto iter = counter.begin(); iter != counter.end(); ++iter){
+            if(iter->second % 2 == 1)
+                res += 1;
+        }
+        return res == 0 ? s.size(): s.size() - res + 1 ;
+    }
+};
+</code></pre>
+<h2 id="面试题10-I-斐波那契数列"><a href="#面试题10-I-斐波那契数列" class="headerlink" title="面试题10-I. 斐波那契数列"></a>面试题10-I. 斐波那契数列</h2><p><img src="/2020/03/19/leetcode20-3-19/leetcode_3.png" alt></p>
+<ul>
+<li>题解</li>
+</ul>
+<pre class=" language-lang-c"><code class="language-lang-c">class Solution {
+public:
+    int res[110];
+    int mod = 1e9+7;
+    int fib(int n) {
+        if(n == 0) return 0;
+        if(n == 1) return 1;
+        res[1] = 1; 
+        for(int i = 2; i <= n; ++i) {
+            res[i] = (res[i-1] + res[i-2]) % mod; 
+        }
+        return res[n];
+    }
+};
+</code></pre>
+<h2 id="面试题16-数值的整数次方（快速幂）"><a href="#面试题16-数值的整数次方（快速幂）" class="headerlink" title="面试题16. 数值的整数次方（快速幂）"></a>面试题16. 数值的整数次方（快速幂）</h2><p><img src="/2020/03/19/leetcode20-3-19/leetcode_4.png" alt></p>
+<ul>
+<li>题解：</li>
+</ul>
+<pre><code>class Solution {
+public: 
+    double ans = 1, exponent = 1; 
+    double myPow(double x, int n) {
+        exponent = x;
+        int sgnn = n;
+        // note: 快速幂可以直接考虑指数为负数的情况，但是为负数时不能用移位运算。
+        for(; sgnn; sgnn /= 2) { 
+            if(sgnn &amp; 1){
+                ans = ans * exponent;
+            } 
+            exponent *= exponent;
+        }
+        return n &gt; 0? ans: 1/ ans;
+    }
+};
+</code></pre><h2 id="面试题12-矩阵中的路径"><a href="#面试题12-矩阵中的路径" class="headerlink" title="面试题12. 矩阵中的路径"></a>面试题12. 矩阵中的路径</h2><ul>
+<li>复习 回溯法 深度优先搜索</li>
+</ul>
+<p><img src="/2020/03/19/leetcode20-3-19/leetcode_5.png" alt></p>
+<pre class=" language-lang-c"><code class="language-lang-c">class Solution {
+private:
+    int dir_x[4] = {0, 1, 0, -1};
+    int dir_y[4] = {1, 0, -1, 0};
+public:
+    bool search(pair<int,int> start, set<pair<int,int>> &record,vector<vector<char>> board, string word, int row, int col, int depth) {
+        if(depth == word.size()) return true; 
+        for(int i = 0; i < 4; ++i) {
+            int new_x = start.first + dir_x[i];
+            int new_y = start.second + dir_y[i];
+            if(record.find(make_pair(new_x, new_y)) == record.end() && new_x >= 0 && new_y >= 0 && new_x < row && new_y < col && board.at(new_x).at(new_y) == word.at(depth)) {
+                record.insert(make_pair(new_x, new_y));
+                if(search(make_pair(new_x, new_y), record, board, word, row, col, depth+1))
+                    return true;
+                record.erase(make_pair(new_x, new_y));
+            }
+        }
+        return false;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        if(board.size() == 0) return false;
+        int row = board.size(), col = board.at(0).size();
+        for(int i = 0; i < row; ++i) {
+            for(int j = 0; j < col; ++j) {
+                if(board.at(i).at(j) == word.at(0)) {
+                    set<pair<int, int>> record;
+                    record.insert(make_pair(i, j));
+                    if(search(make_pair(i, j), record, board, word, row, col, 1))
+                        return true;   
+                }
+            }
+        }
+        return false;
+    }
+};
 </code></pre>
 
             </div>
