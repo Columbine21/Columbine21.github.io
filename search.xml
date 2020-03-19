@@ -20,7 +20,11 @@
       
         <tags>
             
-            <tag> Blogs, Skill, Deep Learning </tag>
+            <tag> Blogs </tag>
+            
+            <tag> Skill </tag>
+            
+            <tag> Deep Learning </tag>
             
         </tags>
       
@@ -45,7 +49,9 @@
       
         <tags>
             
-            <tag> leetcode, C/C++ </tag>
+            <tag> leetcode </tag>
+            
+            <tag> C/C++ </tag>
             
         </tags>
       
@@ -70,9 +76,9 @@
       
         <tags>
             
-            <tag> Github </tag>
-            
             <tag> Blogs </tag>
+            
+            <tag> Github </tag>
             
             <tag> Skills </tag>
             
