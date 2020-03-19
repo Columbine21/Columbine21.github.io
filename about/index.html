@@ -649,7 +649,7 @@
                 type: 'pie',
                 radius: '50%',
                 color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
-                data: [{"name":"Deep Learning Basis","value":1},{"name":"软件安装与配置","value":1},{"name":"Algorithms","value":1}],
+                data: [{"name":"软件安装与配置","value":1},{"name":"Deep Learning Basis","value":1},{"name":"Algorithms","value":1}],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -673,7 +673,7 @@
         xAxis: [
             {
                 type: 'category',
-                data: ["Blogs","Skill","Deep Learning","Github","Skills","leetcode","C/C++"]
+                data: ["Blogs","Github","Skills","Skill","Deep Learning","leetcode","C/C++"]
             }
         ],
         yAxis: [
@@ -803,8 +803,20 @@
         <div class="tag-chips center-align">
             
             
+            <a href="/tags/Github/">
+                <span class="chip center-align waves-effect waves-light chip-default">Github</span>
+            </a>
+            
+            
+            
             <a href="/tags/Blogs/">
                 <span class="chip center-align waves-effect waves-light chip-default">Blogs</span>
+            </a>
+            
+            
+            
+            <a href="/tags/Skills/">
+                <span class="chip center-align waves-effect waves-light chip-default">Skills</span>
             </a>
             
             
@@ -817,18 +829,6 @@
             
             <a href="/tags/Deep-Learning/">
                 <span class="chip center-align waves-effect waves-light chip-default">Deep Learning</span>
-            </a>
-            
-            
-            
-            <a href="/tags/Github/">
-                <span class="chip center-align waves-effect waves-light chip-default">Github</span>
-            </a>
-            
-            
-            
-            <a href="/tags/Skills/">
-                <span class="chip center-align waves-effect waves-light chip-default">Skills</span>
             </a>
             
             
@@ -1022,7 +1022,24 @@ $(function () {
     
     
     
-    <script src="/libs/instantpage/instantpage.js" type="module"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script src="/libs/instantpage/instantpage.js" type="module"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
     
 
 </body>
