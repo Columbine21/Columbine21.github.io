@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <link rel="dns-prefetch" href="//cdn.bootcss.com" />
     <link rel="dns-prefetch" href="//cdn.mathjax.org" />
-    <meta name="keywords" content="leetcode20-3-19, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="Batch Normalization, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>leetcode20-3-19 | Jason Yuan&#39;s Blog</title>
+    <title>Batch Normalization | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">leetcode20-3-19</h1>
+                    <h1 class="description center-align post-title">Batch Normalization</h1>
                 </div>
             </div>
         </div>
@@ -408,12 +408,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/leetcode/">
-                                <span class="chip bg-color">leetcode</span>
+                            <a href="/tags/Machine-Learning/">
+                                <span class="chip bg-color">Machine Learning</span>
                             </a>
                         
-                            <a href="/tags/C-C/">
-                                <span class="chip bg-color">C/C++</span>
+                            <a href="/tags/Deep-Learning/">
+                                <span class="chip bg-color">Deep Learning</span>
                             </a>
                         
                     </div>
@@ -424,8 +424,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Algorithms/" class="post-category">
-                                Algorithms
+                            <a href="/categories/Deep-Learning-Basis/" class="post-category">
+                                Deep Learning Basis
                             </a>
                         
                     </div>
@@ -437,7 +437,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-03-19
+                    2020-03-21
                 </div>
                 
 
@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    301
+                    1.7k
                 </div>
                 
 
@@ -459,147 +459,216 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="面试题09-用两个栈实现队列"><a href="#面试题09-用两个栈实现队列" class="headerlink" title="面试题09. 用两个栈实现队列"></a>面试题09. 用两个栈实现队列</h2><ul>
-<li>Used for test inserting images and codes.</li>
+                <h1 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h1><h2 id="Batch-Normalization-的优点"><a href="#Batch-Normalization-的优点" class="headerlink" title="Batch Normalization 的优点"></a>Batch Normalization 的优点</h2><ul>
+<li>考虑一个网络计算：</li>
 </ul>
-<p><img src="/2020/03/19/leetcode20-3-19/leetcode_1.png" alt></p>
+<script type="math/tex; mode=display">
+l = F_2(F_1(u, \Theta_1), \Theta_2) \tag{1}</script><p>​        学习 <script type="math/tex">\Theta_2</script> 的过程可以被视为使用 <script type="math/tex">x = F_1(u, \Theta_1)</script> 作为子网络的输入，例如在SGD的一步中，</p>
+<script type="math/tex; mode=display">
+\Theta_2 \leftarrow \Theta_2 - \frac{\alpha}{m}\sum_{i=1}^m \frac{\partial F_2(x_i, \Theta_2)}{\partial \Theta_2} \tag{2}</script><p>​        等价于一个独立的只含有一层（$F_2$ 层）的网络对于输入 <script type="math/tex">x</script> 的更新。因此，对于每一层网络 <script type="math/tex">x</script> 的分布随时间保持固定是有利的。 这样，<script type="math/tex">\Theta_2</script> 不必重新调整以补偿 <script type="math/tex">x</script> 分布的变化。</p>
 <ul>
-<li>题解：</li>
+<li><p>使用 Batch Normalization 可以防止非线性层产生 “饱和” 现象（进一步导致梯度消失）</p>
+<p>例如：sigmoid 函数 <script type="math/tex">1/{1 + exp(-x)}</script> 其导数在 <script type="math/tex">|x|</script> 很大的时候对于 <script type="math/tex">x</script> 的导数值很小（饱和状态），梯度将难以传导到之前到 layers，如果我们确保在网络训练时非线性输入的分布更稳定，则优化器将不太可能陷入饱和状态，训练过程会加速。</p>
+</li>
+<li><p>Batch Normalization 本身有在训练过程中增加随机性，在测试过程中消除随机性的功能（训练过程中使用batch 的数据特征，测试时使用训练过程中采用 running average 得到的数据特征。）具有防止过拟合的效果。一定程度上可以减少对于 dropout 的使用。</p>
+<ul>
+<li>实际使用中，可根据具体情况决定 BN dropout 的使用，先尝试仅使用 BN 然后如果仍有严重过拟合，再结合使用 dropout 层。 </li>
 </ul>
-<pre class=" language-lang-c"><code class="language-lang-c">class CQueue {
-public:
-    stack<int> Astack, Bstack;
-    int size = 0;
-    CQueue() {
+</li>
+</ul>
+<h2 id="Batch-Normalization-1"><a href="#Batch-Normalization-1" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h2><ul>
+<li><p>Normalization via Mini-batch Statistics</p>
+<p>For a layer with d-dimensional input <script type="math/tex">x = (x^{(1)} \cdots x^{(d)} )</script>, we will normalize each dimension</p>
+<script type="math/tex; mode=display">
+\hat{x}^{(k)} = \frac{x^{(k)} - E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}} \tag{3}</script><p>where the expectation and variance are computed over the training data set. As shown in (LeCun et al., 1998b), such normalization speeds up convergence, even when the features are not decorrelated.</p>
+<p>同时，考虑到直接使用上述操作可能降低模型表述能力，有些模型的层需要学习到不同的分布。为解决此问题, 我们需要插入网络的 BN 变换可以成为恒等变换（输入等于输出）。为此对于每个激活 <script type="math/tex">x^{(k)}</script> 引入参数 <script type="math/tex">\gamma^{(k)}, \beta^{(k)}</script> 对直接normalization的结果进行变换：</p>
+<script type="math/tex; mode=display">
+y^{(k)} = \gamma^{(k)}\hat{x}^{(k)} + \beta^{(k)} \tag{4}</script><p>网路通过学习参数 <script type="math/tex">\gamma^{(k)}, \beta^{(k)}</script> 动态调整所需要的 normalization。极端情况下 BN 层可能学到恒等变换。</p>
+</li>
+</ul>
+<h3 id="BN-层的前向传播算法"><a href="#BN-层的前向传播算法" class="headerlink" title="BN 层的前向传播算法"></a><em>BN 层的前向传播算法</em></h3><p><img src="/2020/03/21/batchnormalization/bn1.png" alt></p>
+<p>我们用 <script type="math/tex">BN_{\gamma, \beta}(x_i)</script> 表示 <script type="math/tex">\gamma, \beta</script> 是模型中可学习的参数。注意到 <script type="math/tex">BN_{\gamma, \beta}(x_i)</script> 不仅仅受到输入 <script type="math/tex">x_i</script> 的影响也受到</p>
+<p>mini-batch 中其他 <script type="math/tex">x_j</script> 的影响。我们可以将 BN 层视为将每一个标准化的 <script type="math/tex">\hat{x_i}</script>  输入到一个 <script type="math/tex">y^{(k)} = \gamma^{(k)}\hat{x}^{(k)} + \beta^{(k)}</script> 的子网络中。</p>
+<h3 id="BN-层-的反向传播算法"><a href="#BN-层-的反向传播算法" class="headerlink" title="BN 层 的反向传播算法"></a><em>BN 层 的反向传播算法</em></h3><p>To derive the backward pass you should write out the computation graph for batch normalization and backprop through each of the intermediate nodes. Some intermediates may have multiple outgoing branches; make sure to sum gradients across these branches in the backward pass.</p>
+<p>为了使得反向传播算法中的计算更加清晰，我们将从 $\hat{x_i}$ 生成 $y$ 的过程以矩阵的形式表示如下：</p>
+<script type="math/tex; mode=display">
+\left[
+ \begin{matrix}
+   y_1^{(1)} &y_1^{(2)}& \cdots & y_1^{(d)}\\
+   y_2^{(1)} &y_2^{(2)}& \cdots & y_2^{(d)}\\
+   \vdots & \vdots & &\vdots\\
+   y_m^{(1)}&y_m^{(2)}& \cdots& y_m^{(d)}
+  \end{matrix} 
+\right]=\left[
+ \begin{matrix}
+   \hat{x_1}^{(1)} & \hat{x_1}^{(2)}& \cdots & \hat{x_1}^{(d)}\\
+    \hat{x_2}^{(1)} & \hat{x_2}^{(2)}& \cdots &  \hat{x_2}^{(d)}\\
+   \vdots & \vdots & &\vdots\\
+    \hat{x_m}^{(1)}& \hat{x_m}^{(2)}& \cdots&  \hat{x_m}^{(d)}
+  \end{matrix} 
+\right]\cdot 
+\left[
+ \begin{matrix}
+   \gamma^{(1)} & \cdots & \gamma^{(d)}\\
+   \gamma^{(1)} & \cdots & \gamma^{(d)}\\
+   \vdots &  &\vdots\\
+   \gamma^{(1)} & \cdots & \gamma^{(d)}   
+  \end{matrix} 
+\right]
++ 
+\left[
+ \begin{matrix}
+   \beta^{(1)}& \cdots & \beta^{(d)}\\
+   \beta^{(1)}& \cdots & \beta^{(d)}\\
+   \vdots &  &\vdots\\
+   \beta^{(1)} & \cdots & \beta^{(d)}  
+  \end{matrix} 
+\right] \tag{5}</script><p>根据公式(5) 以及正向传播计算方法，我们可以得到如下反向传播计算公式：</p>
+<p><img src="/2020/03/21/batchnormalization/bn2.png" alt></p>
+<h2 id="Implement-From-Scratch"><a href="#Implement-From-Scratch" class="headerlink" title="Implement From Scratch"></a>Implement From Scratch</h2><ul>
+<li>正向传播过程：</li>
+</ul>
+<pre class=" language-lang-python"><code class="language-lang-python">def batchnorm_forward(x, gamma, beta, bn_param):
+    """
+    Forward pass for batch normalization.
 
-    }
+    During training the sample mean and (uncorrected) sample variance are
+    computed from minibatch statistics and used to normalize the incoming data.
+    During training we also keep an exponentially decaying running mean of the
+    mean and variance of each feature, and these averages are used to normalize
+    data at test-time.
 
-    void appendTail(int value) {
-        Astack.push(value);
-        size += 1;
-    }
+    At each timestep we update the running averages for mean and variance using
+    an exponential decay based on the momentum parameter:
 
-    int deleteHead() {
-        if(size == 0) 
-            return -1;
-        while(!Astack.empty()) {
-            Bstack.push(Astack.top());
-            Astack.pop();
-        }
-        int ans = Bstack.top();
-        Bstack.pop();
-        while(!Bstack.empty()){
-            Astack.push(Bstack.top());
-            Bstack.pop();
-        }
-        size -= 1;
-        return ans;
-    }
-}
+    running_mean = momentum * running_mean + (1 - momentum) * sample_mean
+    running_var = momentum * running_var + (1 - momentum) * sample_var
+
+    Note that the batch normalization paper suggests a different test-time
+    behavior: they compute sample mean and variance for each feature using a
+    large number of training images rather than using a running average. For
+    this implementation we have chosen to use running averages instead since
+    they do not require an additional estimation step; the torch7
+    implementation of batch normalization also uses running averages.
+
+    Input:
+    - x: Data of shape (N, D)
+    - gamma: Scale parameter of shape (D,)
+    - beta: Shift paremeter of shape (D,)
+    - bn_param: Dictionary with the following keys:
+      - mode: 'train' or 'test'; required
+      - eps: Constant for numeric stability
+      - momentum: Constant for running mean / variance.
+      - running_mean: Array of shape (D,) giving running mean of features
+      - running_var Array of shape (D,) giving running variance of features
+
+    Returns a tuple of:
+    - out: of shape (N, D)
+    - cache: A tuple of values needed in the backward pass
+    """
+    mode = bn_param['mode']
+    eps = bn_param.get('eps', 1e-5)
+    momentum = bn_param.get('momentum', 0.9)
+
+    N, D = x.shape
+    running_mean = bn_param.get('running_mean', np.zeros(D, dtype=x.dtype))
+    running_var = bn_param.get('running_var', np.zeros(D, dtype=x.dtype))
+
+    out, cache = None, None
+    if mode == 'train':
+        #######################################################################
+        # TODO: Implement the training-time forward pass for batch norm.      #
+        # Use minibatch statistics to compute the mean and variance, use      #
+        # these statistics to normalize the incoming data, and scale and      #
+        # shift the normalized data using gamma and beta.                     #
+        #                                                                     #
+        # You should store the output in the variable out. Any intermediates  #
+        # that you need for the backward pass should be stored in the cache   #
+        # variable.                                                           #
+        #                                                                     #
+        # You should also use your computed sample mean and variance together #
+        # with the momentum variable to update the running mean and running   #
+        # variance, storing your result in the running_mean and running_var   #
+        # variables.                                                          #
+        #                                                                     #
+        # Note that though you should be keeping track of the running         #
+        # variance, you should normalize the data based on the standard       #
+        # deviation (square root of variance) instead!                        # 
+        # Referencing the original paper (https://arxiv.org/abs/1502.03167)   #
+        # might prove to be helpful.                                          #
+        #######################################################################
+
+        batch_mean = np.mean(x, axis=0, keepdims=True)
+        batch_var = np.var(x, axis=0, keepdims=True)
+        x_hat = (x - batch_mean) / np.sqrt(batch_var + eps)
+        out = gamma * x_hat + beta
+        cache = (x, gamma, beta, x_hat, batch_mean, batch_var, eps)
+
+        running_mean = momentum * running_mean + (1-momentum) * batch_mean
+        running_var = momentum * running_var + (1-momentum) * batch_var
+
+    elif mode == 'test':
+        #######################################################################
+        # TODO: Implement the test-time forward pass for batch normalization. #
+        # Use the running mean and variance to normalize the incoming data,   #
+        # then scale and shift the normalized data using gamma and beta.      #
+        # Store the result in the out variable.                               #
+        #######################################################################
+
+        x_hat = (x - running_mean) / np.sqrt(running_var + eps)
+        out = gamma * x_hat + beta
+
+    else:
+        raise ValueError('Invalid forward batchnorm mode "%s"' % mode)
+
+    # Store the updated running means back into bn_param
+    bn_param['running_mean'] = running_mean
+    bn_param['running_var'] = running_var
+
+    return out, cach
 </code></pre>
-<h2 id="2020-3-19-每日一题"><a href="#2020-3-19-每日一题" class="headerlink" title="2020.3.19 每日一题"></a>2020.3.19 每日一题</h2><p><img src="/2020/03/19/leetcode20-3-19/leetcode_2.png" alt></p>
 <ul>
-<li>题解：</li>
+<li>反向传播过程：</li>
 </ul>
-<pre class=" language-lang-c"><code class="language-lang-c">class Solution {
-public:
-    map<char, int> counter;
-    int res = 0;
-    int longestPalindrome(string s) {
-        for(int i = 0; i < s.size(); ++i) {
-            if(counter.find(s.at(i)) == counter.end()) {
-                counter.insert(map<char, int>::value_type(s.at(i), 1));
-            }else {
-                counter[s.at(i)] += 1;
-            }
-        }
-        for(auto iter = counter.begin(); iter != counter.end(); ++iter){
-            if(iter->second % 2 == 1)
-                res += 1;
-        }
-        return res == 0 ? s.size(): s.size() - res + 1 ;
-    }
-};
+<pre class=" language-lang-python"><code class="language-lang-python">def batchnorm_backward(dout, cache):
+    """
+    Backward pass for batch normalization.
+
+    For this implementation, you should write out a computation graph for
+    batch normalization on paper and propagate gradients backward through
+    intermediate nodes.
+
+    Inputs:
+    - dout: Upstream derivatives, of shape (N, D)
+    - cache: Variable of intermediates from batchnorm_forward.
+
+    Returns a tuple of:
+    - dx: Gradient with respect to inputs x, of shape (N, D)
+    - dgamma: Gradient with respect to scale parameter gamma, of shape (D,)
+    - dbeta: Gradient with respect to shift parameter beta, of shape (D,)
+    """
+    dx, dgamma, dbeta = None, None, None
+    ###########################################################################
+    # TODO: Implement the backward pass for batch normalization. Store the    #
+    # results in the dx, dgamma, and dbeta variables.                         #
+    # Referencing the original paper (https://arxiv.org/abs/1502.03167)       #
+    # might prove to be helpful.                                              #
+    ###########################################################################
+
+    x, gamma, beta, x_hat, batch_mean, batch_var, eps = cache
+    num_sample = x.shape[0]
+
+    dhat_x = dout * gamma
+    dvar = np.sum(dhat_x * (x - batch_mean), axis=0) * (-1/2) * (batch_var+eps) ** (-3/2)
+    dmean = np.sum(dhat_x * (-1/np.sqrt(batch_var + eps)), axis=0) + dvar * np.sum(x - batch_mean, axis=0) * (-2 / num_sample)
+    dx = dhat_x / np.sqrt(batch_var + eps) + dvar * 2 / num_sample * (x - batch_mean) + dmean / num_sample
+
+    dgamma = np.sum(dout * x_hat, axis=0)
+    dbeta = np.sum(dout, axis=0)
+
+    return dx, dgamma, dbet
 </code></pre>
-<h2 id="面试题10-I-斐波那契数列"><a href="#面试题10-I-斐波那契数列" class="headerlink" title="面试题10-I. 斐波那契数列"></a>面试题10-I. 斐波那契数列</h2><p><img src="/2020/03/19/leetcode20-3-19/leetcode_3.png" alt></p>
-<ul>
-<li>题解</li>
-</ul>
-<pre class=" language-lang-c"><code class="language-lang-c">class Solution {
-public:
-    int res[110];
-    int mod = 1e9+7;
-    int fib(int n) {
-        if(n == 0) return 0;
-        if(n == 1) return 1;
-        res[1] = 1; 
-        for(int i = 2; i <= n; ++i) {
-            res[i] = (res[i-1] + res[i-2]) % mod; 
-        }
-        return res[n];
-    }
-};
-</code></pre>
-<h2 id="面试题16-数值的整数次方（快速幂）"><a href="#面试题16-数值的整数次方（快速幂）" class="headerlink" title="面试题16. 数值的整数次方（快速幂）"></a>面试题16. 数值的整数次方（快速幂）</h2><p><img src="/2020/03/19/leetcode20-3-19/leetcode_4.png" alt></p>
-<ul>
-<li>题解：</li>
-</ul>
-<pre><code>class Solution {
-public: 
-    double ans = 1, exponent = 1; 
-    double myPow(double x, int n) {
-        exponent = x;
-        int sgnn = n;
-        // note: 快速幂可以直接考虑指数为负数的情况，但是为负数时不能用移位运算。
-        for(; sgnn; sgnn /= 2) { 
-            if(sgnn &amp; 1){
-                ans = ans * exponent;
-            } 
-            exponent *= exponent;
-        }
-        return n &gt; 0? ans: 1/ ans;
-    }
-};
-</code></pre><h2 id="面试题12-矩阵中的路径"><a href="#面试题12-矩阵中的路径" class="headerlink" title="面试题12. 矩阵中的路径"></a>面试题12. 矩阵中的路径</h2><ul>
-<li>复习 回溯法 深度优先搜索</li>
-</ul>
-<p><img src="/2020/03/19/leetcode20-3-19/leetcode_5.png" alt></p>
-<pre class=" language-lang-c"><code class="language-lang-c">class Solution {
-private:
-    int dir_x[4] = {0, 1, 0, -1};
-    int dir_y[4] = {1, 0, -1, 0};
-public:
-    bool search(pair<int,int> start, set<pair<int,int>> &record,vector<vector<char>> board, string word, int row, int col, int depth) {
-        if(depth == word.size()) return true; 
-        for(int i = 0; i < 4; ++i) {
-            int new_x = start.first + dir_x[i];
-            int new_y = start.second + dir_y[i];
-            if(record.find(make_pair(new_x, new_y)) == record.end() && new_x >= 0 && new_y >= 0 && new_x < row && new_y < col && board.at(new_x).at(new_y) == word.at(depth)) {
-                record.insert(make_pair(new_x, new_y));
-                if(search(make_pair(new_x, new_y), record, board, word, row, col, depth+1))
-                    return true;
-                record.erase(make_pair(new_x, new_y));
-            }
-        }
-        return false;
-    }
-    bool exist(vector<vector<char>>& board, string word) {
-        if(board.size() == 0) return false;
-        int row = board.size(), col = board.at(0).size();
-        for(int i = 0; i < row; ++i) {
-            for(int j = 0; j < col; ++j) {
-                if(board.at(i).at(j) == word.at(0)) {
-                    set<pair<int, int>> record;
-                    record.insert(make_pair(i, j));
-                    if(search(make_pair(i, j), record, board, word, row, col, 1))
-                        return true;   
-                }
-            }
-        }
-        return false;
-    }
-};
-</code></pre>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>CS231N课程：<a href="https://cs231n.github.io/" target="_blank" rel="noopener">https://cs231n.github.io/</a></p>
 
             </div>
             <hr/>
@@ -625,7 +694,7 @@ public:
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/03/19/leetcode20-3-19/">http://Columbine21.github.io/2020/03/19/leetcode20-3-19/</a>
+                    <a href="http://Columbine21.github.io/2020/03/21/batchnormalization/">http://Columbine21.github.io/2020/03/21/batchnormalization/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -663,12 +732,12 @@ public:
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/leetcode/">
-                                    <span class="chip bg-color">leetcode</span>
+                                <a href="/tags/Machine-Learning/">
+                                    <span class="chip bg-color">Machine Learning</span>
                                 </a>
                             
-                                <a href="/tags/C-C/">
-                                    <span class="chip bg-color">C/C++</span>
+                                <a href="/tags/Deep-Learning/">
+                                    <span class="chip bg-color">Deep Learning</span>
                                 </a>
                             
                         </div>
@@ -709,30 +778,34 @@ public:
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/03/19/testfomular/">
+                <a href="/2020/03/21/batchnormalization/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Layer Normalization">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Batch Normalization">
                         
-                        <span class="card-title">Layer Normalization</span>
+                        <span class="card-title">Batch Normalization</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Layer NormalizationBackground
-使用 Batch Normalization 存在问题: The effect of batch normalization is dependent on the mini-ba
+                            Batch NormalizationBatch Normalization 的优点
+考虑一个网络计算：
+
+
+l = F_2(F_1(u, \Theta_1), \Theta_2) \tag{1}​        学习 \Theta_2 的
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-19
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -745,6 +818,7 @@ public:
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -767,32 +841,32 @@ public:
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/03/18/hello-my-blog/">
+                <a href="/2020/03/19/testfomular/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Hello-My-Blog">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Layer Normalization">
                         
-                        <span class="card-title">Hello-My-Blog</span>
+                        <span class="card-title">Layer Normalization</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Hello My BlogThis is my first blog which was created in 18th March.
- I think it is the time to start my personal blog cu
+                            Layer NormalizationBackground
+使用 Batch Normalization 存在问题: The effect of batch normalization is dependent on the mini-ba
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-18
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-19
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" class="post-category">
-                                    软件安装与配置
+                            <a href="/categories/Deep-Learning-Basis/" class="post-category">
+                                    Deep Learning Basis
                                 </a>
                             
                             
@@ -802,16 +876,12 @@ public:
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Github/">
-                        <span class="chip bg-color">Github</span>
+                    <a href="/tags/Machine-Learning/">
+                        <span class="chip bg-color">Machine Learning</span>
                     </a>
                     
-                    <a href="/tags/Blogs/">
-                        <span class="chip bg-color">Blogs</span>
-                    </a>
-                    
-                    <a href="/tags/Skills/">
-                        <span class="chip bg-color">Skills</span>
+                    <a href="/tags/Deep-Learning/">
+                        <span class="chip bg-color">Deep Learning</span>
                     </a>
                     
                 </div>
@@ -949,6 +1019,13 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
