@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>快手笔试简记</title>
+      <link href="/2020/03/22/kuaishou-3-20/"/>
+      <url>/2020/03/22/kuaishou-3-20/</url>
+      
+        <content type="html"><![CDATA[<p><strong>快手2020/3/20 算法类笔试 A</strong><br>4道编程题：感觉都是数学题啊。</p><p>除了第二题明显是dp以外其余题目都不按套路来😓，就ac了前两个，下次再来。</p><p>最后一个问球被椭圆截得表面积，输入椭球(x-a)^2/d+(y-b)^2/e+(z-c)^2/f的6个参数abcdef，求单位球被截成两部分各自的表面积。看了就知道并不想做，一方面是不太会算另一方面也挺担心精度问题。不敢浪费时间。<br>倒数第二个，随机数不是爆内存就是爆时间完全没办法😫。偷偷的在考试后截了个屏(第三题)</p><p><img src="/2020/03/22/kuaishou-3-20/3-22.png" alt></p><p>总的来说，题目不错，下次再来🙄</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Batch Normalization</title>
       <link href="/2020/03/21/batchnormalization/"/>
       <url>/2020/03/21/batchnormalization/</url>
