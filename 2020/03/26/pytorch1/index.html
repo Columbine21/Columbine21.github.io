@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <link rel="dns-prefetch" href="//cdn.bootcss.com" />
     <link rel="dns-prefetch" href="//cdn.mathjax.org" />
-    <meta name="keywords" content="快手笔试简记, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="pytorch framework learning, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>快手笔试简记 | Jason Yuan&#39;s Blog</title>
+    <title>pytorch framework learning | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">快手笔试简记</h1>
+                    <h1 class="description center-align post-title">pytorch framework learning</h1>
                 </div>
             </div>
         </div>
@@ -408,16 +408,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Internship/">
-                                <span class="chip bg-color">Internship</span>
+                            <a href="/tags/Deep-Learning/">
+                                <span class="chip bg-color">Deep Learning</span>
                             </a>
                         
-                            <a href="/tags/Online-Test/">
-                                <span class="chip bg-color">Online Test</span>
-                            </a>
-                        
-                            <a href="/tags/Algorithm/">
-                                <span class="chip bg-color">Algorithm</span>
+                            <a href="/tags/Pytorch-Framework/">
+                                <span class="chip bg-color">Pytorch Framework</span>
                             </a>
                         
                     </div>
@@ -428,8 +424,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Experience/" class="post-category">
-                                Experience
+                            <a href="/categories/Deep-Learning-Framework/" class="post-category">
+                                Deep Learning Framework
                             </a>
                         
                     </div>
@@ -441,7 +437,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-03-22
+                    2020-03-26
                 </div>
                 
 
@@ -450,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    186
+                    1.4k
                 </div>
                 
 
@@ -463,11 +459,152 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p><strong>快手2020/3/20 算法类笔试 A</strong><br>4道编程题：感觉都是数学题啊。</p>
-<p>除了第二题明显是dp以外其余题目都不按套路来😓，就ac了前两个，下次再来。</p>
-<p>最后一个问球被椭圆截得表面积，输入椭球(x-a)^2/d+(y-b)^2/e+(z-c)^2/f的6个参数abcdef，求单位球被截成两部分各自的表面积。看了就知道并不想做，一方面是不太会算另一方面也挺担心精度问题。不敢浪费时间。<br>倒数第二个，随机数不是爆内存就是爆时间完全没办法😫。题目来自于网络（newcoder的评论区）</p>
-<p><img src="/2020/03/22/kuaishou-3-20/3-22.png" alt></p>
-<p>总的来说，题目不错，下次再来🙄</p>
+                <h1 id="Pytorch-Learning"><a href="#Pytorch-Learning" class="headerlink" title="Pytorch Learning"></a>Pytorch Learning</h1><p>Date : 2020/3/20 - 2020/3/27 (Week 5)</p>
+<p>这一周，我们学习并分析在机器学习任务中使用 pytorch 必用的 module （torch.nn） 的源代码实现。</p>
+<h2 id="torch-nn-源代码分析"><a href="#torch-nn-源代码分析" class="headerlink" title="./torch/nn 源代码分析"></a>./torch/nn 源代码分析</h2><h3 id="torch-nn目录结构以及init-py"><a href="#torch-nn目录结构以及init-py" class="headerlink" title="torch/nn目录结构以及init.py"></a>torch/nn目录结构以及<strong>init</strong>.py</h3><pre class=" language-lang-python"><code class="language-lang-python"># __init__.py:
+from .modules import *
+from .parameter import Parameter
+from .parallel import DataParallel
+from . import init
+from . import utils
+</code></pre>
+<p>我们在使用中往往使用的语句：</p>
+<pre class=" language-lang-python"><code class="language-lang-python">import torch.nn as nn
+</code></pre>
+<p>执行时，默认导入<code>./torch/nn/modules</code>, <code>./torch/nn/parameter</code>,<code>./torch/nn/parallel</code>, <code>torch/nn/init.py</code>,<code>torch/nn/utils</code> 这些文件的内容。（递归地，又引入了<code>modules.__init__</code>,<code>parallel.__init__</code>的内容 ）</p>
+<p>这样，我们不需要其他额外的 <code>import</code> 就可以使用我们常用的 <code>nn.Module</code> 来定义我们的模型了。</p>
+<p>对于<code>backends</code>,  <code>functional.py</code>, <code>_functions</code> 需要在代码前重新Import。例如我们常用的</p>
+<pre class=" language-lang-python"><code class="language-lang-python">import torch.nn.functional as F
+</code></pre>
+<p>就是导入了<code>functional.py</code>, 同样地，<code>backends</code> 和<code>_functions</code> 是 <code>functional.py</code> 实现各种函数时所用到的。</p>
+<h3 id="torch-nn-parameter-py-源代码分析"><a href="#torch-nn-parameter-py-源代码分析" class="headerlink" title="torch/nn/parameter.py 源代码分析"></a>torch/nn/parameter.py 源代码分析</h3><ul>
+<li>我们首先比较好分析的入手，<code>torch/nn/modules/module.py</code> 的先决，  <code>torch/nn/parameter.py</code>  ：</li>
+<li><code>torch/nn/parameter.py</code>  本内容就一个 <code>Parameter</code>  类定义，下分析其代码实现：</li>
+</ul>
+<pre class=" language-lang-python"><code class="language-lang-python">class Parameter(torch.Tensor):
+    r"""A kind of Tensor that is to be considered a module parameter.
+
+    Parameters are :class:`~torch.Tensor` subclasses, that have a
+    very special property when used with :class:`Module` s - when they're
+    assigned as Module attributes they are automatically added to the list of
+    its parameters, and will appear e.g. in :meth:`~Module.parameters` iterator.
+    Assigning a Tensor doesn't have such effect. This is because one might
+    want to cache some temporary state, like last hidden state of the RNN, in
+    the model. If there was no such class as :class:`Parameter`, these
+    temporaries would get registered too.
+
+    Arguments:
+        data (Tensor): parameter tensor.
+        requires_grad (bool, optional): if the parameter requires gradient. See
+            :ref:`excluding-subgraphs` for more details. Default: `True`
+    """
+
+    def __new__(cls, data=None, requires_grad=True):
+        if data is None:
+            data = torch.Tensor()
+        return torch.Tensor._make_subclass(cls, data, requires_grad)
+
+    def __deepcopy__(self, memo):
+        if id(self) in memo:
+            return memo[id(self)]
+        else:
+            result = type(self)(self.data.clone(memory_format=torch.preserve_format), self.requires_grad)
+            memo[id(self)] = result
+            return result
+
+    def __repr__(self):
+        return 'Parameter containing:\n' + super(Parameter, self).__repr__()
+
+    def __reduce_ex__(self, proto):
+        # See Note [Don't serialize hooks]
+        return (
+            torch._utils._rebuild_parameter,
+            (self.data, self.requires_grad, OrderedDict())
+        )
+</code></pre>
+<ul>
+<li><p><code>Parameter</code>  类是 <code>torch.Tensor</code> 类的子类，区别于 <code>torch.Tensor</code> 当其被指定为 <code>Module</code> 属性的时候，他们会自动加入 <code>Module.parameters</code> 迭代器。</p>
+<ul>
+<li><p><code>__new__</code> : 创建对象（<strong>类准备将自身实例化时调用</strong>）在<code>__init__</code> 方法前调用。</p>
+</li>
+<li><p><code>__deepcopy__</code> : 一旦复制出来了，就是独立的，原对象的改变不影响deepcopy 的对象值。</p>
+</li>
+<li><p><code>__repr__</code> : 方向在 <code>print</code> 时调用，在其中又调用父类的 <code>__repr__</code> 方法。</p>
+</li>
+<li><p>实例属性和类属性：Python 是动态语言，可以在 <code>__init__</code> 动态的添加实例属性。而和编译语言一样，Python 的类属性需要直接定义在类中，举例来说：</p>
+<pre class=" language-lang-python"><code class="language-lang-python">class Car(object):
+    country = u'中国'
+    def __init__(self,owner=None):
+        self.owner = owner
+        self.country = "china"
+</code></pre>
+<p><code>Car</code> 类中含有 <code>country</code> 这一类属性和 <code>owner</code>， <code>country</code> 两个实例属性。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="torch-nn-init-py-源代码分析"><a href="#torch-nn-init-py-源代码分析" class="headerlink" title="torch/nn/init.py 源代码分析"></a>torch/nn/init.py 源代码分析</h3><p>这一部分在实际的使用中非常常用，经常用在 <code>module</code> 子类的<code>__init__</code> 方法中，定义模型参数的初始化方法。常见的初始化方法包括<code>kaiming_normal_</code>, <code>xavier_uniform_</code>,<code>normal_</code> 等，这些在论文中提出的初始化方法能够起到一定控制 gradient 流的作用，从而加速学习效率，十分重要，下举一例说明平时我们如何使用 <code>torch.nn.init</code> 。该例来自 CS231n assignment2。</p>
+<pre class=" language-lang-python"><code class="language-lang-python">class MyConvNet(nn.Module):
+    def __init__(self, input_channel, num_class):
+        super().__init__()
+        self.conv_1 = nn.Conv2d(input_channel, 32, kernel_size=(3, 3), padding=1)
+        nn.init.kaiming_normal_(self.conv_1.weight)
+        self.bn_1 = nn.BatchNorm2d(32)
+        self.pooling_1 = nn.MaxPool2d((2, 2), stride = 2)
+
+        self.conv_2 = nn.Conv2d(32, 32, kernel_size=(3, 3))
+        nn.init.kaiming_normal_(self.conv_2.weight)
+        self.bn_2 = nn.BatchNorm2d(32)
+        self.pooling_2 = nn.MaxPool2d((2, 2), stride = 2)
+
+        self.fc_1 = nn.Linear(32 * 7 * 7, 128)
+        nn.init.kaiming_uniform_(self.fc_1.weight)
+        self.bn_3 = nn.BatchNorm1d(128)
+
+        self.fc_2 = nn.Linear(128, 10)
+        nn.init.kaiming_normal_(self.fc_2.weight)
+
+
+    def forward(self, x):
+        conv_1_out = F.relu(self.bn_1(self.conv_1(x)))
+        pool_1_out = self.pooling_1(conv_1_out)
+        assert pool_1_out.shape == (x.shape[0], 32, 16, 16) , "pool_1_out shape wrong"
+        conv_2_out = F.relu(self.bn_2(self.conv_2(pool_1_out)))
+        pool_2_out = self.pooling_2(conv_2_out)
+        assert pool_2_out.shape == (x.shape[0], 32, 7, 7) , "pool_2_out shape wrong"
+        pool_2_out_flatten = flatten(pool_2_out)
+        assert pool_2_out_flatten.shape == (x.shape[0], 32 * 7 * 7), "flatten shape wrong"
+        fc_1_out = F.relu(self.bn_3(self.fc_1(pool_2_out_flatten)))
+        assert fc_1_out.shape == (x.shape[0], 128)
+        scores = self.fc_2(fc_1_out)
+        return scores
+</code></pre>
+<p>这一部分主要包括以下几个部分：</p>
+<ol>
+<li><p><code>no_grad_*</code> funcitons (<code>_no_grad_uniform_</code>, <code>_no_grad_normal_</code>, <code>_no_grad_trunc_normal_</code>, <code>_no_grad_fill_</code>, <code>_no_grad_zero_</code>) </p>
+<ul>
+<li><code>_no_grad_uniform_</code> : 返回被 with torch.no_grad() 环境包裹的tensor.uniform_(a, b), 均匀分布</li>
+<li><code>_no_grad_normal_</code> ： 返回被 with torch.no_grad() 环境包裹的 tensor.normal_(mean, std), 正太分布</li>
+<li><code>_no_grad_trunc_normal_</code>：返回被 with torch.no_grad() 环境包裹的截断正太分布[a, b] 区间内近似服从正态分布。</li>
+<li><code>_no_grad_fill_</code>：返回被 with torch.no_grad() 环境包裹的 tensor.fill_(val) 填充函数</li>
+<li><code>_no_grad_zero_</code>：返回被 with torch.no_grad() 环境包裹的 tensor.zero_() 函数</li>
+</ul>
+</li>
+<li><p>使用 <code>no_grad_*</code> funcitons 完成的 built-in 函数（<code>uniform_</code>,<code>normal_</code>,<code>trunc_normal_</code>,<code>constant_</code>,<code>ones_</code>, <code>zeros</code>）</p>
+<ul>
+<li>这五个函数分别对应<code>_no_grad_uniform_</code>, <code>_no_grad_normal_</code>, <code>_no_grad_trunc_normal_</code>, <code>_no_grad_fill_</code>, <code>_no_grad_zero_</code>。</li>
+</ul>
+</li>
+<li><p>常见的初始化方法 <code>kaiming_normal_</code>, <code>kaiming_uniform_</code>, <code>xavier_normal_</code>, <code>xavier_uniform_</code>, <code>eye_</code>, <code>dirac_</code>, <code>orthogonal_</code> 等。</p>
+<p>Note: 这里不是按照原顺序排列的方法。而是按照使用的频繁程度排序。</p>
+</li>
+<li><p><code>_make_deprecate</code> :对于使用 old_name 的情况给出 warnings ：建议使用后面加下划线的方法，将old_name 函数重定向到 new_name 方法。</p>
+</li>
+</ol>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul>
+<li>今天我们大致上分析了torch.nn 的调用结构，以及torch.nn.parameters,和torch.nn.init 三个部分。明白了在import torch.nn 的时候完成了工作，清晰了module的参数parameter本质也是torch.tensor, 了解了torch.nn.init中常见的初始化方法，了解到如果不使用加下划线的初始化方法带来的warnings原理。</li>
+<li>之后会继续分析torch.nn文件中其余部分。</li>
+</ul>
 
             </div>
             <hr/>
@@ -493,7 +630,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/03/22/kuaishou-3-20/">http://Columbine21.github.io/2020/03/22/kuaishou-3-20/</a>
+                    <a href="http://Columbine21.github.io/2020/03/26/pytorch1/">http://Columbine21.github.io/2020/03/26/pytorch1/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -531,16 +668,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Internship/">
-                                    <span class="chip bg-color">Internship</span>
+                                <a href="/tags/Deep-Learning/">
+                                    <span class="chip bg-color">Deep Learning</span>
                                 </a>
                             
-                                <a href="/tags/Online-Test/">
-                                    <span class="chip bg-color">Online Test</span>
-                                </a>
-                            
-                                <a href="/tags/Algorithm/">
-                                    <span class="chip bg-color">Algorithm</span>
+                                <a href="/tags/Pytorch-Framework/">
+                                    <span class="chip bg-color">Pytorch Framework</span>
                                 </a>
                             
                         </div>
@@ -581,9 +714,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/03/26/pytorch1/">
                     <div class="card-image">
@@ -603,9 +737,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-26
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-26
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -618,6 +752,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -640,35 +775,33 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/03/21/batchnormalization/">
+                <a href="/2020/03/22/kuaishou-3-20/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Batch Normalization">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="快手笔试简记">
                         
-                        <span class="card-title">Batch Normalization</span>
+                        <span class="card-title">快手笔试简记</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Batch NormalizationBatch Normalization 的优点
-考虑一个网络计算：
-
-
-l = F_2(F_1(u, \Theta_1), \Theta_2) \tag{1}​        学习 \Theta_2 的
+                            快手2020/3/20 算法类笔试 A4道编程题：感觉都是数学题啊。
+除了第二题明显是dp以外其余题目都不按套路来😓，就ac了前两个，下次再来。
+最后一个问球被椭圆截得表面积，输入椭球(x-a)^2/d+(y-b)^2/e+(z-c)^2
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-21
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-22
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Deep-Learning-Basis/" class="post-category">
-                                    Deep Learning Basis
+                            <a href="/categories/Experience/" class="post-category">
+                                    Experience
                                 </a>
                             
                             
@@ -678,12 +811,16 @@ l = F_2(F_1(u, \Theta_1), \Theta_2) \tag{1}​        学习 \Theta_2 的
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Machine-Learning/">
-                        <span class="chip bg-color">Machine Learning</span>
+                    <a href="/tags/Internship/">
+                        <span class="chip bg-color">Internship</span>
                     </a>
                     
-                    <a href="/tags/Deep-Learning/">
-                        <span class="chip bg-color">Deep Learning</span>
+                    <a href="/tags/Online-Test/">
+                        <span class="chip bg-color">Online Test</span>
+                    </a>
+                    
+                    <a href="/tags/Algorithm/">
+                        <span class="chip bg-color">Algorithm</span>
                     </a>
                     
                 </div>
