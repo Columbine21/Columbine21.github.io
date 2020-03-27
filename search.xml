@@ -24,6 +24,8 @@
             
             <tag> Transformers </tag>
             
+            <tag> Time Series Prediction </tag>
+            
         </tags>
       
     </entry>
@@ -40,7 +42,7 @@
       
       <categories>
           
-          <category> Natural Language Processing </category>
+          <category> NLP </category>
           
       </categories>
       
