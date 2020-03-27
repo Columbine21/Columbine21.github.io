@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <link rel="dns-prefetch" href="//cdn.bootcss.com" />
     <link rel="dns-prefetch" href="//cdn.mathjax.org" />
-    <meta name="keywords" content="Relation_Extraction One, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="Transformer on Time Series Forecasting, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Relation_Extraction One | Jason Yuan&#39;s Blog</title>
+    <title>Transformer on Time Series Forecasting | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Relation_Extraction One</h1>
+                    <h1 class="description center-align post-title">Transformer on Time Series Forecasting</h1>
                 </div>
             </div>
         </div>
@@ -412,16 +412,8 @@
                                 <span class="chip bg-color">Deep Learning</span>
                             </a>
                         
-                            <a href="/tags/Paper-Reading/">
-                                <span class="chip bg-color">Paper Reading</span>
-                            </a>
-                        
-                            <a href="/tags/Relation-Embedding/">
-                                <span class="chip bg-color">Relation Embedding</span>
-                            </a>
-                        
-                            <a href="/tags/Relation-Understanding/">
-                                <span class="chip bg-color">Relation Understanding</span>
+                            <a href="/tags/Transformers/">
+                                <span class="chip bg-color">Transformers</span>
                             </a>
                         
                     </div>
@@ -432,8 +424,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Natural-Language-Processing/" class="post-category">
-                                Natural Language Processing
+                            <a href="/categories/NLP/" class="post-category">
+                                NLP
                             </a>
                         
                     </div>
@@ -445,7 +437,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-03-26
+                    2020-03-27
                 </div>
                 
 
@@ -454,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.7k
+                    803
                 </div>
                 
 
@@ -467,106 +459,29 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Global-Textual-Relation-Embedding-for-Relational-Understanding"><a href="#Global-Textual-Relation-Embedding-for-Relational-Understanding" class="headerlink" title="Global Textual Relation Embedding for Relational Understanding"></a>Global Textual Relation Embedding for Relational Understanding</h1><h2 id="Core-Idea"><a href="#Core-Idea" class="headerlink" title="Core Idea"></a>Core Idea</h2><p>全局的统计信息比局部的统计信息更加鲁棒。</p>
-<p>在传统的关系抽取训练中，句子与句子之间是独立的，基于单句的局部特征训练模型，受到错误标签的影响比较大。本文提出了一种全局统计的思路，对每个句子，提取它文本中的关系表述（textual relation），并统计该 textual relation 在训练集中共现的 kb relation 的分布，这个分布可以用来作为 textual relation 的embedding 表示。</p>
-<p><img src="https://ss.csdn.net/p?https://mmbiz.qpic.cn/mmbiz_png/GNpj5fw72EodDOV2M3x7CgCmMfKrc4nI6cia3R9FVQ2VNjKRetL97HecqXUMOCwK18dv2qo4TAiazeCh2TjI7uLg/640?wx_fmt=png" alt></p>
-<p>比如，对于上述两个textual relation，分别统计训练集中包含该textual relation的句子对应的label，可以得到texual relation在kbrelation上的分布如下：</p>
-<p><img src="https://ss.csdn.net/p?https://mmbiz.qpic.cn/mmbiz_png/GNpj5fw72EodDOV2M3x7CgCmMfKrc4nI0wGWkOtVKk2wxnfLBMErZzeoQy56zunvk4EXdkUBPnMLIvibJ529uyA/640?wx_fmt=png" alt></p>
-<p>可以看出，表述为born的句子可以被映射到place_of_birth上，虽然训练集中存在错误标签（place_of_death）的问题，但在全局统计的角度看，错误标签占比比较小。因此，全局共现信息可以有效地突出正确标签。</p>
-<p>本文的思路可以类比 GloVE 对 word2vec 的改进。</p>
-<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>a representation between lexical (and phrasal) level and sentence level is missing. Many tasks require relational understanding of the entities mentioned in the text.</p>
-<p><strong>Definition Textual relation:</strong> the shortest path between two entities in the dependency parse tree of a sentence. <u>(main bearer of relational information in text)</u> </p>
-<p><strong>Definition distant supervision(远程监督):</strong> Distant Supervision 通过将知识库与非结构化文本对齐来自动构建大量训练数据，减少模型对人工标注数据的依赖，增强模型跨领域适应能力。</p>
-<p>Distant Supervision 的提出主要基于以下假设：两个实体如果在知识库中存在某种关系，则包含该两个实体的非结构化句子均能表示出这种关系。例如，“Steve Jobs”, “Apple”在 Freebase 中存在 founder 的关系，则包含这两个实体的非结构文本“Steve Jobs was the co-founder and CEO of Apple and formerly Pixar.”可以作为一个训练正例来训练模型。这类数据构造方法的具体实现步骤是：</p>
+                <h1 id="Time-Series-Forecasting-with-Transformer"><a href="#Time-Series-Forecasting-with-Transformer" class="headerlink" title="Time Series Forecasting with Transformer"></a>Time Series Forecasting with Transformer</h1><p>论文：Enhancing the Locality and Breaking the Memory Bottleneck of Transformer on Time Series Forecasting </p>
+<h2 id="（1）Background"><a href="#（1）Background" class="headerlink" title="（1）Background"></a>（1）Background</h2><p>The well-known self-attention based Transformer [1] has recently been proposed for sequence modeling with its fabulous capablility of capturing long time dependence. .  But it still suffers some Weaknesses:</p>
 <ol>
-<li>从知识库中抽取存在关系的实体对</li>
-<li>从非结构化文本中抽取含有实体对的句子作为训练样例</li>
+<li>我们都知道，transformer 使用的 <strong>自注意力</strong> 机制相当于将句子中两个词的距离设定为 1。尽管作者尝试亡羊补牢，在 word encoding 的过程中加入了 position encoding 提供单词的位置信息。然而，在时序预测问题这种局部信息极为关键的问题中，仍然会因为其 insensitive to local context ，而带来负面影响。</li>
+<li>传统的 transformer 占用的内存正比于 句子长度 L 的平方。对于时间序列预测问题，输入的时间序列可能很长，导致memory bottleneck。 （个人的见解就是内存的问题过个10年就都不是问题哈）</li>
 </ol>
-<p>Distant Supervision 的方法虽然从一定程度上减少了模型对人工标注数据的依赖，但该类方法也存在明显的缺点：</p>
-<ol>
-<li><p>假设过于肯定，难免引入大量的噪声数据。如 “Steven Jobs passed away the daybefore Apple unveiled iPhone 4s in late 2011.”这句话中并没有表示出 Steven Jobs 与 Apple 之间存在 founder 的关系。</p>
-<p><img src="/2020/03/26/relation-extraction/distant-one.png" alt></p>
-<p>The wrong labeling problem of distant supervision. The Ford Motor Company is both founded by and named after Henry Ford. The KB relation <em>founder</em> and <em>named after</em> are thus both mapped to all of the sentences containing the entity pair, resulting in many wrong labels (red dashed arrows). </p>
-</li>
-<li><p>数据构造过程依赖于 NER 等 NLP 工具，中间过程出错会造成错误传播问题。针对这些问题，目前主要有四类方法：（1）在构造数据集过程中引入先验知识作为限制；（2）利用指称与指称间关系用图模型对数据样例打分，滤除置信度较低的句子；（3）利用多示例学习方法对测试包打标签；（4）采用 attention 机制对不同置信度的句子赋予不同的权值。</p>
-</li>
+<h2 id="（2）Contribute"><a href="#（2）Contribute" class="headerlink" title="（2）Contribute"></a>（2）Contribute</h2><ol>
+<li>使用 transformer 进行时序预测，大量实验，效果好</li>
+<li>提出 <strong>convolutional self-attention</strong> 机制产生自注意力机制中的 Q，K，使得 Query-key 更加关注局部信息。</li>
+<li><strong>LogSparse Transformer</strong> (space commplexity:  <script type="math/tex">O(L\cdot(\log L)^2)</script> ) 使得其可以用于更加细粒度的时序预测问题。</li>
 </ol>
-<p><strong>New York Times Dataset:</strong> NYT数据集是关于远程监督关系抽取任务的广泛使用的数据集。该数据集是通过将freebase中的关系与纽约时报（NYT）语料库对齐而生成的。纽约时报New York Times数据集包含150篇来自纽约时报的商业文章。抓取了从2009年11月到2010年1月纽约时报网站上的所有文章。在句子拆分和标记化之后，使用斯坦福NER标记器（URL：<a href="http://nlp.stanford.edu/ner/index.shtml" target="_blank" rel="noopener">http://nlp.stanford.edu/ner/index.shtml</a> ）来标识PER和ORG从每个句子中的命名实体。对于包含多个标记的命名实体，我们将它们连接成单个标记。然后，我们将同一句子中出现的每一对（PER，ORG）实体作为单个候选关系实例，PER实体被视为ARG-1，ORG实体被视为ARG-2。</p>
-<p><img src="https://i.loli.net/2018/06/10/5b1cbc132bc89.jpg" alt></p>
-<h2 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h2><ul>
-<li>通用的 relation embedding</li>
-<li>创造了大规模的通过远程连接标注的数据集</li>
-<li>在 relational understanding tasks（<em>relation extraction（关系抽取）</em> and <em>knowledge base completion（知识库健全）</em> ） 中，验证了我们方法的有效性。<ul>
-<li>relation extraction : 使用我们的 embedding 增强 PCNN+ATT （Neural relation extraction with selective attention over instances）模型。</li>
-<li>Knowledge base completion : we replace the neural network in (Representing text for joint embedding of text and knowledge bases ) with our pre-trained embedding followed by a simple projection layer.</li>
-</ul>
-</li>
-</ul>
-<h2 id="Proposal-Model"><a href="#Proposal-Model" class="headerlink" title="Proposal Model"></a>Proposal Model</h2><h3 id="1-Global-Co-Occurrence-Statistics-from-Distant-Supervision"><a href="#1-Global-Co-Occurrence-Statistics-from-Distant-Supervision" class="headerlink" title="(1) Global Co-Occurrence Statistics from Distant Supervision"></a>(1) Global Co-Occurrence Statistics from Distant Supervision</h3><ul>
-<li><p>Step one: map ClueWeb09 to Freebase Using FACC1 dataset</p>
-<ul>
-<li><p>corpus : ClueWeb09 </p>
-</li>
-<li><p>Knowledge base : Freebase </p>
-</li>
-<li>Result : 5 billion entity mentions in ClueWeb09 and link them to Freebase entities. 155 million sentences containing at least two entity mentions. </li>
-<li><strong>Note :  这里我们使用过滤器来剔除‘垃圾’关系。有4种删选策略（不展开）</strong></li>
-</ul>
-</li>
-<li><p>Step two: use the Stanford Parser (Chen and Manning, 2014) with universal dependencies to extract textual relations (shortest dependency paths) between each pair of entity mentions</p>
-<ul>
-<li>依赖树中找到两个实体之间的最短路径就是textual relation。</li>
-<li>Result : leading to 788 million relational triples (subject, textual relation, object), of which 451 million are unique. </li>
-</ul>
-</li>
-<li><p>Step three: calculate <strong>global co-occurrence statistics</strong> of textual and KB relations. </p>
-<ul>
-<li><p>More specifically, for a relational triple <script type="math/tex">(e1, t, e2)</script> with textual relation t, if <script type="math/tex">(e1, r, e2)</script> with KB relation <script type="math/tex">r</script> exists in the KB, then we count it as a co-occurrence of <script type="math/tex">t</script> and <script type="math/tex">r</script>. </p>
-</li>
-<li><p>Follows are a demonstration of r = ‘founder’ , ‘named_after’, t = ‘founded’, ‘named’.</p>
-<p><img src="/2020/03/26/relation-extraction/co-occurance.png" alt></p>
-<p>Global co-occurrence statistics from our distant supervision dataset, which clearly distinguishes the two textual relations. (We found that in our dataset we surmount the difficult of mistaken distant supervisions.)</p>
-</li>
-</ul>
-</li>
-<li><p>Step four : normalization &amp; construct <strong>bipartite relation graph</strong>.</p>
-<ul>
-<li>each textual relation has a valid probability distribution over all the KB relations. </li>
-<li>one node set being the textual relations, the other node set being the KB relations, 权重就是先前计算的 normalize 之后的概率值。</li>
-</ul>
-</li>
-</ul>
-<h3 id="2-Embedding-Training"><a href="#2-Embedding-Training" class="headerlink" title="(2) Embedding Training"></a>(2) Embedding Training</h3><ul>
-<li><p>Transformer as encoder. </p>
-<ul>
-<li><p>The embedded textual relation token sequence is fed as input.</p>
-</li>
-<li><p>We project the output of the encoder to a vector z as the result embedding</p>
-</li>
-<li><p>Linear layer + softmax activation : the predict distribution of KB relation.</p>
+<h2 id="（3）Problem-Definition"><a href="#（3）Problem-Definition" class="headerlink" title="（3）Problem Definition"></a>（3）Problem Definition</h2><p>对于 <script type="math/tex">N</script> 个不同时间序列 <script type="math/tex">\{z_{i,1:t_0}\}_{i=1}^N</script> , 每一个时间序列 <script type="math/tex">z_{i,1:t_0}􏰄 = [z_{i,1}, z_{i,2}\cdots,z_{i,t_0}]</script> ，我们的任务是预测接下来的 <script type="math/tex">\tau</script>  time steps 的序列值 <script type="math/tex">\{z_{i,t_0+1:t_0+\tau}\}_{i=1}^N</script> 。除了这些，我们还已知 <script type="math/tex">\{x_{i,1:t_0+\tau}\}_{i=1}^N</script> 各个时间点的 d 维的输入向量。我们的目标是建模一下条件分布：</p>
 <script type="math/tex; mode=display">
-p(r_j|t_i) = (softmax(W\cdot z_i + b))_j \tag{1}</script></li>
-<li><p>Loss measure the difference between the predict distribution <script type="math/tex">p(r_j|t_i)</script> and the ground truth set as <strong>global co-occurrence statistics</strong> value <script type="math/tex">\hat{p}((r_j|t_i))</script>.</p>
+p(z_{i,t_0+1:t_0+\tau}\mid z_{i,1:t_0}, x_{i,1:t_0+\tau}; \phi) = \Pi_{t=t_0=1}^{t_0+\tau} p(z_{i,t}\mid z_{i,1:t-1}, x_{i,1:t}; \phi) \tag{1}</script><p>问题可以简化为预测下一个时间节点的数据 <script type="math/tex">p(z_{t}|z_{1:t-1},x_{1:t};\phi)</script> ，其中 <script type="math/tex">\phi</script>  是模型参数 shared by all time series in the collection。</p>
+<p>我们将时序测量值 <script type="math/tex">z_{t-1}</script> 与 covariates <script type="math/tex">x_t</script> 拼接起来共同作为模型在 <script type="math/tex">t</script> 时刻的输入即</p>
 <script type="math/tex; mode=display">
-L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
-<li><p>5% of the training data as validation set</p>
-</li>
-<li><p>Word embeddings are initialized with the GloVe</p>
-</li>
-<li><p>For the Transformer model, we use 6 layers and 6 attention heads for each layer.</p>
-</li>
-<li><p>Adam optimizer &amp; 200 epochs &amp; minimum validation loss for the result.</p>
-</li>
-</ul>
-</li>
-<li><p>Summary : 作者首先通过全局的共同出现概率作为他们的标准训练信号（或者说label）通过 encoder 将包含 texitual relation t 的句子转换为embedding z，在训练过程中希望embedding z能够表征出 t 。</p>
-</li>
-</ul>
-<h2 id="Expriments"><a href="#Expriments" class="headerlink" title="Expriments"></a>Expriments</h2><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li>distant supervision :<a href="https://www.dazhuanlan.com/2019/09/22/5d876517af55b/" target="_blank" rel="noopener">https://www.dazhuanlan.com/2019/09/22/5d876517af55b/</a></li>
-<li>New York Times Dataset: <a href="https://www.dazhuanlan.com/2019/10/19/5daa084d5dd1f/" target="_blank" rel="noopener">https://www.dazhuanlan.com/2019/10/19/5daa084d5dd1f/</a></li>
-<li>Paper: <a href="https://sites.cs.ucsb.edu/~xyan/papers/acl19_gloreplus.pdf" target="_blank" rel="noopener">https://sites.cs.ucsb.edu/~xyan/papers/acl19_gloreplus.pdf</a></li>
-<li>别人的见解：<a href="https://blog.csdn.net/TgqDT3gGaMdkHasLZv/article/details/88096942" target="_blank" rel="noopener">https://blog.csdn.net/TgqDT3gGaMdkHasLZv/article/details/88096942</a></li>
+y_t = [z_{t-1} \circ x_t] \in R^{d+1}; Y_t = [y_1, y_2, \cdots,y_t] \in R^{t\times (d+1)} \tag{2}</script><h2 id="（4）-Methodology"><a href="#（4）-Methodology" class="headerlink" title="（4）  Methodology"></a>（4）  Methodology</h2><h3 id="（4-1）Enhancing-the-locality-of-Transformer"><a href="#（4-1）Enhancing-the-locality-of-Transformer" class="headerlink" title="（4.1）Enhancing the locality of Transformer"></a>（4.1）Enhancing the locality of Transformer</h3><p>个人感觉：模型的主要灵感来于 将 self-attention 模型中的输入 x 到 Q K V 的过程理解为 <script type="math/tex">1\times 1</script> 的卷积操作，然后将这种卷积进行扩展，（很像 convlstm 和 lstm 的关系）。</p>
+<p><img src="/2020/03/27/transformerone/trans-one.png" alt></p>
+<p>上图展示了文章提出的模型与canonical Transformer模型的对比。区别在于Conv1d中将kernal size 大小从 1 调整到 k，使得Q，K在构造的时候考虑之前的 k 个context。使得模型获得了捕捉 shape 相似的能力。（canonical Transformer 仅关注的是输入时刻单点与之前那个单点更加相似，而这里关注的是k lag的时间段内信息与之前那个时间段信息更加相似），显然模型有一定合理性。</p>
+<h3 id="（4-2）-Breaking-the-memory-bottleneck-of-Transformer"><a href="#（4-2）-Breaking-the-memory-bottleneck-of-Transformer" class="headerlink" title="（4.2） Breaking the memory bottleneck of Transformer"></a>（4.2） Breaking the memory bottleneck of Transformer</h3><p>个人不关注如何减少memory问题，暂不研究。</p>
+<h2 id="（5）Expriments"><a href="#（5）Expriments" class="headerlink" title="（5）Expriments"></a>（5）Expriments</h2><p>（略）</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
+<li>Paper ： Enhancing the Locality and Breaking the Memory Bottleneck of Transformer on Time Series Forecasting </li>
 </ol>
 
             </div>
@@ -583,7 +498,7 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io" rel="external nofollow noreferrer">Jason yuan</a>
+                    <a href="http://Columbine21.github.io" rel="external nofollow noreferrer">Jason Yuan</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -593,7 +508,7 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/03/26/relation-extraction/">http://Columbine21.github.io/2020/03/26/relation-extraction/</a>
+                    <a href="http://Columbine21.github.io/2020/03/27/transformerone/">http://Columbine21.github.io/2020/03/27/transformerone/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -606,7 +521,7 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                     本博客所有文章除特別声明外，均采用
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     许可协议。转载请注明来源
-                    <a href="http://Columbine21.github.io" target="_blank">Jason yuan</a>
+                    <a href="http://Columbine21.github.io" target="_blank">Jason Yuan</a>
                     !
                 </span>
             </div>
@@ -635,16 +550,8 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                                     <span class="chip bg-color">Deep Learning</span>
                                 </a>
                             
-                                <a href="/tags/Paper-Reading/">
-                                    <span class="chip bg-color">Paper Reading</span>
-                                </a>
-                            
-                                <a href="/tags/Relation-Embedding/">
-                                    <span class="chip bg-color">Relation Embedding</span>
-                                </a>
-                            
-                                <a href="/tags/Relation-Understanding/">
-                                    <span class="chip bg-color">Relation Understanding</span>
+                                <a href="/tags/Transformers/">
+                                    <span class="chip bg-color">Transformers</span>
                                 </a>
                             
                         </div>
@@ -685,9 +592,10 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/03/27/transformerone/">
                     <div class="card-image">
@@ -705,9 +613,9 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-27
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-27
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -720,6 +628,7 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -742,21 +651,20 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/03/26/pytorch1/">
+                <a href="/2020/03/26/relation-extraction/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="pytorch framework learning">
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="Relation_Extraction One">
                         
-                        <span class="card-title">pytorch framework learning</span>
+                        <span class="card-title">Relation_Extraction One</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Pytorch LearningDate : 2020/3/20 - 2020/3/27 (Week 5)
-这一周，我们学习并分析在机器学习任务中使用 pytorch 必用的 module （torch.nn） 的源代码实现。
-./torc
+                            Global Textual Relation Embedding for Relational UnderstandingCore Idea全局的统计信息比局部的统计信息更加鲁棒。
+在传统的关系抽取训练中，句子与句子之间是独立的，基于单句
                         
                     </div>
                     <div class="publish-info">
@@ -767,8 +675,8 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Deep-Learning-Framework/" class="post-category">
-                                    Deep Learning Framework
+                            <a href="/categories/Natural-Language-Processing/" class="post-category">
+                                    Natural Language Processing
                                 </a>
                             
                             
@@ -782,8 +690,16 @@ L = -\sum_{i,j} \hat{p}((r_j|t_i))\log(p(r_j|t_i)) \tag{2}</script></li>
                         <span class="chip bg-color">Deep Learning</span>
                     </a>
                     
-                    <a href="/tags/Pytorch-Framework/">
-                        <span class="chip bg-color">Pytorch Framework</span>
+                    <a href="/tags/Paper-Reading/">
+                        <span class="chip bg-color">Paper Reading</span>
+                    </a>
+                    
+                    <a href="/tags/Relation-Embedding/">
+                        <span class="chip bg-color">Relation Embedding</span>
+                    </a>
+                    
+                    <a href="/tags/Relation-Understanding/">
+                        <span class="chip bg-color">Relation Understanding</span>
                     </a>
                     
                 </div>

@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Transformer on Time Series Forecasting</title>
+      <link href="/2020/03/27/transformerone/"/>
+      <url>/2020/03/27/transformerone/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Time-Series-Forecasting-with-Transformer"><a href="#Time-Series-Forecasting-with-Transformer" class="headerlink" title="Time Series Forecasting with Transformer"></a>Time Series Forecasting with Transformer</h1><p>论文：Enhancing the Locality and Breaking the Memory Bottleneck of Transformer on Time Series Forecasting </p><h2 id="（1）Background"><a href="#（1）Background" class="headerlink" title="（1）Background"></a>（1）Background</h2><p>The well-known self-attention based Transformer [1] has recently been proposed for sequence modeling with its fabulous capablility of capturing long time dependence. .  But it still suffers some Weaknesses:</p><ol><li>我们都知道，transformer 使用的 <strong>自注意力</strong> 机制相当于将句子中两个词的距离设定为 1。尽管作者尝试亡羊补牢，在 word encoding 的过程中加入了 position encoding 提供单词的位置信息。然而，在时序预测问题这种局部信息极为关键的问题中，仍然会因为其 insensitive to local context ，而带来负面影响。</li><li>传统的 transformer 占用的内存正比于 句子长度 L 的平方。对于时间序列预测问题，输入的时间序列可能很长，导致memory bottleneck。 （个人的见解就是内存的问题过个10年就都不是问题哈）</li></ol><h2 id="（2）Contribute"><a href="#（2）Contribute" class="headerlink" title="（2）Contribute"></a>（2）Contribute</h2><ol><li>使用 transformer 进行时序预测，大量实验，效果好</li><li>提出 <strong>convolutional self-attention</strong> 机制产生自注意力机制中的 Q，K，使得 Query-key 更加关注局部信息。</li><li><strong>LogSparse Transformer</strong> (space commplexity:  <script type="math/tex">O(L\cdot(\log L)^2)</script> ) 使得其可以用于更加细粒度的时序预测问题。</li></ol><h2 id="（3）Problem-Definition"><a href="#（3）Problem-Definition" class="headerlink" title="（3）Problem Definition"></a>（3）Problem Definition</h2><p>对于 <script type="math/tex">N</script> 个不同时间序列 <script type="math/tex">\{z_{i,1:t_0}\}_{i=1}^N</script> , 每一个时间序列 <script type="math/tex">z_{i,1:t_0}􏰄 = [z_{i,1}, z_{i,2}\cdots,z_{i,t_0}]</script> ，我们的任务是预测接下来的 <script type="math/tex">\tau</script>  time steps 的序列值 <script type="math/tex">\{z_{i,t_0+1:t_0+\tau}\}_{i=1}^N</script> 。除了这些，我们还已知 <script type="math/tex">\{x_{i,1:t_0+\tau}\}_{i=1}^N</script> 各个时间点的 d 维的输入向量。我们的目标是建模一下条件分布：</p><script type="math/tex; mode=display">p(z_{i,t_0+1:t_0+\tau}\mid z_{i,1:t_0}, x_{i,1:t_0+\tau}; \phi) = \Pi_{t=t_0=1}^{t_0+\tau} p(z_{i,t}\mid z_{i,1:t-1}, x_{i,1:t}; \phi) \tag{1}</script><p>问题可以简化为预测下一个时间节点的数据 <script type="math/tex">p(z_{t}|z_{1:t-1},x_{1:t};\phi)</script> ，其中 <script type="math/tex">\phi</script>  是模型参数 shared by all time series in the collection。</p><p>我们将时序测量值 <script type="math/tex">z_{t-1}</script> 与 covariates <script type="math/tex">x_t</script> 拼接起来共同作为模型在 <script type="math/tex">t</script> 时刻的输入即</p><script type="math/tex; mode=display">y_t = [z_{t-1} \circ x_t] \in R^{d+1}; Y_t = [y_1, y_2, \cdots,y_t] \in R^{t\times (d+1)} \tag{2}</script><h2 id="（4）-Methodology"><a href="#（4）-Methodology" class="headerlink" title="（4）  Methodology"></a>（4）  Methodology</h2><h3 id="（4-1）Enhancing-the-locality-of-Transformer"><a href="#（4-1）Enhancing-the-locality-of-Transformer" class="headerlink" title="（4.1）Enhancing the locality of Transformer"></a>（4.1）Enhancing the locality of Transformer</h3><p>个人感觉：模型的主要灵感来于 将 self-attention 模型中的输入 x 到 Q K V 的过程理解为 <script type="math/tex">1\times 1</script> 的卷积操作，然后将这种卷积进行扩展，（很像 convlstm 和 lstm 的关系）。</p><p><img src="/2020/03/27/transformerone/trans-one.png" alt></p><p>上图展示了文章提出的模型与canonical Transformer模型的对比。区别在于Conv1d中将kernal size 大小从 1 调整到 k，使得Q，K在构造的时候考虑之前的 k 个context。使得模型获得了捕捉 shape 相似的能力。（canonical Transformer 仅关注的是输入时刻单点与之前那个单点更加相似，而这里关注的是k lag的时间段内信息与之前那个时间段信息更加相似），显然模型有一定合理性。</p><h3 id="（4-2）-Breaking-the-memory-bottleneck-of-Transformer"><a href="#（4-2）-Breaking-the-memory-bottleneck-of-Transformer" class="headerlink" title="（4.2） Breaking the memory bottleneck of Transformer"></a>（4.2） Breaking the memory bottleneck of Transformer</h3><p>个人不关注如何减少memory问题，暂不研究。</p><h2 id="（5）Expriments"><a href="#（5）Expriments" class="headerlink" title="（5）Expriments"></a>（5）Expriments</h2><p>（略）</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol><li>Paper ： Enhancing the Locality and Breaking the Memory Bottleneck of Transformer on Time Series Forecasting </li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> NLP </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Deep Learning </tag>
+            
+            <tag> Transformers </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Relation_Extraction One</title>
       <link href="/2020/03/26/relation-extraction/"/>
       <url>/2020/03/26/relation-extraction/</url>
