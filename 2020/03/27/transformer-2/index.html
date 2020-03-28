@@ -891,7 +891,7 @@ opts = [NoamOpt(512, 1, 4000, None),
         loss.backward()
         if self.opt is not None:
             self.opt.step()
-              self.opt.optimizer.zero_grad()
+            self.opt.optimizer.zero_grad()
         return loss.data.item() * norm
 </code></pre>
 <h3 id="13-3-Greedy-Decoding"><a href="#13-3-Greedy-Decoding" class="headerlink" title="(13.3) Greedy Decoding"></a>(13.3) Greedy Decoding</h3><pre class=" language-lang-python"><code class="language-lang-python">V = 11 # 10 + 1(padding)
@@ -910,13 +910,13 @@ for epoch in range(10):
 <p>  使用Greedy Search decoding 来对输入进行预测。</p>
 </blockquote>
 <pre class=" language-lang-python"><code class="language-lang-python">def greedy_decode(model, src, src_mask, max_len, start_symbol):
-        memory = model.encode(src, src_mask)
+    memory = model.encode(src, src_mask)
     ys = torch.ones(1, 1).fill_(start_symbol).type_as(src.data)
     for i in range(max_len - 1):
-          out = model.decode(memory, src_mask, Variable(ys), Variable(subsequent_mask(ys.size(1)).type_as(src.data)))
-          prob = model.generator(out[:, -1])
-          _, next_word = torch.max(prob, dim=1)
-          next_word = next_word.data.item()
+        out = model.decode(memory, src_mask, Variable(ys), Variable(subsequent_mask(ys.size(1)).type_as(src.data)))
+        prob = model.generator(out[:, -1])
+        _, next_word = torch.max(prob, dim=1)
+        next_word = next_word.data.item()
         ys = torch.cat([ys, torch.ones(1, 1).type_as(src.data).fill_(next_word)], dim=1)
     return ys
 
