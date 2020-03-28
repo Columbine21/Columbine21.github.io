@@ -475,7 +475,7 @@
 </ol>
 <h2 id="2-Model-Architecture"><a href="#2-Model-Architecture" class="headerlink" title="(2) Model Architecture"></a>(2) Model Architecture</h2><p>Encoder-decoder structure : 解决<strong>序列转换问题</strong>的常用结构。</p>
 <pre class=" language-lang-python"><code class="language-lang-python">class EncoderDecoder(nn.Module):
-        def __init__(self, encoder, decoder, src_embed, tgt_embed, generator):
+    def __init__(self, encoder, decoder, src_embed, tgt_embed, generator):
           super(EncoderDecoder, self).__init__()
         self.encoder = encoder
         self.decoder = decoder
@@ -493,20 +493,20 @@
         return self.decoder(self.tgt_embed(tgt), memory, src_mask, tgt_mask)
 </code></pre>
 <pre class=" language-lang-python"><code class="language-lang-python">class Generator(nn.Module):
-        def __init__(self, d_model, vocab):
+    def __init__(self, d_model, vocab):
                 super(Generator, self).__init__()
                 self.proj = nn.Linear(d_model, vocab)
 
-        def forward(self, x):
+    def forward(self, x):
                 return F.log_softmax(self.proj(x), dim=-1)
 </code></pre>
 <p>Transformer 的结构整体上也是 Encoder-decoder 结构，显示如下：</p>
 <p><img src="/2020/03/27/transformer-2/trans-2-1.png" alt></p>
 <h2 id="3-Encoder-amp-Decoder-结构"><a href="#3-Encoder-amp-Decoder-结构" class="headerlink" title="(3) Encoder &amp; Decoder 结构"></a>(3) Encoder &amp; Decoder 结构</h2><h3 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h3><pre class=" language-lang-python"><code class="language-lang-python">def clones(module, N):
-        return nn.ModuleList([copy.deepcopy(module) for _ in range(N)])
+    return nn.ModuleList([copy.deepcopy(module) for _ in range(N)])
 </code></pre>
 <pre class=" language-lang-python"><code class="language-lang-python">class Encoder(nn.Module):
-      def __init__(self, layer, N):
+    def __init__(self, layer, N):
       super(Encoder, self).__init__()
       self.layers = clones(layer, N)
       self.norm = LayerNorm(layer.size)
@@ -518,8 +518,8 @@
 </code></pre>
 <p>In Transformer, model employ a residual connection around each of the two sub-layers, followed by layer normalization (LN 本身就是针对序列问题设计的 Normalize 方法，具体可以见我的 <a href="https://columbine21.github.io/2020/03/19/testfomular/">Blog</a> .</p>
 <pre class=" language-lang-python"><code class="language-lang-python">class LayerNorm(nn.Module):
-      "Construct a layernorm module (See citation for details)."
-        def __init__(self, features, eps=1e-6):
+    "Construct a layernorm module (See citation for details)."
+    def __init__(self, features, eps=1e-6):
                 super(LayerNorm, self).__init__()
                 self.a_2 = nn.Parameter(torch.ones(features))    
         self.b_2 = nn.Parameter(torch.zeros(features))
@@ -533,7 +533,7 @@
 </code></pre>
 <p>这样，每一层的输出就是 <script type="math/tex">LayerNorm(x+Sublayer(x))</script> 。实际使用中，我们还在 Sublayer 之后添加了一个 Dropout 层。为了使残差网络能够正常工作,我们将 embedding layers, sub-layers, outputs 维数都规定为 512。</p>
 <pre class=" language-lang-python"><code class="language-lang-python">class SublayerConnection(nn.Module):
-        """
+    """
     A residual connection followed by a layer norm.
     Note for code simplicity the norm is first as opposed to last.
     """
@@ -575,7 +575,7 @@
 <p>除了在 encoder 中使用过的两个子层之外，decoder 使用了第三个 sub-layer（在encoder stack的 output 上进行 multi-head attention.）和encoder相同的，使用残差网络链接每一个子层，然后使用layer normalization。</p>
 <pre class=" language-lang-python"><code class="language-lang-python">class DecoderLayer(nn.Module):
         """Decoder is made of self-attn, src-attn, and feed forward."""
-      def __init__(self, size, self_attn, src_attn, feed_forward, dropout):
+    def __init__(self, size, self_attn, src_attn, feed_forward, dropout):
           super(DecoderLayer, self).__init__()
         self.size = size
         self.self_attn = self_attn
@@ -591,7 +591,7 @@
 </code></pre>
 <p>与 encoder 不同的是，为了防止 decode 过程中看到后续的信息，decoder 中 mask 需要保证预测第 i 位置的词时仅依赖于已知的在 i 之前产生的 outputs 信息。</p>
 <pre class=" language-lang-python"><code class="language-lang-python">def subsequent_mask(size):
-        """Mask out subseqent position"""
+    """Mask out subseqent position"""
     attn_shape = (1, size, size)
     subsequent_mask = np.triu(np.ones(attn_shape), k=1).astype('uint8')
     return torch.from_numpy(subsequent_mask) == 0
@@ -602,14 +602,14 @@
 <p><img src="/2020/03/27/transformer-2/tran-attn.png" alt></p>
 <p>实际上，我们并行的序列化计算一系列 queries，拼接他们成 <script type="math/tex">Q</script> 矩阵，同样的 <script type="math/tex">K</script>, <script type="math/tex">V</script> 矩阵也由 key， value值拼接而成。<script type="math/tex">Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}}V)</script></p>
 <pre class=" language-lang-python"><code class="language-lang-python">def attention(query, key, value, mask=None, dropout=None):
-        # query.size = key.size = value.size = [batch_size, sen_len, dk]
-      d_k = query.size(-1)
+    # query.size = key.size = value.size = [batch_size, sen_len, dk]
+    d_k = query.size(-1)
     scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
     if mask is not None:
-          score = scores.masked_fill(mask==0, 1e-9)
+         score = scores.masked_fill(mask==0, 1e-9)
     p_attn = F.softmax(scores, dim=-1)
     if dropout is not None:
-          p_attn = dropout(p_attn)
+        p_attn = dropout(p_attn)
     return torch.matmul(p_attn, value), p_attn
 </code></pre>
 <p><strong>Scale</strong> : 原理直接处理的话各项的差值较大，softmax 的梯度趋近于零，不利于模型收敛。假设q，k每一项都符合(0,1)正态分布，则<script type="math/tex">\sum_{i=1}^{d_k} q_ik_i</script> 应服从 <script type="math/tex">(0,d_k)</script> 的正太分布。故此除以 <script type="math/tex">d_k</script> 使之标准化。</p>
@@ -625,7 +625,7 @@ head_i = Attention(QW_i^Q, KW_i^K,VW_i^V)</script><p>其中 <script type="math/t
 <p>其中 <script type="math/tex">W^O\in R^{h\cdot d_v\times d_{model}}</script> 将所有head输出拼接的结果进行映射整合。</p>
 <pre class=" language-lang-python"><code class="language-lang-python">class MultiHeadedAttention(nn.Module):
       def __init__(self, h, d_model, dropout=0.1):
-          """Take in model size and number of heads"""
+        """Take in model size and number of heads"""
         super(MultiHeadedAttention, self).__init__()
         assert d_model % h == 0, "wrong d_model or h"
         # We assume d_v always equals d_k
@@ -636,11 +636,11 @@ head_i = Attention(QW_i^Q, KW_i^K,VW_i^V)</script><p>其中 <script type="math/t
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, query, key, value, mask=None):
-          """Implement of Figure 2. 
+        """Implement of Figure 2. 
               query.size  = key.size = value.size = [batch_size, sen_len, d_model]
           """
         if mask is not None:
-              mask = mask.unsqueeze(1)
+            mask = mask.unsqueeze(1)
         nbatches = query.size(0)
 
         # 1) Do all the linear projections in batch from d_model => h x d_k 
@@ -696,7 +696,7 @@ PE_{(pos, 2i+1)} = cos(pos/10000^{2i/d_{model}})</script><p>其中 pos 表示 �
 <pre class=" language-lang-python"><code class="language-lang-python">class PositionalEncoding(nn.Module):
         """Implement the PE function"""
     def __init__(self, d_model, dropout, max_len=5000):
-          super(PositionalEncoding, self).__init__()
+        super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(p=dropout)
 
         # compute the positional encodings once in log space
@@ -711,14 +711,14 @@ PE_{(pos, 2i+1)} = cos(pos/10000^{2i/d_{model}})</script><p>其中 pos 表示 �
         self.register_buffer('pe', pe)
 
    def forward(self, x):
-        x = x + Variable(self.pe[:, :x.size(1)], requires_grad=False)
-      return self.dropout(x)
+       x = x + Variable(self.pe[:, :x.size(1)], requires_grad=False)
+       return self.dropout(x)
 </code></pre>
 <h2 id="9-Full-Model"><a href="#9-Full-Model" class="headerlink" title="(9) Full Model"></a>(9) Full Model</h2><blockquote>
 <p>  这里我们定义一个函数输入所有超参数，产生一个完整的模型。</p>
 </blockquote>
 <pre class=" language-lang-python"><code class="language-lang-python">def make_model(src_vocab, tgt_vocab, N=6, d_model=512, d_ff=2048, h=8, dropout=0.1):
-        """helper: Construct a model from hyperparameters."""
+    """helper: Construct a model from hyperparameters."""
     c = copy.deepcopy
     attn = MultiHeadedAttention(h, d_model)
     ff = PositionwiseFeedForward(d_model, d_ff, dropout)
@@ -734,8 +734,8 @@ PE_{(pos, 2i+1)} = cos(pos/10000^{2i/d_{model}})</script><p>其中 pos 表示 �
     # this was important from their code.
     # Initialize parameters with Glorot / fan_avg
     for p in model.parameters():
-          if p.dim() > 1: # filter out bias items.
-              nn.init.xavier_uniform(p)
+        if p.dim() > 1: # filter out bias items.
+            nn.init.xavier_uniform(p)
     return model
 
 # Test.
@@ -745,22 +745,22 @@ tmp_model = make_model(10, 10, 2)
 <p>  Interlude for tools needed to train a standard encoder decoder model. First we define a batch object that holds object that holds thhe src &amp; target sentences for training, as well as constructing masks</p>
 </blockquote>
 <h3 id="10-1-Batches-and-Masking"><a href="#10-1-Batches-and-Masking" class="headerlink" title="(10.1) Batches and Masking"></a>(10.1) Batches and Masking</h3><pre class=" language-lang-python"><code class="language-lang-python">class Batch:
-        '''Object for holding a batch of data with mask during training'''
+      '''Object for holding a batch of data with mask during training'''
     def __init__(self, src, trg=None, pad=0):
-          # src : token sequence [batch_size, sen_len]
+        # src : token sequence [batch_size, sen_len]
         # trg : token sequence [batch_size, sen_len']
           self.src = src
         self.src_mask = (src != pad).unsqueeze(-2)
         if trg is not None:
-              self.trg = trg[:, :-1]
+            self.trg = trg[:, :-1]
             self.trg_y = trg[:, 1:]
             self.trg_mask = self.make_std_mask(self.trg, pad)
             self.ntokens = (self.trg_y != pad).data.sum()
 
     @staticmethod 
     def make_std_mask(tgt, pad):
-          '''Create a mask to hide padding and future words.'''
-          tgt_mask = (tgt != pad).unsqueeze(-2)
+        '''Create a mask to hide padding and future words.'''
+        tgt_mask = (tgt != pad).unsqueeze(-2)
         tgt_mask = tgt_mask & Variable(subsequent_mask(tgt.size(-1)).type_as(tgt_mask.data))
         return tgt_mask
 </code></pre>
@@ -772,13 +772,13 @@ tmp_model = make_model(10, 10, 2)
     total_loss = 0
     tokens = 0
     for i, batch in enumerate(data_iter):
-          out = model.forward(batch.src, batch.trg, batch.src_mask, batch.trg_mask)
+        out = model.forward(batch.src, batch.trg, batch.src_mask, batch.trg_mask)
         loss = loss_compute(out, batch.trg_y, batch.ntokens)
         total_loss += loss
         total_tokens += batch.ntokens
         tokens += batch.ntokens
         if i % 50 == 1:
-              elapsed = time.time() - start
+            elapsed = time.time() - start
             print(f"Epoch Step: {i}, Loss: {loss / batch.ntokens}, Tokens per Sec: {tokens / elapsed}")
             start = time.time()
             tokens = 0
@@ -792,10 +792,10 @@ tmp_model = make_model(10, 10, 2)
 </blockquote>
 <pre class=" language-lang-python"><code class="language-lang-python">global max_src_in_batch, max_tgt_in_batch
 def batch_size_fn(new, count, sofar):
-      '''Keep augmenting batch and calculate total nubmer of tokens + padding.'''
+    '''Keep augmenting batch and calculate total nubmer of tokens + padding.'''
     global max_src_in_batch, max_tgt_in_batch
     if count == 1:
-          max_src_in_batch = 0
+        max_src_in_batch = 0
         max_tgt_in_batch = 0
     max_src_in_batch = max(max_src_in_batch, len(new.src))
     max_tgt_in_batch = max(max_tgt_in_batch, len(new.trg) + 2)
@@ -805,9 +805,9 @@ def batch_size_fn(new, count, sofar):
 </code></pre>
 <h2 id="11-Optimizer"><a href="#11-Optimizer" class="headerlink" title="(11) Optimizer"></a>(11) Optimizer</h2><p>采用 Adam 优化器 <script type="math/tex">\beta_1 =0.9</script>, <script type="math/tex">\beta_2 = 0.98</script>, <script type="math/tex">\epsilon=10^{-9}</script>, 学习率采用 warmup 策略，先逐渐上升，然后逐渐下降。<script type="math/tex">lr = d_{model}^{-0.5}\cdot min(step\_num^{-0.5}, step\_num\cdot warmup\_steps^{-1.5})</script> ,这里采用的warmup_steps = 4000.</p>
 <pre class=" language-lang-python"><code class="language-lang-python">class NoamOpt:
-        '''Optim wrapper htat implements rate.'''
+      '''Optim wrapper htat implements rate.'''
     def __init__(self, model_size, factor, warmup, optimizer):
-          self.optimizer = optimizer
+        self.optimizer = optimizer
         self._step = 0
         self.warmup = warmup
         self.factor = factor
@@ -815,26 +815,26 @@ def batch_size_fn(new, count, sofar):
         self._rate = 0
 
     def step(self):
-          '''Update parameters and rate'''
+        '''Update parameters and rate'''
           self._step += 1
           rate = self.rate()
           for p in self.optimizer.param_groups:
-                p['lr'] = rate
+            p['lr'] = rate
           self._rate = rate    
           self.optimizer.step()
 
     def rate(self, step=None):
-            '''Implement lr above'''
+          '''Implement lr above'''
         if step is None:
               step = self._step
         return self.factor * (self.model_size ** (-0.5) * min(step ** (-0.5), step * self.warmup ** (-1.5)))
 
 def get_std_opt(model):
-      return NoamOpt(model.src_embed[0].d_model, 2, 4000,
+    return NoamOpt(model.src_embed[0].d_model, 2, 4000,
                   torch.optim.Adam(model.parameters(), lr=0,
                                   betas=(0.9, 0.98), eps=1e-9))
 </code></pre>
-<p>下图展示了使用这种 warmup 的调整lr方法学习率随epoch 的变化</p>
+<p>下图展示了使用这种 warmup 的调整 lr 方法学习率随 epoch 的变化</p>
 <pre class=" language-lang-python"><code class="language-lang-python"># Three settings of the lrate hyperparameters.
 opts = [NoamOpt(512, 1, 4000, None), 
         NoamOpt(512, 1, 8000, None),
@@ -869,9 +869,9 @@ opts = [NoamOpt(512, 1, 4000, None),
 <p>（之后会详细的分析一下Label Smoothing 的原理和作用）。</p>
 <h2 id="13-A-First-Example"><a href="#13-A-First-Example" class="headerlink" title="(13) A First Example"></a>(13) A First Example</h2><p><em>我们首先尝试一个简单的 ‘copy-task’, 即训练集的 label = input，希望model 能够对于任意输入输出其 token 的 copy。</em></p>
 <h3 id="13-1-Synthetic-Data"><a href="#13-1-Synthetic-Data" class="headerlink" title="(13.1) Synthetic Data"></a>(13.1) Synthetic Data</h3><pre class=" language-lang-python"><code class="language-lang-python">def data_gen(V, batch, nbatches):
-      '''Generate random data for a src-tgt copy task.'''
+    '''Generate random data for a src-tgt copy task.'''
       for i in range(nbatches):
-          data = torch.from_numpy(np.random.randint(1, V, 
+        data = torch.from_numpy(np.random.randint(1, V, 
                                                 size=(batch,10)))
         data[:, 0] = 1
         src = Variable(data, requires_grad=False)
@@ -879,18 +879,18 @@ opts = [NoamOpt(512, 1, 4000, None),
         yield(Batch(src, tgt, 0))
 </code></pre>
 <h3 id="13-2-Loss-Computation"><a href="#13-2-Loss-Computation" class="headerlink" title="(13.2) Loss Computation"></a>(13.2) Loss Computation</h3><pre class=" language-lang-python"><code class="language-lang-python">class SimpleLossCompute:
-        '''A simple loss compute and train function.'''
+      '''A simple loss compute and train function.'''
     def __init__(self, generator, criterion, opt=None):
-          self.generator = generator
+        self.generator = generator
         self.criterion = criterion
         self.opt = opt
 
     def __call__(self, x, y, norm):
-          x = self.generator(x)
+        x = self.generator(x)
         loss = self.criterion(x.contiguous().view(-1, x.size(-1)), y.contiguous().view(-1)) / norm
         loss.backward()
         if self.opt is not None:
-              self.opt.step()
+            self.opt.step()
               self.opt.optimizer.zero_grad()
         return loss.data.item() * norm
 </code></pre>
