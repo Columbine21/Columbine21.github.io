@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <link rel="dns-prefetch" href="//cdn.bootcss.com" />
     <link rel="dns-prefetch" href="//cdn.mathjax.org" />
-    <meta name="keywords" content="Transformer on Time Series Forecasting, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="Common-Terms, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Transformer on Time Series Forecasting | Jason Yuan&#39;s Blog</title>
+    <title>Common-Terms | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Transformer on Time Series Forecasting</h1>
+                    <h1 class="description center-align post-title">Common-Terms</h1>
                 </div>
             </div>
         </div>
@@ -412,12 +412,8 @@
                                 <span class="chip bg-color">Deep Learning</span>
                             </a>
                         
-                            <a href="/tags/Transformers/">
-                                <span class="chip bg-color">Transformers</span>
-                            </a>
-                        
-                            <a href="/tags/Time-Series-Prediction/">
-                                <span class="chip bg-color">Time Series Prediction</span>
+                            <a href="/tags/Paper-Reading/">
+                                <span class="chip bg-color">Paper Reading</span>
                             </a>
                         
                     </div>
@@ -428,8 +424,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/NLP/" class="post-category">
-                                NLP
+                            <a href="/categories/Deep-Learning-Basis/" class="post-category">
+                                Deep Learning Basis
                             </a>
                         
                     </div>
@@ -450,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    881
+                    353
                 </div>
                 
 
@@ -463,31 +459,24 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Time-Series-Forecasting-with-Transformer"><a href="#Time-Series-Forecasting-with-Transformer" class="headerlink" title="Time Series Forecasting with Transformer"></a>Time Series Forecasting with Transformer</h1><p>论文：Enhancing the Locality and Breaking the Memory Bottleneck of Transformer on Time Series Forecasting </p>
-<h2 id="（1）Background"><a href="#（1）Background" class="headerlink" title="（1）Background"></a>（1）Background</h2><p>The well-known self-attention based Transformer [1] has recently been proposed for sequence modeling with its fabulous capablility of capturing long time dependence. .  But it still suffers some Weaknesses:</p>
-<ol>
-<li>我们都知道，transformer 使用的 <strong>自注意力</strong> 机制相当于将句子中两个词的距离设定为 1。尽管作者尝试亡羊补牢，在 word encoding 的过程中加入了 position encoding 提供单词的位置信息。然而，在时序预测问题这种局部信息极为关键的问题中，仍然会因为其 insensitive to local context ，而带来负面影响。</li>
-<li>传统的 transformer 占用的内存正比于 句子长度 L 的平方。对于时间序列预测问题，输入的时间序列可能很长，导致memory bottleneck。 （个人的见解就是内存的问题过个10年就都不是问题哈）</li>
-</ol>
-<h2 id="（2）Contribute"><a href="#（2）Contribute" class="headerlink" title="（2）Contribute"></a>（2）Contribute</h2><ol>
-<li>使用 transformer 进行时序预测，大量实验，效果好</li>
-<li>提出 <strong>convolutional self-attention</strong> 机制产生自注意力机制中的 Q，K，使得 Query-key 更加关注局部信息。</li>
-<li><strong>LogSparse Transformer</strong> (space commplexity:  <script type="math/tex">O(L\cdot(\log L)^2)</script> ) 使得其可以用于更加细粒度的时序预测问题。</li>
-</ol>
-<h2 id="（3）Problem-Definition"><a href="#（3）Problem-Definition" class="headerlink" title="（3）Problem Definition"></a>（3）Problem Definition</h2><p>对于 <script type="math/tex">N</script> 个不同时间序列 <script type="math/tex">\{z_{i,1:t_0}\}_{i=1}^N</script> , 每一个时间序列 <script type="math/tex">z_{i,1:t_0}􏰄 = [z_{i,1}, z_{i,2}\cdots,z_{i,t_0}]</script> ，我们的任务是预测接下来的 <script type="math/tex">\tau</script>  time steps 的序列值 <script type="math/tex">\{z_{i,t_0+1:t_0+\tau}\}_{i=1}^N</script> 。除了这些，我们还已知 <script type="math/tex">\{x_{i,1:t_0+\tau}\}_{i=1}^N</script> 各个时间点的 d 维的输入向量。我们的目标是建模一下条件分布：</p>
-<script type="math/tex; mode=display">
-p(z_{i,t_0+1:t_0+\tau}\mid z_{i,1:t_0}, x_{i,1:t_0+\tau}; \phi) = \Pi_{t=t_0=1}^{t_0+\tau} p(z_{i,t}\mid z_{i,1:t-1}, x_{i,1:t}; \phi) \tag{1}</script><p>问题可以简化为预测下一个时间节点的数据 <script type="math/tex">p(z_{t}|z_{1:t-1},x_{1:t};\phi)</script> ，其中 <script type="math/tex">\phi</script>  是模型参数 shared by all time series in the collection。</p>
-<p>我们将时序测量值 <script type="math/tex">z_{t-1}</script> 与 covariates <script type="math/tex">x_t</script> 拼接起来共同作为模型在 <script type="math/tex">t</script> 时刻的输入即</p>
-<script type="math/tex; mode=display">
-y_t = [z_{t-1} \circ x_t] \in R^{d+1}; Y_t = [y_1, y_2, \cdots,y_t] \in R^{t\times (d+1)} \tag{2}</script><h2 id="（4）-Methodology"><a href="#（4）-Methodology" class="headerlink" title="（4）  Methodology"></a>（4）  Methodology</h2><h3 id="（4-1）Enhancing-the-locality-of-Transformer"><a href="#（4-1）Enhancing-the-locality-of-Transformer" class="headerlink" title="（4.1）Enhancing the locality of Transformer"></a>（4.1）Enhancing the locality of Transformer</h3><p>个人感觉：模型的主要灵感来于 将 self-attention 模型中的输入 x 到 Q K V 的过程理解为 <script type="math/tex">1\times 1</script> 的卷积操作，然后将这种卷积进行扩展，（很像 convlstm 和 lstm 的关系）。</p>
-<p><img src="/2020/03/27/transformerone/trans-one.png" alt></p>
-<p>上图展示了文章提出的模型与canonical Transformer模型的对比。区别在于Conv1d中将kernal size 大小从 1 调整到 k，使得Q，K在构造的时候考虑之前的 k 个context。使得模型获得了捕捉 shape 相似的能力。（canonical Transformer 仅关注的是输入时刻单点与之前那个单点更加相似，而这里关注的是k lag的时间段内信息与之前那个时间段信息更加相似），显然模型有一定合理性。</p>
-<h3 id="（4-2）-Breaking-the-memory-bottleneck-of-Transformer"><a href="#（4-2）-Breaking-the-memory-bottleneck-of-Transformer" class="headerlink" title="（4.2） Breaking the memory bottleneck of Transformer"></a>（4.2） Breaking the memory bottleneck of Transformer</h3><p>个人不关注如何减少memory问题，暂不研究。这里只说明一下原始transformer的空间复杂度。</p>
-<p>Attention实际上相当于将输入两两地算相似度，这构成了一个 <img src="https://www.zhihu.com/equation?tex=n%5E2" alt="[公式]"> 大小的相似度矩阵（即Attention矩阵，n是句子长度，本文的Attention均指Self Attention），这意味着它的空间占用量是 <img src="https://www.zhihu.com/equation?tex=%5Cmathscr%7BO%7D%28n%5E2%29" alt="[公式]"> 量级。</p>
-<h2 id="（5）Expriments"><a href="#（5）Expriments" class="headerlink" title="（5）Expriments"></a>（5）Expriments</h2><p>（略）</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
-<li>Paper ： Enhancing the Locality and Breaking the Memory Bottleneck of Transformer on Time Series Forecasting </li>
-</ol>
+                <h1 id="Common-Terms-in-DL-Scope"><a href="#Common-Terms-in-DL-Scope" class="headerlink" title="Common Terms in DL Scope"></a>Common Terms in DL Scope</h1><p>This Blog is used to record common terms in deep learning scope. (Keep Updating.)</p>
+<h2 id="Model-Level"><a href="#Model-Level" class="headerlink" title="Model Level"></a>Model Level</h2><ul>
+<li>sequence transduction models : refers to a kind of model whose input is a sequence and output is still a sequence.(Sequence to Sequence Model).</li>
+</ul>
+<h2 id="Algorithm-Level"><a href="#Algorithm-Level" class="headerlink" title="Algorithm Level"></a>Algorithm Level</h2><ul>
+<li><p>byte-pair encoding (BPE) : 解决 (out-of-vocabulary) 问题的一种方法。</p>
+<p>在做nlp的时候，很多时候我们会对语料做一个预处理，生成语料的一个字典。为了不让字典太大，我们通常只会把出现频次大于某个阈值的词丢到字典里边，剩下所有的词都统一编码成#UNK 。这是很经典 很朴素的做法，这种方法不能解决未登录词的问题。未登录词是指 在验证集或测试集出现了训练集从来没见到过的单词。这种未登录词对分词，机器翻译性能影响很大。具体详见 blog ：</p>
+<p><a href="https://blog.csdn.net/jmh1996/article/details/89286898" target="_blank" rel="noopener">https://blog.csdn.net/jmh1996/article/details/89286898</a></p>
+</li>
+</ul>
+<h2 id="Model-Tradeoffs"><a href="#Model-Tradeoffs" class="headerlink" title="Model Tradeoffs"></a>Model Tradeoffs</h2><ul>
+<li>深度学习模型的退化问题（degrading problems）：是指复杂的模型效果反而比相对 simple 的模型差。<ul>
+<li>核心问题：深层神经网络面临的“难以训练”问题（梯度流难以控制：梯度爆炸，梯度消失）。</li>
+<li>解决方法：ResNet：本质就是 shortcut 使得模型更加容易学到恒等变换。从而保证更深的模型至少能够达到与浅层模型相似的效果。（2015年 ImageNet 竞赛）</li>
+</ul>
+</li>
+<li>OOV (out-of-vocabulary) Problem:</li>
+</ul>
 
             </div>
             <hr/>
@@ -513,7 +502,7 @@ y_t = [z_{t-1} \circ x_t] \in R^{d+1}; Y_t = [y_1, y_2, \cdots,y_t] \in R^{t\tim
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/03/27/transformerone/">http://Columbine21.github.io/2020/03/27/transformerone/</a>
+                    <a href="http://Columbine21.github.io/2020/03/27/common-terms/">http://Columbine21.github.io/2020/03/27/common-terms/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -555,12 +544,8 @@ y_t = [z_{t-1} \circ x_t] \in R^{d+1}; Y_t = [y_1, y_2, \cdots,y_t] \in R^{t\tim
                                     <span class="chip bg-color">Deep Learning</span>
                                 </a>
                             
-                                <a href="/tags/Transformers/">
-                                    <span class="chip bg-color">Transformers</span>
-                                </a>
-                            
-                                <a href="/tags/Time-Series-Prediction/">
-                                    <span class="chip bg-color">Time Series Prediction</span>
+                                <a href="/tags/Paper-Reading/">
+                                    <span class="chip bg-color">Paper Reading</span>
                                 </a>
                             
                         </div>
@@ -605,21 +590,20 @@ y_t = [z_{t-1} \circ x_t] \in R^{d+1}; Y_t = [y_1, y_2, \cdots,y_t] \in R^{t\tim
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/03/27/common-terms/">
+                <a href="/2020/03/27/transformer-2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="Common-Terms">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Implement of Transformer Learning">
                         
-                        <span class="card-title">Common-Terms</span>
+                        <span class="card-title">Implement of Transformer Learning</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Common Terms in DL ScopeThis Blog is used to record common terms in deep learning scope. (Keep Updating.)
-Model Level
-se
+                            (0) Preface
+作者本人了解到 Transformer Bert 这些 2017-2018 年非常 hot 的模型已经有一段时间了。前一段时间在最终学习完成了CS231N课程之后，觉得自己已经达到了一个初级 Researcher 应
                         
                     </div>
                     <div class="publish-info">
@@ -630,8 +614,8 @@ se
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Deep-Learning-Basis/" class="post-category">
-                                    Deep Learning Basis
+                            <a href="/categories/NLP/" class="post-category">
+                                    NLP
                                 </a>
                             
                             
@@ -645,8 +629,12 @@ se
                         <span class="chip bg-color">Deep Learning</span>
                     </a>
                     
-                    <a href="/tags/Paper-Reading/">
-                        <span class="chip bg-color">Paper Reading</span>
+                    <a href="/tags/Transformer/">
+                        <span class="chip bg-color">Transformer</span>
+                    </a>
+                    
+                    <a href="/tags/SOTA-Implement-Analysis/">
+                        <span class="chip bg-color">SOTA Implement Analysis</span>
                     </a>
                     
                 </div>
@@ -660,25 +648,24 @@ se
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/03/26/relation-extraction/">
+                <a href="/2020/03/27/transformerone/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="Relation_Extraction One">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Transformer on Time Series Forecasting">
                         
-                        <span class="card-title">Relation_Extraction One</span>
+                        <span class="card-title">Transformer on Time Series Forecasting</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Global Textual Relation Embedding for Relational UnderstandingCore Idea全局的统计信息比局部的统计信息更加鲁棒。
-在传统的关系抽取训练中，句子与句子之间是独立的，基于单句
+                            Time Series Forecasting with Transformer论文：Enhancing the Locality and Breaking the Memory Bottleneck of Transformer on T
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-27
                             </span>
                         <span class="publish-author">
                             
@@ -699,16 +686,12 @@ se
                         <span class="chip bg-color">Deep Learning</span>
                     </a>
                     
-                    <a href="/tags/Paper-Reading/">
-                        <span class="chip bg-color">Paper Reading</span>
+                    <a href="/tags/Transformers/">
+                        <span class="chip bg-color">Transformers</span>
                     </a>
                     
-                    <a href="/tags/Relation-Embedding/">
-                        <span class="chip bg-color">Relation Embedding</span>
-                    </a>
-                    
-                    <a href="/tags/Relation-Understanding/">
-                        <span class="chip bg-color">Relation Understanding</span>
+                    <a href="/tags/Time-Series-Prediction/">
+                        <span class="chip bg-color">Time Series Prediction</span>
                     </a>
                     
                 </div>
@@ -846,6 +829,13 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
