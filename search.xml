@@ -4,6 +4,91 @@
   
     
     <entry>
+      <title>MLI-VQA</title>
+      <link href="/2020/04/21/mli-vqa/"/>
+      <url>/2020/04/21/mli-vqa/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Multi-modality-Latent-Interaction-Network-for-Visual-Question-Answering"><a href="#Multi-modality-Latent-Interaction-Network-for-Visual-Question-Answering" class="headerlink" title="Multi-modality Latent Interaction Network for Visual Question Answering"></a>Multi-modality Latent Interaction Network for Visual Question Answering</h1><h2 id="Multi-modality-Latent-Interaction-Network"><a href="#Multi-modality-Latent-Interaction-Network" class="headerlink" title="Multi-modality Latent Interaction Network"></a>Multi-modality Latent Interaction Network</h2><p>MLIN consists a series of stacking Multi-modality Latent modules. (The inputs and outputs of the MLI module has the same dim)</p><p>MLI Aims : summarize input visual-region and question-word information into a small number of latent summarization vectors.</p><p>In the last stage, we conduct elementwise multiplication between the average features of visual regions and question words to predict the final answer. </p><p><img src="/2020/04/21/mli-vqa/MLIN.png" alt></p><h3 id="3-1-Question-and-Visual-Feature-Encoding"><a href="#3-1-Question-and-Visual-Feature-Encoding" class="headerlink" title="3.1 Question and Visual Feature Encoding"></a>3.1 Question and Visual Feature Encoding</h3><p><img src="/2020/04/21/mli-vqa/7.png" alt></p><h3 id="3-2-Modaliity-Summarizations-in-MLI-Module"><a href="#3-2-Modaliity-Summarizations-in-MLI-Module" class="headerlink" title="3.2 Modaliity Summarizations in MLI Module"></a>3.2 Modaliity Summarizations in MLI Module</h3><p><img src="/2020/04/21/mli-vqa/6.png" alt>  </p><h3 id="3-3-Relational-Learning-on-Multi-modality-Latent-Summarizations"><a href="#3-3-Relational-Learning-on-Multi-modality-Latent-Summarizations" class="headerlink" title="3.3 Relational Learning on Multi-modality Latent Summarizations"></a>3.3 Relational Learning on Multi-modality Latent Summarizations</h3><h4 id="Relational-Latent-Summarizations"><a href="#Relational-Latent-Summarizations" class="headerlink" title="Relational Latent Summarizations"></a>Relational Latent Summarizations</h4><p>input : <script type="math/tex">\bar{R}/\bar{E}</script> [k, 512]</p><p>Output: Relational Latent Summarizations [k, k, 512]</p><p><img src="/2020/04/21/mli-vqa/inter.png" style="zoom:33%;"></p><p><img src="/2020/04/21/mli-vqa/1.png" alt></p><h4 id="Relational-Modeling-and-Propagation"><a href="#Relational-Modeling-and-Propagation" class="headerlink" title="Relational Modeling and Propagation"></a>Relational Modeling and Propagation</h4><p><img src="/2020/04/21/mli-vqa/5.png" alt></p><h4 id="Feature-Aggregation"><a href="#Feature-Aggregation" class="headerlink" title="Feature Aggregation"></a>Feature Aggregation</h4><p><img src="/2020/04/21/mli-vqa/4.png" alt> </p><p><strong>前四步给出了模型update region/word feature的方法：首先利用R/E的原始输入分别聚合为k个512d的region/word特征，然后顺序构造A矩阵并使用attention的机制利用每一个region/word 特征在A矩阵上的关注程度聚合信息，最后利用了Resnet的思想，学习变化而不是映射本身.</strong></p><p>可以看到MLI模型的输入和输出维度相同。我们可以使用多层MLI来细化视觉和单词特征。</p><p>最后，我们对视觉区域特征和单词特征进行平均池化，并对池化后的两种特征进行元素乘操作，最后，采用具有SoftMax非线性函数的线性分类器进行答案预测。</p><p><img src="/2020/04/21/mli-vqa/8.png" alt></p><p>整个系统使用交叉熵损失函数以端到端的方式训练。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Natural Language Processing </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Deep Learning </tag>
+            
+            <tag> VQA </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Word2vec</title>
+      <link href="/2020/04/12/word2vec/"/>
+      <url>/2020/04/12/word2vec/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Summary-of-Word2vec"><a href="#Summary-of-Word2vec" class="headerlink" title="Summary of Word2vec"></a>Summary of Word2vec</h1><h2 id="Preface"><a href="#Preface" class="headerlink" title="Preface"></a>Preface</h2><p>之前，在面试阿里的时候，提到了Embedding的问题，面试官问我了解哪些基本的embedding，我提到了word2vec，然后面试官就追问了word2vec的原理，当时没有准备，答得比较凌乱，现结合其他人的 blog 总结 Word2vec 原理回答的主要思路。</p><p>本文总结的时候参考了一下文章：</p><ul><li><a href="https://zhuanlan.zhihu.com/p/50243702" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/50243702</a></li></ul><p>本文图片出处original cs224n，本文图片来自 <a href="https://zhuanlan.zhihu.com/p/50243702，" target="_blank" rel="noopener">知乎</a></p><h2 id="（1）概览"><a href="#（1）概览" class="headerlink" title="（1）概览"></a>（1）概览</h2><p><strong>核心思想：预测每个单词与其上下文之间的关系</strong></p><p><strong>两种不同的算法：</strong></p><ul><li>Skip-grams (SG) : 给定中心单词，预测中心词的上下文单词（位置独立）</li><li>Continuous Bag of Words (CBOW) : 从给定的上下文单词，预测中心词。</li></ul><p><strong>两种训练方法：</strong></p><ul><li>Hierarchical softmax</li><li>Negative sampling</li></ul><h2 id="2-Skip-grams-算法"><a href="#2-Skip-grams-算法" class="headerlink" title="(2) Skip-grams 算法"></a>(2) Skip-grams 算法</h2><p><img src="/2020/04/12/word2vec/sg.jpg" alt></p><h3 id="模型说明："><a href="#模型说明：" class="headerlink" title="模型说明："></a>模型说明：</h3><p>模型预测给定单词 <script type="math/tex">w_t\ \forall t\in{1,2,\cdots,T}</script>  为中心词，该词“半径”为 <script type="math/tex">m</script> 的窗口中的单词，即给定中心词 <script type="math/tex">w_c</script>  最大化上下文单词的概率。即最大化如下目标函数：</p><script type="math/tex; mode=display">J'(\theta) = \Pi_{t=1}^T\Pi_{-m\leq j\leq m \\ j\neq 0} p(w_{t+j}\mid w_t;\theta) \tag{1}</script><p>等价于最小化negetive log likelihood:</p><script type="math/tex; mode=display">J(\theta) = -\frac{1}{T} \sum_{t=1}^T\sum_{-m\leq j\leq m \\ \ \ \ \ j\neq 0} log(p(w_{t+j} \mid w_t)) \tag{2}</script><p>其中，我们使用如下公式计算<script type="math/tex">p(o\mid c)</script> 。</p><script type="math/tex; mode=display">p(o\mid c) = \frac{exp(u_o^Tv_c)}{\sum_{w=1}^V exp(u_w^Tv_c)} \tag{3}</script><p>注意的是，这里对于每个单词来说对应了两个不同的词向量<script type="math/tex">u_i</script>, <script type="math/tex">v_i</script> (分别作为外部和中心词的向量表示)。通过softmax函数，使用中心词 <script type="math/tex">v_c</script> 获取输出单词 <script type="math/tex">u_o</script> 的概率分布。</p><h3 id="skip-grams-的框架"><a href="#skip-grams-的框架" class="headerlink" title="skip-grams 的框架"></a><strong>skip-grams 的框架</strong></h3><p>下图展示了 <strong>skip-grams 的框架</strong> （使用softmax而不是Hierarchical softmax/Negative sampling）</p><p><img src="https://pic1.zhimg.com/80/v2-9ec0f8fc69e6ae39c7ec9ec6b633d758_1440w.jpg" alt></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Natural Language Processing </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Interview </tag>
+            
+            <tag> Language Model </tag>
+            
+            <tag> Embedding </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Multimodal BiTransformers</title>
+      <link href="/2020/04/10/multimodal/"/>
+      <url>/2020/04/10/multimodal/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Paper-Reading"><a href="#Paper-Reading" class="headerlink" title="Paper Reading"></a>Paper Reading</h1><p>Date: 2020/4/10</p><h2 id="Multimodal-BiTransformers"><a href="#Multimodal-BiTransformers" class="headerlink" title="Multimodal BiTransformers"></a>Multimodal BiTransformers</h2><p>Multimodal bitransformer model as follows:</p><p><img src="/2020/04/10/multimodal/bitrans.png" alt></p><h3 id="Image-Encoder"><a href="#Image-Encoder" class="headerlink" title="Image Encoder"></a>Image Encoder</h3><p>Within the multimodal bitransformer architecture, however, we can handle arbitrary lengths and are not committed to a partic- ular number of inputs. Thus, we generalize the final pool- ing layer to yield not one single output vector, but N separate image embeddings, unlike in a regular convolutional neural network.  </p><p> In this case we use a ResNet-152 (He et al. 2016) with average pooling over K × M grids in the image, yielding N = KM output vectors of 2048 dimensions each, for every image. </p><p>相当于对于图片中选择 <script type="math/tex">N = K\cdot M</script> 个区域进行 nn.AdaptiveAvgPool2d 每个区域都对应生成一个2048 dim的vector。</p><p>输入图像经过 torchvision.transfroms 处理形成固定大小224x224的 Tensor 作为输入。</p><h3 id="Multimodal-Transformer-Input-Layer"><a href="#Multimodal-Transformer-Input-Layer" class="headerlink" title="Multimodal Transformer Input Layer"></a>Multimodal Transformer Input Layer</h3><p>Token seq <code>(batch_size, seq_len)</code>-&gt; </p><p>Step one : 使用 bidirectional transformer architecture 以及pre-trained BERT initialize. <code>(batch_size, seq_len, D)</code> 得到text 的 token embedding 并于position embedding 和 segment embedding 做element-wise sum 求得最终的 contextual embedding <code>(batch_size, seq_len, D)</code> .  </p><p>Step two : 使用 <script type="math/tex">W_n, \ n\in1,\cdots N</script> 对图片n 作 linear 变化使之变成 <script type="math/tex">D</script> 维</p><script type="math/tex; mode=display">I_n = W_nf(img, n) \tag{1}</script><p>其中，<script type="math/tex">f(,n)</script> 是第 <script type="math/tex">n</script> 个区域的image encoder 输出结果 <code>(batch-size, 2048)</code> </p><p>对于1个text + 1个 image 的task，我们将text的segment设置为一个特定的值，将image的segment设定为另一个值（例子中为0/1）。使用下标从0开始的seq为text和image分别进行位置编码。这种结构可以推广到任意数量的图片和text结构中(V-SNLI task)。</p><p> Since pretrained BERT itself has only two segment embeddings, in those cases we initialize additional segment embeddings as <script type="math/tex">si=0.5\times(s0+s1)+ε</script> where <script type="math/tex">s_i</script> is a segment embedding for <script type="math/tex">i ≥ 2\ and\ ε ∼ N(0,1e−2)</script>.  (这块有点没懂，之前没见过bert中的segment embedding，而且这样<script type="math/tex">s_t,\ \forall t \geq 2</script> 是不是 segment embedding 是不是都相似了呢 )。 文中还提到他们的adv在于这种对于text/image数量的通用性。</p><h3 id="Classification"><a href="#Classification" class="headerlink" title="Classification"></a>Classification</h3><p>这一块和之前看到的Bert的在垃圾邮件分类中的介绍就比较像了，都是用first output of the final layer 输出接到 <script type="math/tex">clf(x) = Wx +b</script> 上进行分类。multiclass 和 multilabel 使用的方法略有区别。</p><h3 id="Pretrain"><a href="#Pretrain" class="headerlink" title="Pretrain"></a>Pretrain</h3><p>imag encoder : torchvision.models.resnet152(pretrained=True) 估计是只用layer1-layer4 吧（我记得conv1 好像目的是将图片变成224x224？后面的fc应该是用不上了）</p><p>text encoder : Bert 12 layer 768-dim。</p><h3 id="Fine-tuning-and-Multimodal-Optimization"><a href="#Fine-tuning-and-Multimodal-Optimization" class="headerlink" title="Fine-tuning and Multimodal Optimization"></a>Fine-tuning and Multimodal Optimization</h3><p>Bert: it is common to fine- tune BERT in its entirety, and <strong>not to transfer the encoder while keeping its parameters fixed </strong>(这一部分有点没懂，还没咋用过BERT) </p><p>ResNet : unfreezing the conv network during later stages.</p><p>交替冻结image和text encoder (ResNet, BERT)</p><p>we freeze and unfreeze the image and text encoding components at different stages, which we treat as a hyperparameter. </p><p>For example, if we first learn to map image embeddings to an appropriate subspace of the text encoder’s input space, we may expect the network to make more use of visual information than it otherwise would. In other words, since the text modality is likely to dominate, we want to give the visual modality a chance. We experiment with different settings. (就是说在学习 <script type="math/tex">W_n</script> 的时候freeze BERT 参数了吗？没看懂)</p><h2 id="Approach"><a href="#Approach" class="headerlink" title="Approach"></a>Approach</h2><h3 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h3><p>MM-IMDB / FOOD101</p><p>为显示我们的模型对于不同的text/image 数目的泛化能力还在 V-SNLI : (premise, hypothesis, image) triplets 进行了测试。</p><p><img src="/2020/04/10/multimodal/ds.png" alt></p><p><img src="/2020/04/10/multimodal/dataset.png" alt></p><p>V-SNLI 数据集中Premise是Flickr30k的caption任务中的caption，Hypothesis是Turkers标注的。原始图片加Premise &amp; Hypothesis构成了这个任务的三个输入。</p><h3 id="Baselines"><a href="#Baselines" class="headerlink" title="Baselines"></a>Baselines</h3><p>In all cases we use a single layer classifier. Baseline are shown as follows:</p><ul><li><p>Unimodal baseline</p><ul><li><p>Bag of words (Bow) We sum 300-dimensional GloVe embeddings for all words in the text, ignoring the visual features, and feed it to the classifier. </p></li><li><p>Text-only BERT (Bert) We take the first output of the final layer of a pre-trained base-uncased BERT model, and feed it to the classifier. </p></li><li><p>Image-only (Img) We take a standard pre-trained ResNet-152 with a single average pooling operation as output, yielding a 2048-dimensional vector for each image, and classify it in the same way as the other systems. </p></li></ul></li><li><p>concatenating multimodal features as direct features for the classifier.</p><ul><li>Concat Bow + Img (ConcatBow) We concatenate the outputs of the Bow and the Img baselines. Concatenation is often used as a strong baseline in multimodal methods. In this case, the input to the classifier is 2048+300- dimensions. </li><li>Concat BERT + Img (ConcatBert) We concatenate the outputs of the Bert and the Img baselines. In this case, the input to the classifier is 2048+768-dimensions. This is a highly competitive baseline, since it combines the best en- coder for each modality such that the classifier has direct access to the encoder outputs. </li></ul></li></ul><h3 id="Making-the-Problem-Harder"><a href="#Making-the-Problem-Harder" class="headerlink" title="Making the Problem Harder"></a>Making the Problem Harder</h3><p>hard test sets created specifically for examining multimodal performance (i.e., where unimodal performance fails). </p><p>In the hard ground-truth test set, we take the examples where the Bow and Img classifier predictions are most different from the ground truth classes in the test set, i.e. examples that maximize <script type="math/tex">p(a\not= t|I )p(a\not= t|T )</script>, where I and T are the image and textual information respectively, a is the predicted answer and t is the correct answer.  </p><p>In the hard disagreement test set alternative, we do not compare to the ground truth, but instead look at cases where the Bow and Img classifiers disagree with <em>each other</em> the most. We take the top 10% of the most-different examples as the hard cases in the new test sets.  </p><h3 id="Implementation-Details"><a href="#Implementation-Details" class="headerlink" title="Implementation Details"></a>Implementation Details</h3><p>Learning rate : {1e-4, 5e-5}</p><p>Early stop : on validation accuracy for the multiclass datasets, and Micro-F1 for the multilabel dataset.</p><p>Epochs: &amp; Number of Image Embedding: ( hyper parameters)</p><p>Optimizer: BertAdam &amp; Adam</p><p>Since not all datasets are balanced, we weight the class labels by their inverse frequency (这一点有点没懂啥叫weight the class labels)</p><h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>mean performance over 5 runs with random seeds together with the standard deviation. </p><p><img src="/2020/04/10/multimodal/result.png" alt></p><p>Bilinear-gated model 为啥 2048x768x101没太懂，(2048x768怎么来的？2048 是img_feature, 768 text_feature 为啥相乘) meaning that one of the two input modalities is sigmoided and then gates over the other input bilinearly, i.e. by taking an outer product这句话没太懂。后面的result说明没细看了。</p><h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><p>主要看的是Freezing Strategy</p><p><img src="/2020/04/10/multimodal/str.png" alt></p><p>It is useful to first learn to put the components together, then unfreeze the image encoder, and only after that unfreeze the pre-trained bitransformer. </p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>Original Paper : Supervised Multimodal Bitransformers for Classifying Images and Text </p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Multimodal </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Deep Learning </tag>
+            
+            <tag> Multimodal </tag>
+            
+            <tag> BiTransformers </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Construct GNN with Pytorch &amp; Analysis the implement of ResNet</title>
       <link href="/2020/04/09/pytorch-resnet/"/>
       <url>/2020/04/09/pytorch-resnet/</url>
