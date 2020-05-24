@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <link rel="dns-prefetch" href="//cdn.bootcss.com" />
     <link rel="dns-prefetch" href="//cdn.mathjax.org" />
-    <meta name="keywords" content="MLI-VQA, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="bytepair_encoding, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>MLI-VQA | Jason Yuan&#39;s Blog</title>
+    <title>bytepair_encoding | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">MLI-VQA</h1>
+                    <h1 class="description center-align post-title">bytepair_encoding</h1>
                 </div>
             </div>
         </div>
@@ -412,8 +412,8 @@
                                 <span class="chip bg-color">Deep Learning</span>
                             </a>
                         
-                            <a href="/tags/VQA/">
-                                <span class="chip bg-color">VQA</span>
+                            <a href="/tags/Free-Open-Source-Software/">
+                                <span class="chip bg-color">Free Open Source Software</span>
                             </a>
                         
                     </div>
@@ -437,7 +437,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-04-21
+                    2020-05-10
                 </div>
                 
 
@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    333
+                    1.5k
                 </div>
                 
 
@@ -459,24 +459,238 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Multi-modality-Latent-Interaction-Network-for-Visual-Question-Answering"><a href="#Multi-modality-Latent-Interaction-Network-for-Visual-Question-Answering" class="headerlink" title="Multi-modality Latent Interaction Network for Visual Question Answering"></a>Multi-modality Latent Interaction Network for Visual Question Answering</h1><h2 id="Multi-modality-Latent-Interaction-Network"><a href="#Multi-modality-Latent-Interaction-Network" class="headerlink" title="Multi-modality Latent Interaction Network"></a>Multi-modality Latent Interaction Network</h2><p>MLIN consists a series of stacking Multi-modality Latent modules. (The inputs and outputs of the MLI module has the same dim)</p>
-<p>MLI Aims : summarize input visual-region and question-word information into a small number of latent summarization vectors.</p>
-<p>In the last stage, we conduct elementwise multiplication between the average features of visual regions and question words to predict the final answer. </p>
-<p><img src="/2020/04/21/mli-vqa/MLIN.png" alt></p>
-<h3 id="3-1-Question-and-Visual-Feature-Encoding"><a href="#3-1-Question-and-Visual-Feature-Encoding" class="headerlink" title="3.1 Question and Visual Feature Encoding"></a>3.1 Question and Visual Feature Encoding</h3><p><img src="/2020/04/21/mli-vqa/7.png" alt></p>
-<h3 id="3-2-Modaliity-Summarizations-in-MLI-Module"><a href="#3-2-Modaliity-Summarizations-in-MLI-Module" class="headerlink" title="3.2 Modaliity Summarizations in MLI Module"></a>3.2 Modaliity Summarizations in MLI Module</h3><p><img src="/2020/04/21/mli-vqa/6.png" alt>  </p>
-<h3 id="3-3-Relational-Learning-on-Multi-modality-Latent-Summarizations"><a href="#3-3-Relational-Learning-on-Multi-modality-Latent-Summarizations" class="headerlink" title="3.3 Relational Learning on Multi-modality Latent Summarizations"></a>3.3 Relational Learning on Multi-modality Latent Summarizations</h3><h4 id="Relational-Latent-Summarizations"><a href="#Relational-Latent-Summarizations" class="headerlink" title="Relational Latent Summarizations"></a>Relational Latent Summarizations</h4><p>input : <script type="math/tex">\bar{R}/\bar{E}</script> [k, 512]</p>
-<p>Output: Relational Latent Summarizations [k, k, 512]</p>
-<p><img src="/2020/04/21/mli-vqa/inter.png" style="zoom:33%;"></p>
-<p><img src="/2020/04/21/mli-vqa/1.png" alt></p>
-<h4 id="Relational-Modeling-and-Propagation"><a href="#Relational-Modeling-and-Propagation" class="headerlink" title="Relational Modeling and Propagation"></a>Relational Modeling and Propagation</h4><p><img src="/2020/04/21/mli-vqa/5.png" alt></p>
-<h4 id="Feature-Aggregation"><a href="#Feature-Aggregation" class="headerlink" title="Feature Aggregation"></a>Feature Aggregation</h4><p><img src="/2020/04/21/mli-vqa/4.png" alt> </p>
-<p><strong>前四步给出了模型update region/word feature的方法：首先利用R/E的原始输入分别聚合为k个512d的region/word特征，然后顺序构造A矩阵并使用attention的机制利用每一个region/word 特征在A矩阵上的关注程度聚合信息，最后利用了Resnet的思想，学习变化而不是映射本身.</strong></p>
-<p>可以看到MLI模型的输入和输出维度相同。我们可以使用多层MLI来细化视觉和单词特征。</p>
-<p>最后，我们对视觉区域特征和单词特征进行平均池化，并对池化后的两种特征进行元素乘操作，最后，采用具有SoftMax非线性函数的线性分类器进行答案预测。</p>
-<p><img src="/2020/04/21/mli-vqa/8.png" alt></p>
-<p>整个系统使用交叉熵损失函数以端到端的方式训练。</p>
+                <h1 id="Week-11-Contribute-to-Pytorch-NLP"><a href="#Week-11-Contribute-to-Pytorch-NLP" class="headerlink" title="Week 11 Contribute to Pytorch-NLP"></a>Week 11 Contribute to Pytorch-NLP</h1><p>This week, xiaolei wang and I were managing to fix the <a href="https://github.com/PetrochukM/PyTorch-NLP/issues/7" target="_blank" rel="noopener">issue7</a> in Pytorch-NLP project.</p>
+<p>Following the reference given by the author <a href="https://github.com/eladhoffer/seq2seq.pytorch/blob/master/seq2seq/tools/tokenizer.py" target="_blank" rel="noopener">https://github.com/eladhoffer/seq2seq.pytorch/blob/master/seq2seq/tools/tokenizer.py</a> , We finally make our small step of pull request to Free Open Source Software.</p>
+<p><strong>This is the first time I can finish some parts of FOSS, and pull request !!!, many thanks to FOSS class</strong></p>
+<h2 id="Core-Steps"><a href="#Core-Steps" class="headerlink" title="Core Steps"></a>Core Steps</h2><h2 id="Some-procedure-of-making-a-pull-request"><a href="#Some-procedure-of-making-a-pull-request" class="headerlink" title="Some procedure of making a pull request"></a>Some procedure of making a pull request</h2><ul>
+<li>first step is to fork the upstream repo into your own work space. &amp; always keep consistent with the upstream repo <a href="https://blog.csdn.net/matrix_google/article/details/80676034" target="_blank" rel="noopener">https://blog.csdn.net/matrix_google/article/details/80676034</a></li>
+<li>Second write your own code and push them to your own repo(forked from upstream repo).</li>
+<li>Last but not least, when you get every thing ready make the pull request &amp; mention the corresponding issue or even comment to the author.</li>
+<li>Finally keep focus on your pr, make sure it pass all test &amp; get a excellent coverage.</li>
+</ul>
+<h2 id="BytePair-Encoding-PR-Experience-Summary"><a href="#BytePair-Encoding-PR-Experience-Summary" class="headerlink" title="BytePair Encoding PR Experience Summary"></a>BytePair Encoding PR Experience Summary</h2><ul>
+<li><p>Xiaolei wang provide me reasonable interface, and made me clear about what I should do next, I finish the tokenizer which is the focal part of the encoder and write certain test for it.</p>
+</li>
+<li><p>We also confronted many challenges, you could see them for 6 times failures on the test.</p>
+<ul>
+<li><p>For comphehension local test we should use : </p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">RUN_DOCS=true RUN_SLOW=true RUN_FLAKE8=true bash build_tools/travis/test_script.sh
+</code></pre>
+</li>
+<li><p>first is the PEP8 format check, such as more than 100 characters, etc, the author write its confine of format in file .flake8. </p>
+<pre><code>[flake8]
+ignore = E402, E722, E731, E741, W504
+max-line-length = 100
+exclude = examples/
+</code></pre></li>
+<li><p>Second is about python 3.5 is not a steady version of python. It is shown here, our next two test failed on python3.5 while pass on python 3.6 &amp; 3.7.</p>
+<ul>
+<li><a href="https://travis-ci.org/github/PetrochukM/PyTorch-NLP/builds/686862438" target="_blank" rel="noopener">https://travis-ci.org/github/PetrochukM/PyTorch-NLP/builds/686862438</a> </li>
+</ul>
+</li>
+<li><p>Finally, xiaolei wang found out what’s going on, and finally pass the test on the cloud.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Last-about-our-code"><a href="#Last-about-our-code" class="headerlink" title="Last about our code"></a>Last about our code</h2><ul>
+<li><p>Major code is shown as follows:</p>
+<p>./PyTorch-NLP/torchnlp/encoders/text/bpe_encoder.py : you can find the final version in xiaolei wang’s report or in github.</p>
+<p>./PyTorch-NLP/torchnlp/encoders/text/bpe_text_tokenizer.py    </p>
+</li>
+</ul>
+<pre class=" language-lang-python"><code class="language-lang-python">import codecs
+from subword_nmt import learn_bpe, apply_bpe
+from collections import Counter
+from sacremoses import MosesTokenizer, MosesDetokenizer
 
+
+class BPETextTokenizer(object):
+    _moses_tok = MosesTokenizer(lang='en')
+    _moses_detok = MosesDetokenizer(lang='en')
+
+    def __init__(self, file_prefix=None, separator='@@'):
+        if file_prefix is not None:
+            self.codes_file = '{}.vocab'.format(file_prefix)
+
+        self.separator = separator
+        self.bpe = None
+        self.vocab = None
+
+    @staticmethod
+    def pre_tokenize(line):
+        return BPETextTokenizer._moses_tok.tokenize(line, return_str=True)
+
+    @staticmethod
+    def _segment_words(line, pre_apply=None):
+        if pre_apply is not None:
+            line = pre_apply(line)
+        line = str(line)
+        return line.strip('\r\n ').split()
+
+    @staticmethod
+    def get_vocabulary(item_list, segment=_segment_words, from_filenames=True):
+        vocab = Counter()
+        if from_filenames:
+            for fname in item_list:
+                with codecs.open(fname, encoding='UTF-8') as f:
+                    for line in f:
+                        for word in segment(line):
+                            vocab[word] += 1
+        else:
+            for line in item_list:
+                for word in segment(line):
+                    vocab[word] += 1
+        return vocab
+
+    def build_from_corpus(self, item_list, min_count=2, num_symbols=10000,
+                          total_symbols=False, from_filenames=True):
+        def segment_words(line):
+            return self._segment_words(line, self.pre_tokenize)
+
+        vocab_words = self.get_vocabulary(item_list, segment_words, from_filenames=from_filenames)
+
+        vocab_list = ['{0} {1}'.format(key, freq)
+                      for (key, freq) in vocab_words.items()]
+
+        with codecs.open(self.codes_file, 'w', encoding='UTF-8') as output:
+            learn_bpe.learn_bpe(vocab_list, output, num_symbols=num_symbols,
+                                min_frequency=min_count, verbose=False,
+                                is_dict=True, total_symbols=total_symbols)
+
+        with codecs.open(self.codes_file, encoding='UTF-8') as codes:
+            self.bpe = apply_bpe.BPE(codes, separator=self.separator)
+
+        self.vocab = dict(self.get_vocabulary(item_list=item_list, segment=self.segment,
+                                              from_filenames=from_filenames))
+
+    def segment(self, line):
+        if not hasattr(self, 'bpe'):
+            raise NameError('Learn bpe first!')
+        line = self.pre_tokenize(line)
+        return self.bpe.segment(line.strip('\r\n ')).split(' ')
+
+    def encode(self, raw_text):
+        return self.segment(raw_text)
+
+    def decode(self, bpe_text, delimiter=' '):
+        decode_string = delimiter.join(bpe_text)
+        try:
+            decode_string = decode_string.decode('utf-8')
+        except Exception:
+            pass
+        decode_string = decode_string \
+            .replace(self.separator + ' ', '') \
+            .replace(self.separator, '')
+        decode_string = str(decode_string).strip('\r\n ').split()
+        decode_string = self._moses_detok.tokenize(decode_string)
+        return decode_string
+</code></pre>
+<ul>
+<li><p>Uint Test </p>
+<p>./PyTorch-NLP/tests/encoders/text/test_bytepair_encoder.py : shown in xiaolei wang’s report / GitHub.</p>
+<p>./PyTorch-NLP/tests/encoders/text/test_bytepair_tokenizer.py</p>
+<p>```python<br>import unittest<br>import pickle</p>
+<p>from torchnlp.encoders.text.bpe_text_tokenizer import BPETextTokenizer</p>
+</li>
+</ul>
+<pre><code>class TestBPETextTokenizer(unittest.TestCase):
+
+    def setUp(self):
+        self.corpus = [
+            &quot;One morning I shot an elephant in my pajamas. How he got in my pajamas, I don&#39;t&quot;,
+            &#39;know.&#39;, &#39;Groucho Marx&#39;,
+            &quot;I haven&#39;t slept for 10 days... because that would be too long.&quot;, &#39;Mitch Hedberg&#39;
+        ]
+
+    def test_pre_tokenizer(self):
+        expected = [&#39;One morning I shot an elephant in my pajamas . How he got in my pajamas ,&#39;
+                    &#39; I don &amp;apos;t&#39;,
+                    &#39;know .&#39;,
+                    &#39;Groucho Marx&#39;,
+                    &#39;I haven &amp;apos;t slept for 10 days ... because that would be too long .&#39;,
+                    &#39;Mitch Hedberg&#39;]
+
+        self.assertListEqual(expected, [BPETextTokenizer.pre_tokenize(sen) for sen in self.corpus])
+
+    def test_get_vocabulary(self):
+        # tokenizer = BPETextTokenizer(&#39;test_bpe&#39;, use_moses=True)
+        def segment_words(line):
+            return BPETextTokenizer._segment_words(line, BPETextTokenizer.pre_tokenize)
+        token_counts = BPETextTokenizer.get_vocabulary(self.corpus,
+                                                       segment_words, from_filenames=False)
+        expected = {
+            &quot;&amp;apos;t&quot;: 2,
+            &quot;.&quot;: 3,
+            &quot;...&quot;: 1,
+            &quot;Groucho&quot;: 1,
+            &quot;Marx&quot;: 1,
+            &quot;Mitch&quot;: 1,
+            &quot;Hedberg&quot;: 1,
+            &quot;I&quot;: 3,
+            &quot;in&quot;: 2,
+            &quot;my&quot;: 2,
+            &quot;know&quot;: 1,
+            &quot;because&quot;: 1,
+            &quot;pajamas&quot;: 2,
+        }
+        self.assertDictContainsSubset(expected, token_counts)
+
+    def test_learn_bpe(self):
+        tokenizer = BPETextTokenizer(&#39;test_bpe&#39;)
+        tokenizer.build_from_corpus(self.corpus, from_filenames=False)
+        expected = {(&#39;&amp;&#39;, &#39;apos;t&lt;/w&gt;&#39;): 21, (&#39;a&#39;, &#39;pos;t&lt;/w&gt;&#39;): 20, (&#39;b&#39;, &#39;e&#39;): 19,
+                    (&#39;i&#39;, &#39;n&lt;/w&gt;&#39;): 18, (&#39;le&#39;, &#39;p&#39;): 17, (&#39;l&#39;, &#39;e&#39;): 16, (&#39;m&#39;, &#39;y&lt;/w&gt;&#39;): 15,
+                    (&#39;n&#39;, &#39;g&lt;/w&gt;&#39;): 14, (&#39;o&#39;, &#39;t&lt;/w&gt;&#39;): 13, (&#39;o&#39;, &#39;u&#39;): 12, (&#39;o&#39;, &#39;w&lt;/w&gt;&#39;): 11,
+                    (&#39;pajama&#39;, &#39;s&lt;/w&gt;&#39;): 10, (&#39;pajam&#39;, &#39;a&#39;): 9, (&#39;paja&#39;, &#39;m&#39;): 8, (&#39;paj&#39;, &#39;a&#39;): 7,
+                    (&#39;pa&#39;, &#39;j&#39;): 6, (&#39;p&#39;, &#39;a&#39;): 5, (&#39;po&#39;, &#39;s;t&lt;/w&gt;&#39;): 4, (&#39;p&#39;, &#39;o&#39;): 3,
+                    (&#39;s;&#39;, &#39;t&lt;/w&gt;&#39;): 2, (&#39;s&#39;, &#39;;&#39;): 1, (&#39;h&#39;, &#39;a&#39;): 0}
+        self.assertDictEqual(expected, tokenizer.bpe.bpe_codes)
+
+    def test_encode_decode(self):
+        corpus = [&#39;This is a corpus of text that provides a bunch of tokens from which &#39;,
+                  &#39;to build a vocabulary. It will be used when strings are encoded &#39;,
+                  &#39;with a SubwordTextTokenizer subclass. The encoder was coded by a coder.&#39;]
+
+        original = &#39;This is a coded sentence encoded by the SubwordTextTokenizer.&#39;
+
+        tokenizer = BPETextTokenizer(&#39;test_bpe&#39;)
+        tokenizer.build_from_corpus(corpus, from_filenames=False)
+
+        # Encoding should be reversible.
+        encoded = tokenizer.encode(original)
+        decoded = tokenizer.decode(encoded)
+        self.assertEqual(original, decoded)
+
+        # The substrings coded@@ and en@@ are frequent enough in the corpus that
+        # they should appear in the vocabulary even though they are substrings
+        # of other included strings.
+        subtoken_strings = encoded
+        self.assertIn(&#39;en@@&#39;, subtoken_strings)
+        self.assertIn(&#39;code@@&#39;, subtoken_strings)
+
+    def test_build_vocab(self):
+        tokenizer = BPETextTokenizer(&#39;test_bpe&#39;)
+        tokenizer.build_from_corpus(self.corpus, from_filenames=False)
+
+        # test the all item in vocab.
+        expect = {&#39;O@@&#39;: 1, &#39;n@@&#39;: 4, &#39;e&#39;: 4, &#39;m@@&#39;: 1, &#39;o@@&#39;: 5, &#39;r@@&#39;: 4, &#39;i@@&#39;: 2,
+                  &#39;ng&#39;: 2, &#39;I&#39;: 3, &#39;s@@&#39;: 3, &#39;h@@&#39;: 3, &#39;ot&#39;: 2, &#39;a@@&#39;: 4, &#39;n&#39;: 3,
+                  &#39;e@@&#39;: 3, &#39;lep@@&#39;: 2, &#39;ha@@&#39;: 3, &#39;t&#39;: 3, &#39;in&#39;: 2, &#39;my&#39;: 2,
+                  &#39;pajamas&#39;: 2, &#39;.&#39;: 4, &#39;H@@&#39;: 2, &#39;ow&#39;: 2, &#39;g@@&#39;: 1, &#39;,&#39;: 1, &#39;d@@&#39;: 3,
+                  &#39;&amp;apos;t&#39;: 2, &#39;k@@&#39;: 1, &#39;G@@&#39;: 1, &#39;ou@@&#39;: 2, &#39;c@@&#39;: 3, &#39;o&#39;: 2,
+                  &#39;M@@&#39;: 2, &#39;x&#39;: 1, &#39;v@@&#39;: 1, &#39;f@@&#39;: 1, &#39;r&#39;: 1, &#39;1@@&#39;: 1, &#39;0&#39;: 1,
+                  &#39;y@@&#39;: 1, &#39;s&#39;: 1, &#39;.@@&#39;: 2, &#39;be@@&#39;: 2, &#39;u@@&#39;: 1, &#39;t@@&#39;: 3,
+                  &#39;w@@&#39;: 1, &#39;l@@&#39;: 2, &#39;d&#39;: 1, &#39;b@@&#39;: 1, &#39;h&#39;: 1, &#39;g&#39;: 1}
+
+        self.assertDictEqual(expect, tokenizer.vocab)
+
+
+def test_is_pickleable():
+    tokenizer = BPETextTokenizer(&#39;test_bpe&#39;)
+    pickle.dumps(tokenizer)
+```
+</code></pre>
             </div>
             <hr/>
 
@@ -491,7 +705,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io" rel="external nofollow noreferrer">Jason yuan</a>
+                    <a href="http://Columbine21.github.io" rel="external nofollow noreferrer">Jason Yuan</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -501,7 +715,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/04/21/mli-vqa/">http://Columbine21.github.io/2020/04/21/mli-vqa/</a>
+                    <a href="http://Columbine21.github.io/2020/05/10/bytepair-encoding/">http://Columbine21.github.io/2020/05/10/bytepair-encoding/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -514,7 +728,7 @@
                     本博客所有文章除特別声明外，均采用
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     许可协议。转载请注明来源
-                    <a href="http://Columbine21.github.io" target="_blank">Jason yuan</a>
+                    <a href="http://Columbine21.github.io" target="_blank">Jason Yuan</a>
                     !
                 </span>
             </div>
@@ -543,8 +757,8 @@
                                     <span class="chip bg-color">Deep Learning</span>
                                 </a>
                             
-                                <a href="/tags/VQA/">
-                                    <span class="chip bg-color">VQA</span>
+                                <a href="/tags/Free-Open-Source-Software/">
+                                    <span class="chip bg-color">Free Open Source Software</span>
                                 </a>
                             
                         </div>
@@ -589,26 +803,83 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/05/10/bytepair-encoding/">
+                <a href="/2020/05/24/sklearn-one/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="bytepair_encoding">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Sklearn:Gaussian Mixture Model">
                         
-                        <span class="card-title">bytepair_encoding</span>
+                        <span class="card-title">Sklearn:Gaussian Mixture Model</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Week 11 Contribute to Pytorch-NLPThis week, xiaolei wang and I were managing to fix the issue7 in Pytorch-NLP project.
-F
+                            Sklearn 源码阅读笔记（一）GMM（一）GMM 模型简述关于模型中_m_step更新公式推导，有两种方式
+（推荐一：https://datawhalechina.github.io/pumpkin-book/#/chapter9/ch
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-05-10
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-05-24
                         </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Sklearn-Source-Code-Reading/" class="post-category">
+                                    Sklearn Source Code Reading
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Machine-Learning/">
+                        <span class="chip bg-color">Machine Learning</span>
+                    </a>
+                    
+                    <a href="/tags/Source-Code-Reading/">
+                        <span class="chip bg-color">Source Code Reading</span>
+                    </a>
+                    
+                    <a href="/tags/Matrix-theory/">
+                        <span class="chip bg-color">Matrix theory</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/04/21/mli-vqa/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="MLI-VQA">
+                        
+                        <span class="card-title">MLI-VQA</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Multi-modality Latent Interaction Network for Visual Question AnsweringMulti-modality Latent Interaction NetworkMLIN con
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -628,65 +899,8 @@ F
                         <span class="chip bg-color">Deep Learning</span>
                     </a>
                     
-                    <a href="/tags/Free-Open-Source-Software/">
-                        <span class="chip bg-color">Free Open Source Software</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2020/04/12/word2vec/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Word2vec">
-                        
-                        <span class="card-title">Word2vec</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            Summary of Word2vecPreface之前，在面试阿里的时候，提到了Embedding的问题，面试官问我了解哪些基本的embedding，我提到了word2vec，然后面试官就追问了word2vec的原理，当时没有准备，答得比
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-12
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Natural-Language-Processing/" class="post-category">
-                                    Natural Language Processing
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Interview/">
-                        <span class="chip bg-color">Interview</span>
-                    </a>
-                    
-                    <a href="/tags/Language-Model/">
-                        <span class="chip bg-color">Language Model</span>
-                    </a>
-                    
-                    <a href="/tags/Embedding/">
-                        <span class="chip bg-color">Embedding</span>
+                    <a href="/tags/VQA/">
+                        <span class="chip bg-color">VQA</span>
                     </a>
                     
                 </div>
