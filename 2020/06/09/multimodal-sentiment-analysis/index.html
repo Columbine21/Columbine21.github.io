@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <link rel="dns-prefetch" href="//cdn.bootcss.com" />
     <link rel="dns-prefetch" href="//cdn.mathjax.org" />
-    <meta name="keywords" content="Sklearn:Gaussian Mixture Model, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="多模态感情分析数据集调研, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Sklearn:Gaussian Mixture Model | Jason Yuan&#39;s Blog</title>
+    <title>多模态感情分析数据集调研 | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Sklearn:Gaussian Mixture Model</h1>
+                    <h1 class="description center-align post-title">多模态感情分析数据集调研</h1>
                 </div>
             </div>
         </div>
@@ -408,16 +408,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Machine-Learning/">
-                                <span class="chip bg-color">Machine Learning</span>
+                            <a href="/tags/MultiModal/">
+                                <span class="chip bg-color">MultiModal</span>
                             </a>
                         
-                            <a href="/tags/Source-Code-Reading/">
-                                <span class="chip bg-color">Source Code Reading</span>
-                            </a>
-                        
-                            <a href="/tags/Matrix-theory/">
-                                <span class="chip bg-color">Matrix theory</span>
+                            <a href="/tags/Dataset/">
+                                <span class="chip bg-color">Dataset</span>
                             </a>
                         
                     </div>
@@ -428,8 +424,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Sklearn-Source-Code-Reading/" class="post-category">
-                                Sklearn Source Code Reading
+                            <a href="/categories/MultiModal-Sentiment-Analysis/" class="post-category">
+                                MultiModal Sentiment Analysis
                             </a>
                         
                     </div>
@@ -441,7 +437,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-05-24
+                    2020-06-09
                 </div>
                 
 
@@ -450,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    1.2k
                 </div>
                 
 
@@ -463,194 +459,94 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Sklearn-源码阅读笔记（一）GMM"><a href="#Sklearn-源码阅读笔记（一）GMM" class="headerlink" title="Sklearn 源码阅读笔记（一）GMM"></a>Sklearn 源码阅读笔记（一）GMM</h1><h2 id="（一）GMM-模型简述"><a href="#（一）GMM-模型简述" class="headerlink" title="（一）GMM 模型简述"></a>（一）GMM 模型简述</h2><p>关于模型中_m_step更新公式推导，有两种方式</p>
-<p>（推荐一：<a href="https://datawhalechina.github.io/pumpkin-book/#/chapter9/chapter9）" target="_blank" rel="noopener">https://datawhalechina.github.io/pumpkin-book/#/chapter9/chapter9）</a></p>
-<p>（推荐二：<a href="https://zhuanlan.zhihu.com/p/24709748）" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/24709748）</a></p>
-<p>模型伪代码如下：（具体原理参考西瓜书第九章）</p>
+                <h1 id="多模态感情分类（一）数据集调研"><a href="#多模态感情分类（一）数据集调研" class="headerlink" title="多模态感情分类（一）数据集调研"></a>多模态感情分类（一）数据集调研</h1><p>本文主要关注 图像 + 文本 的多模态任务，除此之外还有 语音 + 图像 + 文本 &amp; 视频 + 文本 的数据集。 </p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>模态</th>
+<th>任务</th>
+<th>数据集</th>
+<th>数据集</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图像 + 文本</td>
+<td>图文情感分类</td>
+<td>Yelp 数据集</td>
+<td>Tumblr 数据集</td>
+<td>VistaNet [1]</td>
+</tr>
+<tr>
+<td>图像 + 文本</td>
+<td>图文的方面级情感分类</td>
+<td>Multi-ZOL 数据集</td>
+<td>Twitter15/17数据集</td>
+<td>MINI [2]</td>
+</tr>
+<tr>
+<td>图像 + 文本</td>
+<td>图文反讽识别</td>
+<td>Twitter反讽数据集</td>
+<td>/</td>
+<td>HFM [3]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="（1）各个数据集详细说明"><a href="#（1）各个数据集详细说明" class="headerlink" title="（1）各个数据集详细说明"></a>（1）各个数据集详细说明</h2><h3 id="（1-1）面向图文的情感分类任务"><a href="#（1-1）面向图文的情感分类任务" class="headerlink" title="（1.1）面向图文的情感分类任务"></a>（1.1）面向图文的情感分类任务</h3><ul>
+<li>Yelp 数据集<ul>
+<li>数据内容：来自Yelp.com评论网站，收集的是波士顿，芝加哥，洛杉矶，纽约，旧金山五个城市关于餐厅和食品的Yelp上的评论。</li>
+<li>数据集规模：一共有44305条评论，244569张图片（每条评论的图片有多张），平均每条评论有13个句子，230个单词。</li>
+<li>数据集的情感标注：是对每条评论的情感倾向打1,2,3,4,5五个分值。</li>
+</ul>
+</li>
+<li>Tumblr 数据集<ul>
+<li>数据内容：从Tumblr收集来的多模态情绪数据集。Tumblr是一种微博客服务，用户在上面发布的多媒体内容通常包含：图片、文本和标签。数据集是根据选定的十五种情绪搜索对应的情绪标签的推文，并且只选择其中既有文本又有图片的部分，然后进行了数据处理，删除了那些文本中原本就包含对应情绪词的内容，以及那些主要不是英文为主的推文。</li>
+<li>数据集规模：共有256897个多模态推文。</li>
+<li>数据集的情感标注：包含高兴，悲伤，厌恶在内的十五种情绪。</li>
+</ul>
+</li>
+</ul>
+<h3 id="（1-2）-面向图文的方面级情感分类任务"><a href="#（1-2）-面向图文的方面级情感分类任务" class="headerlink" title="（1.2） 面向图文的方面级情感分类任务"></a>（1.2） 面向图文的方面级情感分类任务</h3><p>方面级情感分类任务是对给定一个方面（Aspect），研究多模态文档在该方面的情感极性。一个方面可能由多个词语组成，例如“Eatingenvironment”，方面本身包含的信息对于文本和图像信息的提取有重要的指导意义。</p>
 <ul>
-<li>输入： 样本集 $D = \{x_1, \cdots, x_m\}$ 高斯混合成分个数 $k$</li>
-<li>过程：<ul>
-<li>初始化高斯混合分布的模型参数 $\{(a_i, \mu_i, \Sigma_i\mid 1\leq i\leq k \}$ </li>
-<li>Repeat: <ul>
-<li>计算 $x_j$ 由各个混合成分生成的后验概率 $\gamma_{ji} = p_M(z_j=i|x_j)$ (_e_step)</li>
-<li>根据后验概率计算新的模型参数。(_m_step)</li>
+<li>Multi-ZOL 数据集<ul>
+<li>数据内容：数据集收集整理了IT信息和商业门户网站ZOL.com上的关于手机的评论。</li>
+<li>数据集规模：原始数据有12587条评论(7359条单模态评论，5288条多模态评论)，覆盖114个品牌和1318种手机。其中的5288多模态评论，构成了Multi-ZOL数据集。在这个数据集中，每条多模态数据包含一个文本内容、一个图像集，以及至少一个但不超过六个评价方面。</li>
+<li>数据集的情感标注：这六个方面分别是性价比、性能配置、电池寿命、外观与感觉、拍摄效果、屏幕。总共得到28469（=5288*([1-6])）个方面。对于每个方面，都有一个从1到10的情感得分。</li>
 </ul>
 </li>
-<li>Until : 满足停止条件（收敛/max_iter）</li>
+<li>Twitter15/17数据集<ul>
+<li>数据内容：包含文本和文本对应图片的多模态数据集，数据集标注了目标实体及对其图文中表达的情感倾向。</li>
+<li>数据集规模：Twitter-15(3179/1122/1037)条带图片推文，Twitter-17（3562/1176/1234）条带图片推文(train, dev, test)</li>
+<li>数据集的情感标注：情感标注为三分类</li>
 </ul>
 </li>
-<li>Predict 阶段：根据 $\lambda_j = argmax_{i\in {1, 2,\cdots, k}}\gamma_{ji}$ 确定 $x_j$ 的簇标记 $\lambda_j$ </li>
-<li>输出：簇划分 $C = \{C_1, \cdots, C_k\}$</li>
 </ul>
-<h2 id="（二）Sklearn-实现源代码"><a href="#（二）Sklearn-实现源代码" class="headerlink" title="（二）Sklearn 实现源代码"></a>（二）Sklearn 实现源代码</h2><p>源代码仓库：<a href="https://github.com/scikit-learn/scikit-learn" target="_blank" rel="noopener">https://github.com/scikit-learn/scikit-learn</a></p>
-<p>Sklearn 中的 GMM：<code>sklearn/mixture/_gaussian_mixture.py</code> </p>
-<p><strong>Summary</strong></p>
+<h3 id="（1-3）面向图文的反讽识别任务"><a href="#（1-3）面向图文的反讽识别任务" class="headerlink" title="（1.3）面向图文的反讽识别任务"></a>（1.3）面向图文的反讽识别任务</h3><p>反讽识别任务的目的是判断一段文档是否含有反讽表达。</p>
 <ul>
-<li><p>首先说一下为什么想到要写一篇blog 专门分析一下GMM在sklearn中实现的源代码：</p>
-<ul>
-<li><p>首先，我们从上面的GMM模型伪代码中，我们可以看到：模型本身非常简洁清晰。在西瓜书上，非常全面的伪代码一共不超过20行。然而在sklearn中，为了得到更好的效率，以及得到更全面的功能，sklearn实现中一共洋洋洒洒写了400+行（不算注释）Python。可见其做的优化，并不想我们直观从西瓜书上看到的那样简单。</p>
-</li>
-<li><p>模型主要的优化体现在 <strong>precisions matrix</strong> 以及 <strong>precision matrix 的 cholesky 分解</strong> 用法上，主要用于提高西瓜书上 (9.28) 多元高斯分布公式的计算效率。</p>
-<script type="math/tex; mode=display">
-p(x) = \frac{1}{(2\pi)^{\frac{n}{2}} |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)} \tag{1}</script><ul>
-<li><p>事实上，$\Sigma$ 表示的是协方差矩阵，是对称正定矩阵, 其可用逆矩阵（precision matrix）等价代换（对称正定矩阵于其逆矩阵是一对一映射关系），使用 precision matrix 可以在 test time 加速计算后验概率 (1) 式。同时，sklearn 中采用了$\log p(x)$ 的方式计算/存储后验概率.</p>
-<script type="math/tex; mode=display">
-\log p(x) = -\frac{n}{2} * \log(2\pi) - \frac{1}{2}\log|\Sigma| - \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) \tag{2}</script><p>对比这来看sklearn 中计算log的后验函数如下：（我们故意忽略了除了’full’ 以外的方式） </p>
-<pre class=" language-lang-python"><code class="language-lang-python">def _estimate_log_gaussian_prob(X, means, precisions_chol, covariance_type):
-    """Estimate the log Gaussian probability.
-
-    Parameters
-    ----------
-    X : array-like, shape (n_samples, n_features)
-
-    means : array-like, shape (n_components, n_features)
-
-    precisions_chol : array-like
-        Cholesky decompositions of the precision matrices.
-        'full' : shape of (n_components, n_features, n_features)
-        'tied' : shape of (n_features, n_features)
-        'diag' : shape of (n_components, n_features)
-        'spherical' : shape of (n_components,)
-
-    covariance_type : {'full', 'tied', 'diag', 'spherical'}
-
-    Returns
-    -------
-    log_prob : array, shape (n_samples, n_components)
-    """
-    n_samples, n_features = X.shape
-    n_components, _ = means.shape
-    # det(precision_chol) is half of det(precision)
-    log_det = _compute_log_det_cholesky(
-        precisions_chol, covariance_type, n_features)
-
-    if covariance_type == 'full':
-        log_prob = np.empty((n_samples, n_components))
-        for k, (mu, prec_chol) in enumerate(zip(means, precisions_chol)):
-            y = np.dot(X, prec_chol) - np.dot(mu, prec_chol)
-            log_prob[:, k] = np.sum(np.square(y), axis=1)
-    elif ...
-
-    return -.5 * (n_features * np.log(2 * np.pi) + log_prob) + log_det
-</code></pre>
-</li>
-<li><p>从上面函数中，我们可以看到其调用了_compute_log_det_cholesky 函数来计算 $-\frac{1}{2}\log|\Sigma|$ ,我们稍微往上一翻就找到了这个函数的定义</p>
-</li>
-</ul>
-</li>
-<li><p>计算 $\frac{1}{2}\log|\Sigma|$ 的方法：(事实上，用了cholesky 分解的性质 $\Sigma = L\cdot L^T$ 则 $log|L| = \frac{1}{2}log|\Sigma|$) </p>
-<pre class=" language-lang-python"><code class="language-lang-python">def _compute_log_det_cholesky(matrix_chol, covariance_type, n_features):
-    """Compute the log-det of the cholesky decomposition of matrices.
-
-    Parameters
-    ----------
-    matrix_chol : array-like
-        Cholesky decompositions of the matrices.
-        'full' : shape of (n_components, n_features, n_features)
-        'tied' : shape of (n_features, n_features)
-        'diag' : shape of (n_components, n_features)
-        'spherical' : shape of (n_components,)
-
-    covariance_type : {'full', 'tied', 'diag', 'spherical'}
-
-    n_features : int
-        Number of features.
-
-    Returns
-    -------
-    log_det_precision_chol : array-like, shape (n_components,)
-        The determinant of the precision matrix for each component.
-    """
-    if covariance_type == 'full':
-        n_components, _, _ = matrix_chol.shape
-        // 因为 L 矩阵是下三角矩阵，行列式等于对角线元素的积
-        log_det_chol = (np.sum(np.log(
-            matrix_chol.reshape(
-                n_components, -1)[:, ::n_features + 1]), 1))
-
-    elif ...
-
-    return log_det_chol
-</code></pre>
-</li>
-<li><p>M Step 中使用一下函数进行参数的更新</p>
-<pre class=" language-lang-python"><code class="language-lang-python">def _estimate_gaussian_parameters(X, resp, reg_covar, covariance_type):
-    """Estimate the Gaussian distribution parameters.
-
-    Parameters
-    ----------
-    X : array-like, shape (n_samples, n_features)
-        The input data array.
-
-    resp : array-like, shape (n_samples, n_components)
-        The responsibilities for each data sample in X.
-
-    reg_covar : float
-        The regularization added to the diagonal of the covariance matrices.
-
-    covariance_type : {'full', 'tied', 'diag', 'spherical'}
-        The type of precision matrices.
-
-    Returns
-    -------
-    nk : array-like, shape (n_components,)
-        The numbers of data samples in the current components.
-
-    means : array-like, shape (n_components, n_features)
-        The centers of the current components.
-
-    covariances : array-like
-        The covariance matrix of the current components.
-        The shape depends of the covariance_type.
-    """
-    nk = resp.sum(axis=0) + 10 * np.finfo(resp.dtype).eps
-    means = np.dot(resp.T, X) / nk[:, np.newaxis]
-    covariances = {"full": _estimate_gaussian_covariances_full,
-                   "tied": _estimate_gaussian_covariances_tied,
-                   "diag": _estimate_gaussian_covariances_diag,
-                   "spherical": _estimate_gaussian_covariances_spherical
-                   }[covariance_type](resp, X, nk, means, reg_covar)
-    return nk, means, covariances
-</code></pre>
-<ul>
-<li><p>可以从上面更新步骤中看出，$nk$ 代表的是 西瓜书中的 $\sum_{j=1}^m\gamma_{ji}$ 表示的是所有样本中属于簇 i 的后验概率之和。计算 covariances 的时候使用的函数随着type不同变换。</p>
-</li>
-<li><p>计算 covariance_type 为 ‘full’ 的 covariance.</p>
-<pre class=" language-lang-python"><code class="language-lang-python">def _estimate_gaussian_covariances_full(resp, X, nk, means, reg_covar):
-    """Estimate the full covariance matrices.
-
-    Parameters
-    ----------
-    resp : array-like, shape (n_samples, n_components)
-
-    X : array-like, shape (n_samples, n_features)
-
-    nk : array-like, shape (n_components,)
-
-    means : array-like, shape (n_components, n_features)
-
-    reg_covar : float
-
-    Returns
-    -------
-    covariances : array, shape (n_components, n_features, n_features)
-        The covariance matrix of the current components.
-    """
-    n_components, n_features = means.shape
-    covariances = np.empty((n_components, n_features, n_features))
-    for k in range(n_components):
-        diff = X - means[k]
-        covariances[k] = np.dot(resp[:, k] * diff.T, diff) / nk[k]
-        covariances[k].flat[::n_features + 1] += reg_covar
-    return covariances
-</code></pre>
-</li>
+<li>Twitter 反讽数据集<ul>
+<li>Twitters反讽数据集构建自Twitter平台，其从Twitter上收集包含图片和一些特定话题标签(例如#sarcasm，等等)的英语推文，将其作为正例，并收集带有图片但没有此类标签的英语推文，作为反例。</li>
+<li>数据集规模：数据集分为训练集、开发集和测试集，分别是19816,2410,2409条带图片推文。</li>
+<li>数据集的情感标注：标注为是讽刺/不是讽刺二分类</li>
 </ul>
 </li>
 </ul>
-</li>
+<h2 id="（2）Yelp-数据集-详细调研"><a href="#（2）Yelp-数据集-详细调研" class="headerlink" title="（2）Yelp 数据集 详细调研"></a>（2）Yelp 数据集 详细调研</h2><p>数据集链接：来源 kaggle 网站 <a href="https://www.kaggle.com/yelp-dataset/yelp-dataset/discussion" target="_blank" rel="noopener">https://www.kaggle.com/yelp-dataset/yelp-dataset/discussion</a></p>
+<p>在该网站上我们可以看到一些其他人对于数据集做的 EDA 工作。然而，我们也可以看到，原始数据集需要进过很多额外的处理才能真正的融入使用。（不妨直接找找在这个数据集上运行的代码，从那里找数据集。）</p>
+<p>STOA : [1]  实现代码：<a href="https://github.com/PreferredAI/vista-net" target="_blank" rel="noopener">https://github.com/PreferredAI/vista-net</a> </p>
+<h2 id="（3）Todo-Next"><a href="#（3）Todo-Next" class="headerlink" title="（3）Todo Next"></a>（3）Todo Next</h2><ul>
+<li>下一篇中，我们将相近的阅读 [1] paper 并且 分析 <a href="https://github.com/PreferredAI/vista-net" target="_blank" rel="noopener">https://github.com/PreferredAI/vista-net</a> 实现代码。</li>
 </ul>
-<p>以上就是GMM 中Sklearn中的所有优化。关于后面模型的fit / predict 过程这里不多赘述。(后续如果有时间更新…)</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><p>[1] Truong T Q, Lauw H W. VistaNet:Visual Aspect Attention Network for Multimodal Sentiment Analysis[C]. nationalconference on artificial intelligence, 2019: 305-312.</p>
+</li>
+<li><p>[2] Xu N, Mao W, Chen G, et al.Multi-Interactive Memory Network for Aspect Based Multimodal SentimentAnalysis[C]. national conference on artificial intelligence, 2019: 371-378.</p>
+</li>
+<li>[3] Cai Y, Cai H, Wan X, et al.Multi-Modal Sarcasm Detection in Twitter with Hierarchical Fusion Model[C].meeting of the association for computational linguistics, 2019: 2506-2515.</li>
+</ul>
 
             </div>
             <hr/>
@@ -666,7 +562,7 @@ p(x) = \frac{1}{(2\pi)^{\frac{n}{2}} |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io" rel="external nofollow noreferrer">Jason yuan</a>
+                    <a href="http://Columbine21.github.io" rel="external nofollow noreferrer">Jason Yuan</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -676,7 +572,7 @@ p(x) = \frac{1}{(2\pi)^{\frac{n}{2}} |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/05/24/sklearn-one/">http://Columbine21.github.io/2020/05/24/sklearn-one/</a>
+                    <a href="http://Columbine21.github.io/2020/06/09/multimodal-sentiment-analysis/">http://Columbine21.github.io/2020/06/09/multimodal-sentiment-analysis/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -689,7 +585,7 @@ p(x) = \frac{1}{(2\pi)^{\frac{n}{2}} |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\
                     本博客所有文章除特別声明外，均采用
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     许可协议。转载请注明来源
-                    <a href="http://Columbine21.github.io" target="_blank">Jason yuan</a>
+                    <a href="http://Columbine21.github.io" target="_blank">Jason Yuan</a>
                     !
                 </span>
             </div>
@@ -714,16 +610,12 @@ p(x) = \frac{1}{(2\pi)^{\frac{n}{2}} |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Machine-Learning/">
-                                    <span class="chip bg-color">Machine Learning</span>
+                                <a href="/tags/MultiModal/">
+                                    <span class="chip bg-color">MultiModal</span>
                                 </a>
                             
-                                <a href="/tags/Source-Code-Reading/">
-                                    <span class="chip bg-color">Source Code Reading</span>
-                                </a>
-                            
-                                <a href="/tags/Matrix-theory/">
-                                    <span class="chip bg-color">Matrix theory</span>
+                                <a href="/tags/Dataset/">
+                                    <span class="chip bg-color">Dataset</span>
                                 </a>
                             
                         </div>
@@ -764,9 +656,10 @@ p(x) = \frac{1}{(2\pi)^{\frac{n}{2}} |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/06/09/multimodal-sentiment-analysis/">
                     <div class="card-image">
@@ -800,9 +693,9 @@ Ye
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-06-09
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-09
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -815,6 +708,7 @@ Ye
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -837,32 +731,32 @@ Ye
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/05/10/bytepair-encoding/">
+                <a href="/2020/05/24/sklearn-one/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="bytepair_encoding">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Sklearn:Gaussian Mixture Model">
                         
-                        <span class="card-title">bytepair_encoding</span>
+                        <span class="card-title">Sklearn:Gaussian Mixture Model</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Week 11 Contribute to Pytorch-NLPThis week, xiaolei wang and I were managing to fix the issue7 in Pytorch-NLP project.
-F
+                            Sklearn 源码阅读笔记（一）GMM（一）GMM 模型简述关于模型中_m_step更新公式推导，有两种方式
+（推荐一：https://datawhalechina.github.io/pumpkin-book/#/chapter9/ch
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-10
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-24
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Natural-Language-Processing/" class="post-category">
-                                    Natural Language Processing
+                            <a href="/categories/Sklearn-Source-Code-Reading/" class="post-category">
+                                    Sklearn Source Code Reading
                                 </a>
                             
                             
@@ -872,12 +766,16 @@ F
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Deep-Learning/">
-                        <span class="chip bg-color">Deep Learning</span>
+                    <a href="/tags/Machine-Learning/">
+                        <span class="chip bg-color">Machine Learning</span>
                     </a>
                     
-                    <a href="/tags/Free-Open-Source-Software/">
-                        <span class="chip bg-color">Free Open Source Software</span>
+                    <a href="/tags/Source-Code-Reading/">
+                        <span class="chip bg-color">Source Code Reading</span>
+                    </a>
+                    
+                    <a href="/tags/Matrix-theory/">
+                        <span class="chip bg-color">Matrix theory</span>
                     </a>
                     
                 </div>
