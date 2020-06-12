@@ -450,7 +450,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    1.4k
                 </div>
                 
 
@@ -551,6 +551,12 @@ p = softmax(W_cd+b_c)</script></li>
 <li><p>模型是使用最小化交叉熵函数的方法进行优化</p>
 <script type="math/tex; mode=display">
 loss = -\sum_d\log p_{d,l}</script></li>
+</ul>
+</li>
+<li><p><strong>Summary</strong> : </p>
+<ul>
+<li>本篇文章其实就是使用了 2016年 提出的 多层注意力模型（<strong><u>Hierarchical Attention Networks for Document Classification（<em>NAACL2016</em>）</u></strong>）原文章是在文档分类问题中提出的。本文本质上就是对于这种方法在多模态问题上的一个改进，使用图片信息进行soft attention。</li>
+<li>对于多模态问题，核心问题在于不同模态信息的 fusion 可以考虑从传统的 nlp/cv 模型中“借鉴”思想。以本文为例，核心是 document 中文档信息与图片信息的提取+分类。我们可以从nlp中的文档信息提取的工作中的到灵感。</li>
 </ul>
 </li>
 </ul>
