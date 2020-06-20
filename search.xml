@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>WakaTime</title>
+      <link href="/2020/06/20/wakatime/"/>
+      <url>/2020/06/20/wakatime/</url>
+      
+        <content type="html"><![CDATA[<h1 id="WakaTime-Tools"><a href="#WakaTime-Tools" class="headerlink" title="WakaTime Tools"></a>WakaTime Tools</h1><p><img src="/2020/06/20/wakatime/1.png" alt></p><ul><li>果然，越是期末越是喜欢摸鱼。这段时间看到别人（耿总，Q哥）等人的 Github pinned List 上有不错的 Tools 来记录自己每周用于 coding 时间的工具。于是便开始了自己的摸鱼记录。</li><li>在配置过程中，也记录一下，关于 Github Action &amp; Github gist 这两个 90% Github 用户用不到的功能吧。<ul><li>Note：Github gist 功能需要科学上完才能正常使用。</li></ul></li><li>配置 WakaTime 的过程主要分成一下步骤：（详细流程见 Github 仓库 <a href="https://github.com/matchai/waka-box）" target="_blank" rel="noopener">https://github.com/matchai/waka-box）</a><ul><li>首先是在自己平常使用的 IDEA 上下载相应的 WakaTime 插件。（我目前装了vscode + Pycharm的插件）均需要绑定 Wakatime 上私密的 API key。（Vscode 上 应用市场安装 wakatime， ctrl + shift + P 输入 wakatime，自动弹出相应配置。）<ul><li>设置成功后 Vscode 左下角会显示 0s （记录时间）</li></ul></li><li>配置完可以去 dashboard 上确认一下<br><img src="/2020/06/20/wakatime/5.png" alt></li><li>在 Github 上，创建一个 schedule 的Action，定时更新 Github Gist。</li></ul></li></ul><h2 id="GitHub-Action-amp-Github-Gist"><a href="#GitHub-Action-amp-Github-Gist" class="headerlink" title="GitHub Action &amp; Github Gist"></a>GitHub Action &amp; Github Gist</h2><ul><li><p>GitHub Gist: 这里并不打算详尽列举其功能，详细可以见这篇知乎文章<a href="https://www.zhihu.com/question/21343711" target="_blank" rel="noopener">https://www.zhihu.com/question/21343711</a>，我们可以在这里找到他。</p><p><div style="text-align: center"><br>  <img src="/2020/06/20/wakatime/2.png" style="zoom:50%;"></div></p><div>  </div></li></ul><ul><li><p>GitHub Action: 对于我们的每一个 GitHub 的仓库，都有一个 Action 的栏，这一栏记录这个仓库的特定workflow（可以设定当有人点赞的时候，触发什么事件，或者定时触发事件等）。<br><img src="/2020/06/20/wakatime/3.png" alt><br><img src="/2020/06/20/wakatime/4.png" alt></p></li><li><p>这次配置的过程也是一波三折，多次询问 技术dalao（耿总），纠正了我的一些常见的配置问题。记录如下：</p><ul><li><strong>坑一</strong> Github repo 的 Action 功能需要手动授权开启，开启方法可以是 Settings -&gt; Actions，也可以是直接从图三这里点 Actions 栏，进去之后如果 Github 有 .yml 的 workflow 会自动提示开启相应的权限。</li><li><strong>坑二</strong> Github repo 的 workflow 可能不会自动检查到（即使设置的是schedule，自动调度的Action），可能需要手动触发一次Action，Github 才会检查的到：这有一个workflow，手动调度 Action 的方法见文章<a href="https://p3terx.com/archives/github-actions-manual-trigger.html" target="_blank" rel="noopener">https://p3terx.com/archives/github-actions-manual-trigger.html</a></li></ul></li></ul><h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul><li>尽管自己可能还是之后打算做科研多一些，但还是要多向身边的技术大佬们多学习好用的技术啊（<del>战术后仰，来自一个“还有几天最后一个体系结构期末考试，却完全不想复习”的咸鱼</del>）。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 软件安装与配置 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> WakaTime Tools </tag>
+            
+            <tag> Github Tools </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hierarchical-Attention-Networks</title>
       <link href="/2020/06/19/hierarchical-attention-networks/"/>
       <url>/2020/06/19/hierarchical-attention-networks/</url>
