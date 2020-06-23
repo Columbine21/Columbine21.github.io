@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>baai2020</title>
+      <link href="/2020/06/23/baai2020/"/>
+      <url>/2020/06/23/baai2020/</url>
+      
+        <content type="html"><![CDATA[<h1 id="2020-北京智源大会-简记"><a href="#2020-北京智源大会-简记" class="headerlink" title="2020 北京智源大会 简记"></a>2020 北京智源大会 简记</h1><ul><li>Date: 2020/6/21 - 2020/6/24</li><li>网址： <a href="https://2020.baai.ac.cn/" target="_blank" rel="noopener">https://2020.baai.ac.cn/</a></li><li>今天上午听了刘欢老师在假新闻检测方向的总述。（假新闻检测也算是典型多模态数据融合的问题之一吧）。</li><li>主要的一些收获：刘老师主要介绍的是假新闻检测的4个方向：dataset &amp; detection &amp; explaination &amp; migirate<ul><li>Dataset : 主要是假新闻标注的成本问题。主要提到了标注过程的 time consuming &amp; human expert 问题<ul><li><a href="https://github.com/bigheiniu/awesome-coronavirus19-dataset" target="_blank" rel="noopener">https://github.com/bigheiniu/awesome-coronavirus19-dataset</a></li></ul></li><li>Detection：（大部分研究都属于这一领域）<ul><li>Leveraging Multi-Source Weak Social Supervision for Early Detection of Fake News</li><li>Detecting Fake News with Weak Social Supervision.</li></ul></li><li>explaination:  Existing work focuses on detecting fake news, but cannot explain how it is detected as fake.<ul><li>Kai Shu, Limeng Cui, Suhang Wang, and Huan Liiu. “dEFEND: Explainable Fake News Detection.” KDD 2019</li></ul></li><li>Migitate: 刘老师主要强调了 Migitate 的重要性（以及强调了其与detection 是不同的任务）</li><li>开始关注Kai Shu doc 的工作吧（<del>爆破了一波 github 账号 <a href="https://github.com/KaiDMML" target="_blank" rel="noopener">https://github.com/KaiDMML</a></del>）个人主页：<a href="http://www.public.asu.edu/~skai2/" target="_blank" rel="noopener">http://www.public.asu.edu/~skai2/</a></li></ul></li></ul><h2 id="（1）感兴趣的一些-report"><a href="#（1）感兴趣的一些-report" class="headerlink" title="（1）感兴趣的一些 report"></a>（1）感兴趣的一些 report</h2><ul><li><p>机器学习：<a href="https://2020-assets.baai.ac.cn/file_path/002智源学者成果机器学习.pdf" target="_blank" rel="noopener">https://2020-assets.baai.ac.cn/file_path/002智源学者成果机器学习.pdf</a></p></li><li><p>自然语言处理方向：（内含新的问答系统数据集）<a href="https://2020-assets.baai.ac.cn/file_path/008智源学者成果NLP_何晓冬.pdf" target="_blank" rel="noopener">https://2020-assets.baai.ac.cn/file_path/008智源学者成果NLP_何晓冬.pdf</a></p></li><li><p>李涓子 老师的 视觉推理问答（这个属于VQA方向，隶属于多模态问题）<a href="https://2020-assets.baai.ac.cn/file_path/009智源学者成果NLP_李涓子.pdf" target="_blank" rel="noopener">https://2020-assets.baai.ac.cn/file_path/009智源学者成果NLP_李涓子.pdf</a></p></li><li><p>else ：（勉强和多模态问题沾边） <a href="https://2020-assets.baai.ac.cn/file_path/004智源学者成果_智能信息检索与挖掘_刘奕群.pdf" target="_blank" rel="noopener">https://2020-assets.baai.ac.cn/file_path/004智源学者成果_智能信息检索与挖掘_刘奕群.pdf</a></p></li></ul><h2 id="（2）其他方向（膜就完事了）"><a href="#（2）其他方向（膜就完事了）" class="headerlink" title="（2）其他方向（膜就完事了）"></a>（2）其他方向（<del>膜就完事了</del>）</h2><ul><li>数理基础（<del>并看不懂</del>）：<a href="https://2020-assets.baai.ac.cn/file_path/智源学者成果_人工智能的数理基础.pdf" target="_blank" rel="noopener">https://2020-assets.baai.ac.cn/file_path/智源学者成果_人工智能的数理基础.pdf</a></li><li>随手来一手 刘洋老师（虽然和我之前做的方向没啥关系）<a href="https://2020-assets.baai.ac.cn/file_path/010智源学者成果NLP_刘洋.pdf" target="_blank" rel="noopener">https://2020-assets.baai.ac.cn/file_path/010智源学者成果NLP_刘洋.pdf</a></li><li>再来一手 刘知远老师 文本对抗攻击（<a href="https://2020-assets.baai.ac.cn/file_path/011智源学者成果NLP_刘知远.pdf" target="_blank" rel="noopener">https://2020-assets.baai.ac.cn/file_path/011智源学者成果NLP_刘知远.pdf)</a>）</li><li>Pku 王选组 万小军老师 基于抽象语义表示的文本生成 <a href="https://2020-assets.baai.ac.cn/file_path/013智源学者成果NLP_万小军.pdf" target="_blank" rel="noopener">https://2020-assets.baai.ac.cn/file_path/013智源学者成果NLP_万小军.pdf</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Conference </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Deep Learning </tag>
+            
+            <tag> Multimodal </tag>
+            
+            <tag> Fake news </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>WakaTime</title>
       <link href="/2020/06/20/wakatime/"/>
       <url>/2020/06/20/wakatime/</url>
