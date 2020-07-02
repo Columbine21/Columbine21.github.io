@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>QREmbedding</title>
+      <link href="/2020/07/02/qrembedding/"/>
+      <url>/2020/07/02/qrembedding/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Quotient-remainder-trick"><a href="#Quotient-remainder-trick" class="headerlink" title="Quotient-remainder trick"></a>Quotient-remainder trick</h1><p>Paper : Compositional Embeddings Using Complementary Partitions for Memory-Efficient Recommendation Systems </p><p>Link : <a href="https://arxiv.org/abs/1909.02107" target="_blank" rel="noopener">https://arxiv.org/abs/1909.02107</a> </p><ul><li>Summary: 这是一个在做 category 数据 embedding 的时候减小 embedding matrix 维度的 trick。<ul><li>平凡的 embedding 方法需要一个 $|S|\times d$ 的 embedding matrix. 其中，$S$ 表示类别的集合。)</li><li>改进后的 embedding 方法仅需要 $O(\sqrt{|S|} D)$ 的 embedding parameters.</li><li>该方法优于之前的 hashing trick 在于：hashing trick 的结果会存在多个不同的类别使用相同的 embedding 的情况，而这种方法能够有效的避免这种现象的出现。</li></ul></li><li>使用场景：有大量的 category 数据，且每一个 category 有很多种不同取值的时候。</li><li>本篇中，我们将详细介绍 hashing trick &amp; quotient remainder trick 并给出 facebook 的quotient remainder trick 的实现方法。</li></ul><h2 id="Quotient-Remainder-Trick"><a href="#Quotient-Remainder-Trick" class="headerlink" title="Quotient Remainder Trick"></a>Quotient Remainder Trick</h2><p>我们考虑一个类别属性，记类别属性的可能取值集合为 $S$ ,记 $\epsilon: S\rightarrow \{0,\dots, |S|-1 \}$ 是将属性值的编码函数。</p><ul><li><p>传统的 embedding 使用 $W\in R^{|S|\times D}$ 作为 embedding 矩阵，我们将每个类别进行编码(将 category $x\in S$ 映射成 index $i = \epsilon(x)$ 并使用 one-hot 向量 $e_i\in R^{|S|}$ 进行表示)  ,然后使用</p><script type="math/tex; mode=display">x_{emb} = W^T e_i</script><p>获得相应的类别的 dense embedding vector。传统的 embedding 需要的 memory complexity 为 $O(|S|\cdot D)$  becomes restrictive when |S | is large.</p></li><li><p>The naive approach of reducing the embedding table is to use a simple hash function.</p><ul><li><p>核心：对类别 index 进行 hashing 变换 $\{0, 1, \dots, |S|-1\} \rightarrow \{0, 1, \dots, m\}$ 其中 $m &lt;&lt; |S|$, 将映射之后的编码使用传统的 embedding 处理。</p></li><li><p>模型参数数量级：$O(m\cdot D)$ </p></li><li><p>实现方法：首先构造一个 hash matrix $R\in R^{m\times|S|}$ </p><script type="math/tex; mode=display">R_{i,j} = \begin{cases}  1 & j \ \%\ m = i \\0 & otherwise\end{cases}</script><p>这个 hash matrix 每一列只有一个 1，其余全零。</p><p>模型参数为 $\hat{W} \in R^{m\times D}$ 是 embedding matrix, 这样，embedding 的过程可以表示为 (相当于对于类别编号 mod m 同于的类别共用一套 embedding)</p><script type="math/tex; mode=display">x_{emb} = \hat{W}^TR e_i</script></li></ul></li></ul><p><img src="/2020/07/02/qrembedding/1.png" style="zoom:50%;"></p><ul><li><p>显然，hashing embedding 的方法无法区分两个不同的 label ，降低了模型的表示能力。为了对于不同的 label 产生不同的 embedding，quotient remainder trick 产生了。</p><ul><li><p>核心：首先设定一个 num_collisions ($m$) 为除数。对于任意一个 类别编码 index $\in \{0, \dots , |S|-1\}$ 其对于 num_collisions ($m$) 的商和余数唯一。我们分别建立两个不同的 embedding matrix： $W_r \in R^{m\times D}$ 和  $W_q \in R^{|S|/m \times D}$ 对于 index 的label分别查这两张表格。分别获得两个 $D$ 维的 embedding 在将这两个 embedding 通过 add/mul/concat 的方法结合起来获得最终的embedding。</p></li><li><p>模型参数数量级：$O(m\cdot D + \frac{|S|}{m} \cdot D)$  </p></li><li><p>算法伪代码：</p><p><img src="/2020/07/02/qrembedding/2.png" style="zoom:50%;"></p></li></ul></li></ul><h2 id="Facebook-公司相应的实现代码"><a href="#Facebook-公司相应的实现代码" class="headerlink" title="Facebook 公司相应的实现代码"></a>Facebook 公司相应的实现代码</h2><p>Link：<a href="https://github.com/facebookresearch/dlrm/blob/master/tricks/qr_embedding_bag.py" target="_blank" rel="noopener">https://github.com/facebookresearch/dlrm/blob/master/tricks/qr_embedding_bag.py</a></p><h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul><li><p>模型在使用quotient remainder embedding 的时候，相当于为了减小embedding matrix 的存储开销，增加了不同类别 embedding 之间的关联，使得不同的类别 embedding 之间的独立性被打破，一定程度上损害了模型的表述能力。</p></li><li><p>该方法实际上是通过减小部分模型表达能力的方式提高 embedding 的空间存储效率。</p></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Deep Learning tricks </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Deep Learning </tag>
+            
+            <tag> Efficient tricks </tag>
+            
+            <tag> Model Compression </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>北京智源大会 简记</title>
       <link href="/2020/06/23/baai2020/"/>
       <url>/2020/06/23/baai2020/</url>
