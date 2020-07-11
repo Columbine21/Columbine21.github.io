@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <link rel="dns-prefetch" href="//cdn.bootcss.com" />
     <link rel="dns-prefetch" href="//cdn.mathjax.org" />
-    <meta name="keywords" content="QREmbedding, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="dp, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>QREmbedding | Jason Yuan&#39;s Blog</title>
+    <title>dp | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">QREmbedding</h1>
+                    <h1 class="description center-align post-title">dp</h1>
                 </div>
             </div>
         </div>
@@ -406,33 +406,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/Deep-Learning/">
-                                <span class="chip bg-color">Deep Learning</span>
-                            </a>
-                        
-                            <a href="/tags/Efficient-tricks/">
-                                <span class="chip bg-color">Efficient tricks</span>
-                            </a>
-                        
-                            <a href="/tags/Model-Compression/">
-                                <span class="chip bg-color">Model Compression</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/Deep-Learning-tricks/" class="post-category">
-                                Deep Learning tricks
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -441,7 +420,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-07-02
+                    2020-07-06
                 </div>
                 
 
@@ -450,7 +429,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    812
+                    249
                 </div>
                 
 
@@ -463,63 +442,251 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Quotient-remainder-trick"><a href="#Quotient-remainder-trick" class="headerlink" title="Quotient-remainder trick"></a>Quotient-remainder trick</h1><p>Paper : Compositional Embeddings Using Complementary Partitions for Memory-Efficient Recommendation Systems </p>
-<p>Link : <a href="https://arxiv.org/abs/1909.02107" target="_blank" rel="noopener">https://arxiv.org/abs/1909.02107</a> </p>
+                <p>title: 动态规划 Summary<br>date: 2020-07-06 14:52:26<br>author: Jason Yuan<br>tags:</p>
 <ul>
-<li>Summary: 这是一个在做 category 数据 embedding 的时候减小 embedding matrix 维度的 trick。<ul>
-<li>平凡的 embedding 方法需要一个 $|S|\times d$ 的 embedding matrix. 其中，$S$ 表示类别的集合。)</li>
-<li>改进后的 embedding 方法仅需要 $O(\sqrt{|S|} D)$ 的 embedding parameters.</li>
-<li>该方法优于之前的 hashing trick 在于：hashing trick 的结果会存在多个不同的类别使用相同的 embedding 的情况，而这种方法能够有效的避免这种现象的出现。</li>
+<li>Algorithm</li>
+<li>Online Judge<br>categories: Online Judge</li>
 </ul>
+<h2 id="（1）动态规划"><a href="#（1）动态规划" class="headerlink" title="（1）动态规划"></a>（1）动态规划</h2><h3 id="（1-1）数位-dp-学习"><a href="#（1-1）数位-dp-学习" class="headerlink" title="（1.1）数位 dp 学习"></a>（1.1）数位 dp 学习</h3><ul>
+<li><p>数位dp是一种计数用的dp，一般就是要统计一个区间 [le,ri] 内满足一些条件数的个数。</p>
 </li>
-<li>使用场景：有大量的 category 数据，且每一个 category 有很多种不同取值的时候。</li>
-<li>本篇中，我们将详细介绍 hashing trick &amp; quotient remainder trick 并给出 facebook 的quotient remainder trick 的实现方法。</li>
+<li><p>对应的暴力算法：</p>
+<pre class=" language-lang-c++"><code class="language-lang-c++">for(int i=le;i<=ri;i++)
+    if(right(i)) ans++;
+</code></pre>
+</li>
+<li><p>新的枚举：控制上界枚举，从最高位开始往下枚举，例如：ri=213，那么我们从百位开始枚举：百位可能的情况有0,1,2。</p>
+<p><img src="/2020/07/06/dp/2.png" alt></p>
+</li>
+<li><p>例一：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=2089" target="_blank" rel="noopener">HDU 2089</a> 不要62</p>
+<p>入门题。就是数位上不能有4也不能有连续的62，没有4的话在枚举的时候判断一下，不枚举4就可以保证状态合法了，所以这个约束没有记忆化的必要，而对于62的话，涉及到两位，当前一位是6或者不是6这两种不同情况我计数是不相同的，所以要用状态来记录不同的方案数。</p>
+<p>dp[pos][sta]表示当前第pos位，前一位是否是6的状态，这里sta只需要去0和1两种状态就可以了，不是6的情况可视为同种，不会影响计数。</p>
+<p><img src="/2020/07/06/dp/3.png" alt></p>
+</li>
+<li><p>例题 <strong>[POJ 3252]</strong></p>
+<p>这题的约束就是一个数的二进制中0的数量要不能少于1的数量，通过上一题，这题状态就很简单了，dp[pos][num],到当前数位pos,0的数量减去1的数量不少于num的方案数，一个简单的问题，中间某个pos位上num可能为负数(这不一定是非法的，因为我还没枚举完嘛，只要最终的num&gt;=0才能判合法，中途某个pos就不一定了)，这里比较好处理，Hash嘛，最小就-32吧(好像),直接加上32，把32当0用。这题主要是要想讲一下lead的用法，显然我要统计0的数量，前导零是有影响的。至于!lead&amp;&amp;!limit才能dp，都是类似的，自己慢慢体会吧。</p>
+<p><img src="/2020/07/06/dp/4.png" alt></p>
+</li>
 </ul>
-<h2 id="Quotient-Remainder-Trick"><a href="#Quotient-Remainder-Trick" class="headerlink" title="Quotient Remainder Trick"></a>Quotient Remainder Trick</h2><p>我们考虑一个类别属性，记类别属性的可能取值集合为 $S$ ,记 $\epsilon: S\rightarrow \{0,\dots, |S|-1 \}$ 是将属性值的编码函数。</p>
+<h3 id="（1-2）字符串-dp-复习"><a href="#（1-2）字符串-dp-复习" class="headerlink" title="（1.2）字符串 dp 复习"></a>（1.2）字符串 dp 复习</h3><ul>
+<li>连个字符串之间的关系往往可以通过 dp 完成。（编辑距离 / 最长公共子序列 / ）</li>
+</ul>
+<h3 id="（1-3）博弈论-dp-学习"><a href="#（1-3）博弈论-dp-学习" class="headerlink" title="（1.3）博弈论 dp 学习"></a>（1.3）博弈论 dp 学习</h3><p><img src="/2020/07/06/dp/1.png" alt></p>
 <ul>
-<li><p>传统的 embedding 使用 $W\in R^{|S|\times D}$ 作为 embedding 矩阵，我们将每个类别进行编码(将 category $x\in S$ 映射成 index $i = \epsilon(x)$ 并使用 one-hot 向量 $e_i\in R^{|S|}$ 进行表示)  ,然后使用</p>
-<script type="math/tex; mode=display">
-x_{emb} = W^T e_i</script><p>获得相应的类别的 dense embedding vector。传统的 embedding 需要的 memory complexity 为 $O(|S|\cdot D)$  becomes restrictive when |S | is large.</p>
+<li><p>解：记 dp[i] 表示还剩  i+1 … n  时，先手的最大得分。（可能为负数）</p>
+<p>状态转化函数：dp[i-1] = max(a[i] + a[i+1] + a[i+2] -dp[i+2], a[i] + a[i+1] - dp[i+1], a[i] - dp[i])</p>
 </li>
-<li><p>The naive approach of reducing the embedding table is to use a simple hash function.</p>
+<li><p>核心：博弈论题目可以考虑动态规划解法：后面的选择与之前怎么到达改状态无关。</p>
+</li>
+<li><p>状态转移推导：先手交换的思想。</p>
+</li>
+<li><p>code： （自己写的代码比较凌乱，就不贴了。）</p>
+<p><img src="/2020/07/06/dp/5.png" alt></p>
+</li>
+</ul>
+<h3 id="（1-4）经典动态规划"><a href="#（1-4）经典动态规划" class="headerlink" title="（1.4）经典动态规划"></a>（1.4）经典动态规划</h3><ul>
+<li><p>最长公共子序列</p>
+<p><img src="/Users/yuanziqi/Library/Application Support/typora-user-images/image-20200708074230167.png" alt="image-20200708074230167"></p>
+</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20181120124004582.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDY3MzYwOA==,size_16,color_FFFFFF,t_70" style="zoom:50%;"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-b0f663ab82935625d3e28c18d9f3ff3c_1440w.jpg" alt></p>
+<pre class=" language-lang-c++"><code class="language-lang-c++">// 动态规划求解并输出所有LCS
+#include <iostream>
+#include <string>
+#include <vector>
+#include <set>
+#include <algorithm>
+using namespace std;
+
+string X = "ABCBDAB";
+string Y = "BDCABA";
+vector<vector<int>> table; // 动态规划表
+set<string> setOfLCS;      // set保存所有的LCS
+
+int max(int a, int b)
+{
+    return (a>b)? a:b;
+}
+
+/**
+ * 构造表，并返回X和Y的LCS的长度
+ */
+int lcs(int m, int n)
+{
+    // 表的大小为(m+1)*(n+1)
+    table = vector<vector<int>>(m+1,vector<int>(n+1));
+
+    for(int i=0; i<m+1; ++i)
+    {
+        for(int j=0; j<n+1; ++j)
+        {
+            // 第一行和第一列置0
+            if (i == 0 || j == 0)
+                table[i][j] = 0;
+            else if(X[i-1] == Y[j-1])
+                table[i][j] = table[i-1][j-1] + 1;
+            else
+                table[i][j] = max(table[i-1][j], table[i][j-1]);
+        }
+    }
+
+    return table[m][n];
+}
+
+/**
+ * 求出所有的最长公共子序列，并放入set中
+ */
+void traceBack(int i, int j, string lcs_str, int lcs_len)
+{
+    while (i>0 && j>0)
+    {
+        if (X[i-1] == Y[j-1])
+        {
+            lcs_str.push_back(X[i-1]);
+            --i;
+            --j;
+        }
+        else
+        {
+            if (table[i-1][j] > table[i][j-1])
+                --i;
+            else if (table[i-1][j] < table[i][j-1])
+                --j;
+            else   // 相等的情况
+            {
+                traceBack(i-1, j, lcs_str, lcs_len);
+                traceBack(i, j-1, lcs_str, lcs_len);
+                return;
+            }
+        }
+    }
+
+    string str(lcs_str.rbegin(), lcs_str.rend()); // lcs_str逆序
+        if((int)str.size() == lcs_len)                // 判断str的长度是否等于lcs_len
+            setOfLCS.insert(str);
+}
+
+void print()
+{
+    set<string>::iterator beg = setOfLCS.begin();
+    for( ; beg!=setOfLCS.end(); ++beg)
+        cout << *beg << endl;
+}
+int main()
+{
+    int m = X.length();
+    int n = Y.length();
+    int length = lcs(m, n);
+    cout << "The length of LCS is " << length << endl;
+
+    string str;
+    traceBack(m, n, str, length);
+    print();
+
+    getchar();
+    return 0;
+}
+</code></pre>
 <ul>
-<li><p>核心：对类别 index 进行 hashing 变换 $\{0, 1, \dots, |S|-1\} \rightarrow \{0, 1, \dots, m\}$ 其中 $m &lt;&lt; |S|$, 将映射之后的编码使用传统的 embedding 处理。</p>
-</li>
-<li><p>模型参数数量级：$O(m\cdot D)$ </p>
-</li>
-<li><p>实现方法：首先构造一个 hash matrix $R\in R^{m\times|S|}$ </p>
-<script type="math/tex; mode=display">
-R_{i,j} = \begin{cases}  
-1 & j \ \%\ m = i \\
-0 & otherwise
-\end{cases}</script><p>这个 hash matrix 每一列只有一个 1，其余全零。</p>
-<p>模型参数为 $\hat{W} \in R^{m\times D}$ 是 embedding matrix, 这样，embedding 的过程可以表示为 (相当于对于类别编号 mod m 同于的类别共用一套 embedding)</p>
-<script type="math/tex; mode=display">
-x_{emb} = \hat{W}^TR e_i</script></li>
-</ul>
-</li>
-</ul>
-<p><img src="/2020/07/02/qrembedding/1.png" style="zoom:50%;"></p>
+<li><p>最长单调子序列：</p>
 <ul>
-<li><p>显然，hashing embedding 的方法无法区分两个不同的 label ，降低了模型的表示能力。为了对于不同的 label 产生不同的 embedding，quotient remainder trick 产生了。</p>
+<li><p>直接 dp</p>
+<pre class=" language-lang-c++"><code class="language-lang-c++">class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n=(int)nums.size();
+        if (n == 0) return 0;
+        vector<int> dp(n, 0);
+        for (int i = 0; i < n; ++i) {
+            dp[i] = 1;
+            for (int j = 0; j < i; ++j) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        return *max_element(dp.begin(), dp.end());
+    }
+};
+
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/zui-chang-shang-sheng-zi-xu-lie-by-leetcode-soluti/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+</code></pre>
+</li>
+<li><p>贪心 + 二分查找</p>
+<pre class=" language-lang-c++"><code class="language-lang-c++">class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int len = 1, n = (int)nums.size();
+        if (n == 0) return 0;
+        vector<int> d(n + 1, 0);
+        d[len] = nums[0];
+        for (int i = 1; i < n; ++i) {
+            if (nums[i] > d[len]) d[++len] = nums[i];
+            else{
+                int l = 1, r = len, pos = 0; // 如果找不到说明所有的数都比 nums[i] 大，此时要更新 d[1]，所以这里将 pos 设为 0
+                while (l <= r) {
+                    int mid = (l + r) >> 1;
+                    if (d[mid] < nums[i]) {
+                        pos = mid;
+                        l = mid + 1;
+                    }
+                    else r = mid - 1;
+                }
+                d[pos + 1] = nums[i];
+            }
+        }
+        return len;
+    }
+};
+
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/zui-chang-shang-sheng-zi-xu-lie-by-leetcode-soluti/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
 <ul>
-<li><p>核心：首先设定一个 num_collisions ($m$) 为除数。对于任意一个 类别编码 index $\in \{0, \dots , |S|-1\}$ 其对于 num_collisions ($m$) 的商和余数唯一。我们分别建立两个不同的 embedding matrix： $W_r \in R^{m\times D}$ 和  $W_q \in R^{|S|/m \times D}$ 对于 index 的label分别查这两张表格。分别获得两个 $D$ 维的 embedding 在将这两个 embedding 通过 add/mul/concat 的方法结合起来获得最终的embedding。</p>
-</li>
-<li><p>模型参数数量级：$O(m\cdot D + \frac{|S|}{m} \cdot D)$  </p>
-</li>
-<li><p>算法伪代码：</p>
-<p><img src="/2020/07/02/qrembedding/2.png" style="zoom:50%;"></p>
+<li><p>最长回文子序列</p>
+<p><img src="/Users/yuanziqi/Library/Application Support/typora-user-images/image-20200708075338574.png" alt="image-20200708075338574"></p>
 </li>
 </ul>
-</li>
-</ul>
-<h2 id="Facebook-公司相应的实现代码"><a href="#Facebook-公司相应的实现代码" class="headerlink" title="Facebook 公司相应的实现代码"></a>Facebook 公司相应的实现代码</h2><p>Link：<a href="https://github.com/facebookresearch/dlrm/blob/master/tricks/qr_embedding_bag.py" target="_blank" rel="noopener">https://github.com/facebookresearch/dlrm/blob/master/tricks/qr_embedding_bag.py</a></p>
-<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul>
-<li><p>模型在使用quotient remainder embedding 的时候，相当于为了减小embedding matrix 的存储开销，增加了不同类别 embedding 之间的关联，使得不同的类别 embedding 之间的独立性被打破，一定程度上损害了模型的表述能力。</p>
-</li>
-<li><p>该方法实际上是通过减小部分模型表达能力的方式提高 embedding 的空间存储效率。</p>
-</li>
-</ul>
+<pre class=" language-lang-c++"><code class="language-lang-c++">class Solution {
+public:
+    int longestPalindromeSubseq(string s1) {
+        string  s2 = s1;
+        reverse(s2.begin(), s2.end());//s2为s1的逆序列
+        return longestCommonSubsequence(s1,s2);
+    }
+
+    //最长公共子序列函数
+    int longestCommonSubsequence(string s1, string s2) {
+           int l1 = s1.size(),l2=s2.size();
+        int **dp = new int*[l1+1];
+            for (int i = 0; i < l1+1; ++i) {
+                    dp[i] = new int[l2+1]();
+            }
+        for (int i = 1; i < l1+1; i++) {
+            for (int j = 1; j < l2+1; j++) {
+                if (s1[i-1] == s2[j-1])    dp[i][j] = dp[i - 1][j - 1] + 1;
+                else dp[i][j] = max(dp[i - 1][j] , dp[i][j - 1]);
+            }
+        }
+        return dp[l1][l2];
+    }
+};
+
+作者：njyang-yang-yang
+链接：https://leetcode-cn.com/problems/longest-palindromic-subsequence/solution/dong-tai-gui-hua-zui-jian-dan-si-lu-by-njyang-yang/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+</code></pre>
 
             </div>
             <hr/>
@@ -545,7 +712,7 @@ x_{emb} = \hat{W}^TR e_i</script></li>
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/07/02/qrembedding/">http://Columbine21.github.io/2020/07/02/qrembedding/</a>
+                    <a href="http://Columbine21.github.io/2020/07/06/dp/">http://Columbine21.github.io/2020/07/06/dp/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -582,19 +749,7 @@ x_{emb} = \hat{W}^TR e_i</script></li>
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/Deep-Learning/">
-                                    <span class="chip bg-color">Deep Learning</span>
-                                </a>
-                            
-                                <a href="/tags/Efficient-tricks/">
-                                    <span class="chip bg-color">Efficient tricks</span>
-                                </a>
-                            
-                                <a href="/tags/Model-Compression/">
-                                    <span class="chip bg-color">Model Compression</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -633,9 +788,10 @@ x_{emb} = \hat{W}^TR e_i</script></li>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/07/06/dp/">
                     <div class="card-image">
@@ -658,9 +814,9 @@ Online Judgecategories: Online Judge
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-07-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-07-06
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -669,6 +825,7 @@ Online Judgecategories: Online Judge
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -679,34 +836,31 @@ Online Judgecategories: Online Judge
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/06/23/baai2020/">
+                <a href="/2020/07/02/qrembedding/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="北京智源大会 简记">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="QREmbedding">
                         
-                        <span class="card-title">北京智源大会 简记</span>
+                        <span class="card-title">QREmbedding</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            2020 北京智源大会 简记
-Date: 2020/6/21 - 2020/6/24
-网址： https://2020.baai.ac.cn/
-今天上午听了刘欢老师在假新闻检测方向的总述。（假新闻检测也算是典型多模态数据融合的问题之一吧）。
+                            Quotient-remainder trickPaper : Compositional Embeddings Using Complementary Partitions for Memory-Efficient Recommendat
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-23
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-07-02
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Conference/" class="post-category">
-                                    Conference
+                            <a href="/categories/Deep-Learning-tricks/" class="post-category">
+                                    Deep Learning tricks
                                 </a>
                             
                             
@@ -720,12 +874,12 @@ Date: 2020/6/21 - 2020/6/24
                         <span class="chip bg-color">Deep Learning</span>
                     </a>
                     
-                    <a href="/tags/Multimodal/">
-                        <span class="chip bg-color">Multimodal</span>
+                    <a href="/tags/Efficient-tricks/">
+                        <span class="chip bg-color">Efficient tricks</span>
                     </a>
                     
-                    <a href="/tags/Fake-news/">
-                        <span class="chip bg-color">Fake news</span>
+                    <a href="/tags/Model-Compression/">
+                        <span class="chip bg-color">Model Compression</span>
                     </a>
                     
                 </div>
