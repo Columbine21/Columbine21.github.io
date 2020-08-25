@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    784
+                    1.1k
                 </div>
                 
 
@@ -459,70 +459,137 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Paper：Words Can Shift: Dynamically Adjusting Word Representations Using Nonverbal Behaviors </p>
-<p>Link：<a href="https://arxiv.org/abs/1811.09362" target="_blank" rel="noopener">https://arxiv.org/abs/1811.09362</a></p>
-<h3 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h3><ul>
-<li>通过 shifting word embedding 的方式将非文本信息融合到文本 embedding 中。</li>
-<li>关注细粒度的非语言信息（对于每一个单词对应时间片的video/audio信息提取）<ul>
-<li>主要考虑到对应于每一个词时间片（video/audio都是一个sequence数据）</li>
-</ul>
-</li>
-<li>通过可视化 word embedding 的 shift 的变化可以了解非文本信息的作用。（用于模型可解释性的研究）</li>
-</ul>
-<h3 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h3><ul>
-<li>模型结构图已经非常清晰了（只有如何做注意力机制需要稍作补充即可）</li>
-</ul>
-<p><img src="/2020/08/18/wordcanshift/1.png" alt></p>
+                <p>paper: Multimodal Language Analysis in the Wild: CMU-MOSEI Dataset and Interpretable Dynamic Fusion Graph</p>
+<p>Reference From: <a href="https://github.com/pliang279/MFN" target="_blank" rel="noopener">https://github.com/pliang279/MFN</a> &amp; <a href="https://github.com/A2Zadeh/CMU-MultimodalSDK" target="_blank" rel="noopener">https://github.com/A2Zadeh/CMU-MultimodalSDK</a></p>
+<h2 id="DFG-模型"><a href="#DFG-模型" class="headerlink" title="DFG 模型"></a>DFG 模型</h2><p>下图为 graph-mfn 模型于原本的 mfn 模型的对比图。（可以看出使用 DFG 代替了Delta-memory Attention Network）</p>
+<p><img src="/2020/08/18/graph-mfn/2.png" alt="image-20200723232140382"></p>
 <ul>
-<li><p>模型的注意力计算方法：</p>
-<p>首先计算 visual / audio 的 influence 大小（scalar）</p>
-<p><img src="/2020/08/18/wordcanshift/2.png" style="zoom:50%;"></p>
-<p>然后求 Nonverbal Shift vector：</p>
-<p><img src="/2020/08/18/wordcanshift/3.png" style="zoom:50%;"></p>
-</li>
-<li><p>关于模型的 shift 部分使用和 <strong>Integrating Multimodal Information in Large Pretrained Transformers</strong>  工作相同的 shift 的 trick ： </p>
-<p><img src="/2020/08/18/wordcanshift/4.png" style="zoom:50%;"></p>
-</li>
+<li>目前正在为 <a href="https://github.com/Columbine21/MSA-AAAI2021/commits?author=iyuge2" target="_blank" rel="noopener">https://github.com/Columbine21/MSA-AAAI2021/commits?author=iyuge2</a> 贡献模型代码。</li>
+<li>目前已经完成了模型部分的编写，预计本周内跑通 graph-mfn 模型，并对于模型超参数进行 一定调优。</li>
+<li>模型的解释：使用 DFG 模型代替了原来的 attention 部分。使用 DFG 的顶层节点的 representation 作为原MFN 模型的 attened，$\hat{c}$ 进行相应的 gate 操作。</li>
 </ul>
-<h3 id="模型效果"><a href="#模型效果" class="headerlink" title="模型效果"></a>模型效果</h3><p><img src="/2020/08/18/wordcanshift/5.png" style="zoom:50%;"></p>
-<h3 id="可解释性工作"><a href="#可解释性工作" class="headerlink" title="可解释性工作"></a>可解释性工作</h3><ul>
-<li><p>visualize the distribution of shifted word representations that belong to the same word. （使用PCA 进行embedding 降维进行可视化，绘制了正例和负例的Gaussian contour，并绘制了中心点，并画出了总体（正例+负例）质心 到正例质心、负例质心的路径）</p>
-<p><img src="/2020/08/18/wordcanshift/6.png" style="zoom:50%;">- </p>
+<pre class=" language-lang-python"><code class="language-lang-python">class DynamicFusionGraph(nn.Module):
+    """
+    Input : (list): [InputModalA, InputModalB, ..., InputModalZ], singleton vertex representation.
+    Output: (return a tuple in forward): (t_output, outputs, efficacies) 
+            t_output   : i.e. T used as c_hat in MFN model.
+            outputs    :   each node representation
+            efficacies : the alpha list: [batch_size, 19] (19 for three modal fusion, 65 for four modal fusion)
+
+    Examples:
+    --------
+    >>> from torch.autograd import Variable
+    >>> import torch.nn.functional as F
+    >>> import numpy
+    >>> inputx = Variable(torch.Tensor(numpy.array(numpy.zeros([32, 40]))), requires_grad=True)
+    >>> inputy = Variable(torch.Tensor(numpy.array(numpy.zeros([32, 12]))), requires_grad=True)
+    >>> inputz = Variable(torch.Tensor(numpy.array(numpy.zeros([32, 20]))), requires_grad=True)
+    >>> inputw = Variable(torch.Tensor(numpy.array(numpy.zeros([32, 25]))), requires_grad=True)
+    >>> modalities = [inputx, inputy, inputz, inputw]
+    >>> pattern_model = nn.Sequential(nn.Linear(100, 20))
+    >>> efficacy_model = nn.Sequential(nn.Linear(100, 20))
+    >>> fmodel = DynamicFusionGraph(pattern_model, [40, 12, 20, 25], 20, efficacy_model)
+    >>> out = fmodel(modalities)
+    """
+    def __init__(self, pattern_model, in_dimensions, out_dimension, efficacy_model, device):
+        """
+        Args:
+            pattern_model - nn.Module, a nn.Sequential model which will be used as core of the models inside the DFG
+            in_dimensions - List, input dimensions of each modality
+            out_dimension - int, output dimension of the pattern models
+            efficacy_model - the core of the efficacy model
+        """
+        super(DynamicFusionGraph, self).__init__()
+        self.num_modalities = len(in_dimensions)
+        self.in_dimensions = in_dimensions
+        self.out_dimension = out_dimension
+
+        # in this part we sort out number of connections, how they will be connected etc.
+        # powerset = [(0,), (1,), (2,), (0, 1), (0, 2), (1, 2), (0, 1, 2)] for three modal fusion. 
+        self.powerset = list(
+            chain.from_iterable(combinations(range(self.num_modalities), r) for r in range(self.num_modalities + 1)))[1:]
+
+        # initializing the models inside the DFG
+        self.input_shapes = {tuple([key]): value for key, value in zip(range(self.num_modalities), in_dimensions)}
+
+        self.networks = {}
+        self.total_input_efficacies = 0 # total_input_efficacies: for alpha list size = [batch_size, total_input_efficacies].
+
+        # loop over n-modal node (n >= 2)
+        for key in self.powerset[self.num_modalities:]:
+            # connections coming from the unimodal components
+            unimodal_dims = 0
+            for modality in key:
+                unimodal_dims += in_dimensions[modality]
+            multimodal_dims = ((2 ** len(key) - 2) - len(key)) * out_dimension
+            self.total_input_efficacies += 2 ** len(key) - 2
+            # for the network that outputs key component, what is the input dimension
+            final_dims = unimodal_dims + multimodal_dims
+            self.input_shapes[key] = final_dims
+            pattern_copy = copy.deepcopy(pattern_model)
+
+            # final_model: transform the input to the node into out_dimension dim.
+            final_model = nn.Sequential(
+                *[nn.Linear(self.input_shapes[key], list(pattern_copy.children())[0].in_features), pattern_copy]).to(device)
+            self.networks[key] = final_model
+        # finished construction weights, now onto the t_network which summarizes the graph
+        self.total_input_efficacies += 2 ** self.num_modalities - 1
+
+        self.t_in_dimension = unimodal_dims + (2 ** self.num_modalities - (self.num_modalities) - 1) * out_dimension
+        pattern_copy = copy.deepcopy(pattern_model)
+        # self.t_network: generate top level representation τ 
+        self.t_network = nn.Sequential(*[nn.Linear(self.t_in_dimension, list(pattern_copy.children())[0].in_features), pattern_copy]).to(device)
+        # self.efficacy_model: generate the alpha list using the singleton vertex input. 
+        # (in 3 modal [batch_size, dim_l+dim_v+dim_a] -> [batch_size, 19])
+        self.efficacy_model = nn.Sequential(
+            *[nn.Linear(sum(in_dimensions), list(efficacy_model.children())[0].in_features), efficacy_model,
+              nn.Linear(list(efficacy_model.children())[-1].out_features, self.total_input_efficacies)]).to(device)
+
+    def __call__(self, in_modalities):
+        return self.fusion(in_modalities)
+
+    def fusion(self, in_modalities):
+
+        outputs = {}
+        for modality, index in zip(in_modalities, range(len(in_modalities))):
+            outputs[tuple([index])] = modality
+        efficacies = self.efficacy_model(torch.cat([x for x in in_modalities], dim=1))
+        efficacy_index = 0
+        for key in self.powerset[self.num_modalities:]:
+            small_power_set = list(chain.from_iterable(combinations(key, r) for r in range(len(key) + 1)))[1:-1]
+            this_input = torch.cat([outputs[x] * efficacies[:, efficacy_index + y].view(-1, 1) for x, y in
+                                    zip(small_power_set, range(len(small_power_set)))], dim=1)
+
+            outputs[key] = self.networks[key](this_input)
+            efficacy_index += len(small_power_set)
+
+        small_power_set.append(tuple(range(self.num_modalities)))
+        t_input = torch.cat([outputs[x] * efficacies[:, efficacy_index + y].view(-1, 1) for x, y in
+                                zip(small_power_set, range(len(small_power_set)))], dim=1)
+        t_output = self.t_network(t_input)
+        return t_output, outputs, efficacies
+
+    def forward(self, x):
+        print("Not yet implemented for nn.Sequential")
+        exit(-1)
+</code></pre>
+<h3 id="实验结果-amp-启发"><a href="#实验结果-amp-启发" class="headerlink" title="实验结果 &amp; 启发"></a>实验结果 &amp; 启发</h3><p>本文值得学习的地方在于： 评估 modalities fusion 过程中，模态间的交互。（<strong>模态融合可解释性</strong>的核心）</p>
+<p>文章通过 DFG 模型中不同 n-modal 之间的权重值随时间变化的热度图进行了以下分析：</p>
+<p><img src="/2020/08/18/graph-mfn/1.png" alt></p>
+<ol>
+<li><p>多模态融合是一个易变的过程</p>
+<p>即在不同的 case 中，DFG 总体来看 n-modal 之间的权重值变化较大。</p>
 </li>
-<li><p>对于不同的词 shift 情况可以分成 3 类：</p>
-<ul>
-<li>For <em>words with their inherent polarity</em> <ul>
-<li>对于含有 sentiment bias 的词：与本意相同的 contour 质心变化很小，与本意不同的 contour 质心变化很大</li>
-<li>单词“ great”的整体质心非常接近于其正质心，而其负质心与整体质心和正质心都相距甚远。</li>
-</ul>
+<li><p>融合有一定的优先级</p>
+<p>可以从图中看到 (l → l,a)、 (a → l,a) 这两行权值在 4 个 case 中权值均很大。（语言 l 声音 a 之间 交互频繁）</p>
+<p>多模态结果 很少直接受单模态影响。l → $\tau$  a → $\tau$   v → $\tau$   的权值均较低。</p>
+<p>视觉 v 频繁表现出独立于其他模态的信息。</p>
 </li>
-<li>For <em>nouns that appear in both positive and negative contexts</em><ul>
-<li>尽管此类名词通常指的是情感上没有明显极性的实体，但我们的模型会根据附带的多峰语境学习“极化”这些表示。</li>
-<li>例如，名词“ guy”经常用于称呼好演员和坏演员，并且RAVEN能够相应地在单词嵌入空间中将它们朝两个不同的方向移动。</li>
-</ul>
+<li><p>多模态融合主导路径分析</p>
+<p>声音和文本信息交互密切（实质上他们本事可通过 word intonations 对齐，即表达完全相同语义）。</p>
+<p>视频信息只有当非常具有信息量的时候才参与融合。（图1、4中（对应视频信息量大）v 的链路权重大，而图2、3中含 v 的链路权重小）</p>
 </li>
-<li>For <em>words that are not critical in conveying sentiment</em><ul>
-<li>几乎重合</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="我的观点"><a href="#我的观点" class="headerlink" title="我的观点"></a>我的观点</h3><ul>
-<li><p>这篇文章在模型上本质创新在于 </p>
-<ul>
-<li><p>video/audio 做了 fine-grained 的 lstm 以外 </p>
-</li>
-<li><p>采用了 shifting 的思想进行多模态融合，讨论了模型的可解释性。</p>
-</li>
-</ul>
-<p>感觉上思路比较平淡，这种 shifting 的思路在 Integrating Multimodal Information in Large Pretrained Transformers 论文中使用过，不知道那篇文章提出比较早，那篇文章的效果也是优于这篇工作</p>
-</li>
-<li><p>个人感觉这篇工作是在对于多模态融合过程的初步探索吧，因为 shifting 这个过程非常类似于在计算机视觉中对 CNN 浅层通过对于权重矩阵进行可视化，进行模型可解释性的工作。在Integrating Multimodal Information in Large Pretrained Transformers 中也用了 shift 但是由于是在非第一层做的 shifting 所以谁也说不清是到底完成了什么工作qaq。shifting本身确实是对于可解释性的一种尝试。</p>
-</li>
-<li><p>这给了我一些启发，可以参考在 CV 工作中的一些常用的可视化技术进行模型可解释性的分析。</p>
-</li>
-</ul>
+</ol>
 
             </div>
             <hr/>
@@ -548,7 +615,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/08/18/wordcanshift/">http://Columbine21.github.io/2020/08/18/wordcanshift/</a>
+                    <a href="http://Columbine21.github.io/2020/08/18/graph-mfn/">http://Columbine21.github.io/2020/08/18/graph-mfn/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -632,10 +699,9 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
                 <a href="/2020/08/18/wordcanshift/">
                     <div class="card-image">
@@ -654,9 +720,9 @@ Link：https://arxiv.org/abs/
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-18
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-08-18
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -669,7 +735,6 @@ Link：https://arxiv.org/abs/
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -692,32 +757,31 @@ Link：https://arxiv.org/abs/
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/08/18/graph-mfn/">
+                <a href="/2020/07/19/multimodal-language-analysis-datasets/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="Paper Reading">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="Multimodal Language Analysis Datasets">
                         
-                        <span class="card-title">Paper Reading</span>
+                        <span class="card-title">Multimodal Language Analysis Datasets</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            paper: Multimodal Language Analysis in the Wild: CMU-MOSEI Dataset and Interpretable Dynamic Fusion Graph
-Reference From
+                            Multimodal DatasetSummary from Paper :  Multimodal Language Analysis in the Wild: CMU-MOSEI Dataset and Interpretable Dy
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-18
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-07-19
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Multimodal-Analysis/" class="post-category">
-                                    Multimodal Analysis
+                            <a href="/categories/MultiModal-Dataset/" class="post-category">
+                                    MultiModal Dataset
                                 </a>
                             
                             
@@ -727,12 +791,12 @@ Reference From
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Paper-Reading/">
-                        <span class="chip bg-color">Paper Reading</span>
+                    <a href="/tags/MultiModal-Dataset/">
+                        <span class="chip bg-color">MultiModal Dataset</span>
                     </a>
                     
-                    <a href="/tags/modal-fusion-explanation/">
-                        <span class="chip bg-color">modal fusion explanation</span>
+                    <a href="/tags/Sentiment-Analysis/">
+                        <span class="chip bg-color">Sentiment Analysis</span>
                     </a>
                     
                 </div>
