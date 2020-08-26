@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    791
+                    724
                 </div>
                 
 
@@ -492,18 +492,25 @@
 <li><p>MOSEI 数据集</p>
 <p>最终模型参数选择：</p>
 <p>| hidden_dims     | memsize | inner_node_dim | NNConfig                     | gamma1Config                 | gamma2Config                 | outConfig                   | batch_size | Learning_rate |<br>| ———————- | ———- | ——————— | —————————————— | —————————————— | —————————————— | —————————————- | ————— | ——————- |<br>| (128, 16,  128) | 300     | 64             | {‘drop’: 0.2, ‘shapes’: 128} | {‘drop’: 0.0, ‘shapes’: 128} | {‘drop’: 0.5, ‘shapes’: 128} | {‘drop’: 0.0, ‘shapes’: 32} |            | 0.005         |</p>
-<p>模型实现效果对比：（我们的复现采用了 grid search 方法，但还是比paper 中的效果低几个 pp ）</p>
-<p>| Model                  | Dataset | Accuracy | Mult_acc_5 | Mult_acc_7 | F1    | MAE   | $r$  |<br>| ——————————— | ———- | ———— | ————— | ————— | ——- | ——- | —— |<br>| graph_mfn (<strong>origin</strong>) | MOSEI   | 76.90    | 45.10      | 45.00      | 77.00 | 0.71  | 0.54 |<br>| graph_mfn (<strong>ours</strong>)   | MOSEI   | 69.28    | 50.53      | 49.05      | 70.13 | 62.52 | 0.66 |<br>| graph_mfn (<strong>ours</strong>)   | MOSEI   | 71.57    | 49.0       | 47.74      | 71.69 | 63.81 | 0.65 |</p>
-</li>
-<li><p>MOSI 数据集</p>
-<p>最终模型参数选择：</p>
-<p>| hidden_dims     | memsize | inner_node_dim | NNConfig                     | gamma1Config                 | gamma2Config                 | outConfig                   | batch_size | Learning_rate |<br>| ———————- | ———- | ——————— | —————————————— | —————————————— | —————————————— | —————————————- | ————— | ——————- |<br>| (128, 16,  128) | 300     | 64             | {‘drop’: 0.2, ‘shapes’: 128} | {‘drop’: 0.0, ‘shapes’: 128} | {‘drop’: 0.5, ‘shapes’: 128} | {‘drop’: 0.0, ‘shapes’: 32} | 32         | 0.005         |</p>
-<p>| Model                  | Dataset | Accuracy   | Mult_acc_5  | Mult_acc_7  | F1          | MAE         | $r$         |<br>| ——————————— | ———- | ————— | —————- | —————- | —————- | —————- | —————- |<br>| graph_mfn (<strong>ours</strong>)   | MOSI    | 76.03,0.81 | 38.28, 1.37 | 33.88, 1.51 | 75.94, 0.89 | 98.92, 2.28 | 62.67, 1.25 |<br>| graph_mfn (<strong>origin</strong>) | MOSI    | -          | -           | -           | -           | -           | -           |</p>
 </li>
 </ul>
 </li>
-<li><p>可视化效果复现</p>
-</li>
+</ul>
+<pre><code>    模型实现效果对比：（我们的复现采用了 grid search 方法，但还是比paper 中的效果低几个 pp ）
+
+    ![](./Graph-MFN/5.png)
+
+-   MOSI 数据集
+
+    最终模型参数选择：
+
+    | hidden_dims     | memsize | inner_node_dim | NNConfig                     | gamma1Config                 | gamma2Config                 | outConfig                   | batch_size | Learning_rate |
+    | --------------- | ------- | -------------- | ---------------------------- | ---------------------------- | ---------------------------- | --------------------------- | ---------- | ------------- |
+    | (128, 16,  128) | 300     | 64             | {&#39;drop&#39;: 0.2, &#39;shapes&#39;: 128} | {&#39;drop&#39;: 0.0, &#39;shapes&#39;: 128} | {&#39;drop&#39;: 0.5, &#39;shapes&#39;: 128} | {&#39;drop&#39;: 0.0, &#39;shapes&#39;: 32} | 32         | 0.005         |
+
+    ![](Graph-MFN/6.png)
+</code></pre><ul>
+<li>可视化效果复现</li>
 </ul>
 <p>可视化工作核心代码（使用 matplotlib 绘制，可进一步改善）：</p>
 <p><img src="/2020/08/18/graph-mfn/3.png" alt></p>
