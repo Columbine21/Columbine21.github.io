@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Baselines On MOSI Dataset</title>
+      <link href="/2020/08/28/baselines/"/>
+      <url>/2020/08/28/baselines/</url>
+      
+        <content type="html"><![CDATA[<h1 id="MOSI-数据集-Baseline-总结"><a href="#MOSI-数据集-Baseline-总结" class="headerlink" title="MOSI 数据集 Baseline 总结"></a>MOSI 数据集 Baseline 总结</h1><p>本文按照时间线从（时间早的论文中提出的）老模型到（刚刚提出的论文中的）新模型的模型在 <strong>MOSI</strong> 两个数据集上的模型效果进行总结。</p><p>各个模型在 <strong>MOSEI</strong> 上的效果详见 <a href>MOSEI Baseline Summary</a></p><p><strong>Note：本文按照论文时间先后顺序，依次总结各个经典论文中提到的 baseline 效果。</strong></p><h2 id="Model：MISA"><a href="#Model：MISA" class="headerlink" title="Model：MISA"></a>Model：MISA</h2><ul><li><p>Paper : MISA: Modality-Invariant and -Specific Representations for Multimodal Sentiment Analysis</p></li><li><p>Proposed Time : 2020-05</p></li><li>收录会议：首发于 arxiv 网站，后为 ACM MM 会议录用</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> MultiModal Sentiment Analysis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Baseline Summary </tag>
+            
+            <tag> MOSI &amp; MOSEI </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Automation</title>
       <link href="/2020/08/25/automation/"/>
       <url>/2020/08/25/automation/</url>
