@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    724
+                    635
                 </div>
                 
 
@@ -491,26 +491,20 @@
 <ul>
 <li><p>MOSEI 数据集</p>
 <p>最终模型参数选择：</p>
-<p>| hidden_dims     | memsize | inner_node_dim | NNConfig                     | gamma1Config                 | gamma2Config                 | outConfig                   | batch_size | Learning_rate |<br>| ———————- | ———- | ——————— | —————————————— | —————————————— | —————————————— | —————————————- | ————— | ——————- |<br>| (128, 16,  128) | 300     | 64             | {‘drop’: 0.2, ‘shapes’: 128} | {‘drop’: 0.0, ‘shapes’: 128} | {‘drop’: 0.5, ‘shapes’: 128} | {‘drop’: 0.0, ‘shapes’: 32} |            | 0.005         |</p>
+<p><img src="/2020/08/18/graph-mfn/7.png" alt></p>
+<p>模型实现效果对比：（我们的复现采用了 grid search 方法，但还是比paper 中的效果低几个 pp ）</p>
+<p><img src="/2020/08/18/graph-mfn/5.png" alt></p>
+</li>
+<li><p>MOSI 数据集</p>
+<p>最终模型参数选择：</p>
+<p><img src="/2020/08/18/graph-mfn/8.png" alt></p>
+<p>模型实现效果对比: </p>
+<p><img src="/2020/08/18/graph-mfn/6.png" alt></p>
 </li>
 </ul>
 </li>
-</ul>
-<pre><code>    模型实现效果对比：（我们的复现采用了 grid search 方法，但还是比paper 中的效果低几个 pp ）
-
-    ![](./Graph-MFN/5.png)
-
--   MOSI 数据集
-
-    最终模型参数选择：
-
-    | hidden_dims     | memsize | inner_node_dim | NNConfig                     | gamma1Config                 | gamma2Config                 | outConfig                   | batch_size | Learning_rate |
-    | --------------- | ------- | -------------- | ---------------------------- | ---------------------------- | ---------------------------- | --------------------------- | ---------- | ------------- |
-    | (128, 16,  128) | 300     | 64             | {&#39;drop&#39;: 0.2, &#39;shapes&#39;: 128} | {&#39;drop&#39;: 0.0, &#39;shapes&#39;: 128} | {&#39;drop&#39;: 0.5, &#39;shapes&#39;: 128} | {&#39;drop&#39;: 0.0, &#39;shapes&#39;: 32} | 32         | 0.005         |
-
-    ![](Graph-MFN/6.png)
-</code></pre><ul>
-<li>可视化效果复现</li>
+<li><p>可视化效果复现</p>
+</li>
 </ul>
 <p>可视化工作核心代码（使用 matplotlib 绘制，可进一步改善）：</p>
 <p><img src="/2020/08/18/graph-mfn/3.png" alt></p>
