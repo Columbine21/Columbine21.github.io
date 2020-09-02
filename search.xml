@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Tech-Optimizer</title>
+      <link href="/2020/09/02/tech-optimizer/"/>
+      <url>/2020/09/02/tech-optimizer/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Optimizer-Tricks-Summary"><a href="#Optimizer-Tricks-Summary" class="headerlink" title="Optimizer Tricks Summary"></a>Optimizer Tricks Summary</h2><p>我们都知道 深度学习模型有三个重要的组成部分：模型（model）损失函数（Loss）优化器（optimizer）。</p><p>Note：这里<u>先不谈对于数据集的构造和处理</u>，尽管在实现的过程中，数据集的处理往往是比较复杂的。</p><p>在这三个组成部分中，每个组成部分都会有自己的一些 tricks 。这些 tricks 的使用可以直接影响模型的训练过程，最终影响模型的效果及模型的效率。为了不用每次使用的时候都先查手册。我打算对于一些“常用”的 tricks 进行总结。这里首先是对于 Optimizer 的总结。</p><p><code>from torch import optim</code></p><h3 id="Original-Optimizer"><a href="#Original-Optimizer" class="headerlink" title="Original Optimizer"></a>Original Optimizer</h3><ul><li>最基本的 Optimizer 的写法如下：我们需要指定optimizer负责优化的参数，optim 通用的学习率，以及其他Optimizer的参数 如比较常见的 <code>weight_decay</code> 。</li></ul><p><code>optimizer = optim.Adam(model.parameters(), lr=self.args.learning_rate, weight_decay=self.args.weight_decay)</code></p><h3 id="Tricks-one-varient-learning-rate"><a href="#Tricks-one-varient-learning-rate" class="headerlink" title="Tricks one: varient learning rate"></a>Tricks one: varient learning rate</h3><ul><li><p>第一种 Optimizer 的常用变种是根据 epochs 动态调整模型的学习率。这个想法来源于 Resnet 中提出的warmup 热启动方法。<strong>Warmup</strong> 用来解决 预训练参数的引入，<u>如果开始就用很大的学习率将破坏预训练的模型参数，导致模型不收敛的问题。</u></p></li><li><p><strong>Warmup</strong> 根据调整 learning rate 的策略可以分成两种。其一是根据训练的 epochs / iteration 更新学习率，称为 <strong>Constant Warmup</strong> ，这种 warmup 的方法问题在于突然增大 lr 可能导致模型的 train loss 突然增大。</p><p>Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour (<a href="https://arxiv.org/pdf/1706.02677v2.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1706.02677v2.pdf</a>) 论文中提出了 <strong>Gradual warmup</strong> 即从最开始的小学习率开始，每个iteration增大一点，直到最初设置的比较大的学习率。</p></li></ul><p>下面给出 Gradual warmup 的实现方法：使用到 <code>from torch.optim.lr_scheduler import _LRScheduler</code> </p><p>Pytorch 中给出了很多不同的常用的 LRScheduler 他们都继承相同的 <code>_LRScheduler</code> 。其本质就是将 parameter 进行 group 分组，然后使用 wrapper 让 LRScheduler 感知到当前的 epoches （_step_count 用于记录）。每次调用 get_lr 的方法获得不同 group 的 lr 进行更新。</p><p><img src="/2020/09/02/tech-optimizer/1.png" alt></p><p>实现过程核心就是完成 get_lr 函数的定义，在 <code>self.last_epoch &lt;= self.total_epoch</code> 的时候，模型采用热启动，逐渐增大每个 group 的 learning rate。在<code>self.last_epoch &gt; self.total_epoch</code> 的时候检查是否有after_scheduler 的存在，如果有的话，更新 after_scheduler  的 base_lrs 为当前的 base_lrs, 否则继续使用该 lr</p><ul><li>鉴于上面已经提到了 ReduceLROnPlateau 策略，这里也简单提一下这个的实现方法。</li></ul><p><code>optimizer = optim.Adam(model.parameters(), lr=self.args.learning_rate)</code></p><p> <code>scheduler = ReduceLROnPlateau(optimizer, mode=&#39;min&#39;, factor=0.1, verbose=True, patience=self.args.patience)</code></p><p>Example: Note： step 函数需要传入 valid loss。</p><p><img src="/2020/09/02/tech-optimizer/2.png" style="zoom:50%;"></p><h3 id="Tricks-Two-Parameters-groups"><a href="#Tricks-Two-Parameters-groups" class="headerlink" title="Tricks Two: Parameters groups"></a>Tricks Two: Parameters groups</h3><p>上面已经提到了在 optimizer 的使用中可以将不同的参数进行分组，使不同的参数获得不同的学习率。</p><p>这里举例说明一下 parameters groups 的使用方法。</p><p><img src="/2020/09/02/tech-optimizer/3.png" alt></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Technique Summary </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Optimizer Utilization </tag>
+            
+            <tag> Pytorch Usage </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Baselines On MOSI Dataset</title>
       <link href="/2020/08/28/baselines/"/>
       <url>/2020/08/28/baselines/</url>
