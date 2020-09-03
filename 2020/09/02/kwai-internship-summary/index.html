@@ -6,7 +6,7 @@
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <link rel="dns-prefetch" href="//cdn.bootcss.com" />
     <link rel="dns-prefetch" href="//cdn.mathjax.org" />
-    <meta name="keywords" content="Tech-Optimizer, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
+    <meta name="keywords" content="Kwai-Internship-Summary, Bupt CV DeepLearning MachineLearning 袁子麒 Jason Yuan Natural Language Processing">
     <meta name="description" content="北京邮电大学 | 计算机学院 | Natural Language Processing">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Tech-Optimizer | Jason Yuan&#39;s Blog</title>
+    <title>Kwai-Internship-Summary | Jason Yuan&#39;s Blog</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Tech-Optimizer</h1>
+                    <h1 class="description center-align post-title">Kwai-Internship-Summary</h1>
                 </div>
             </div>
         </div>
@@ -408,12 +408,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Optimizer-Utilization/">
-                                <span class="chip bg-color">Optimizer Utilization</span>
+                            <a href="/tags/Experience/">
+                                <span class="chip bg-color">Experience</span>
                             </a>
                         
-                            <a href="/tags/Pytorch-Usage/">
-                                <span class="chip bg-color">Pytorch Usage</span>
+                            <a href="/tags/Kwai-social-science-department/">
+                                <span class="chip bg-color">Kwai social science department</span>
                             </a>
                         
                     </div>
@@ -424,8 +424,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Technique-Summary/" class="post-category">
-                                Technique Summary
+                            <a href="/categories/Internship/" class="post-category">
+                                Internship
                             </a>
                         
                     </div>
@@ -446,7 +446,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    750
+                    2.2k
                 </div>
                 
 
@@ -459,35 +459,115 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="Optimizer-Tricks-Summary"><a href="#Optimizer-Tricks-Summary" class="headerlink" title="Optimizer Tricks Summary"></a>Optimizer Tricks Summary</h2><p>我们都知道 深度学习模型有三个重要的组成部分：模型（model）损失函数（Loss）优化器（optimizer）。</p>
-<p>Note：这里<u>先不谈对于数据集的构造和处理</u>，尽管在实现的过程中，数据集的处理往往是比较复杂的。</p>
-<p>在这三个组成部分中，每个组成部分都会有自己的一些 tricks 。这些 tricks 的使用可以直接影响模型的训练过程，最终影响模型的效果及模型的效率。为了不用每次使用的时候都先查手册。我打算对于一些“常用”的 tricks 进行总结。这里首先是对于 Optimizer 的总结。</p>
-<p><code>from torch import optim</code></p>
-<h3 id="Original-Optimizer"><a href="#Original-Optimizer" class="headerlink" title="Original Optimizer"></a>Original Optimizer</h3><ul>
-<li>最基本的 Optimizer 的写法如下：我们需要指定optimizer负责优化的参数，optim 通用的学习率，以及其他Optimizer的参数 如比较常见的 <code>weight_decay</code> 。</li>
-</ul>
-<p><code>optimizer = optim.Adam(model.parameters(), lr=self.args.learning_rate, weight_decay=self.args.weight_decay)</code></p>
-<h3 id="Tricks-one-varient-learning-rate"><a href="#Tricks-one-varient-learning-rate" class="headerlink" title="Tricks one: varient learning rate"></a>Tricks one: varient learning rate</h3><ul>
-<li><p>第一种 Optimizer 的常用变种是根据 epochs 动态调整模型的学习率。这个想法来源于 Resnet 中提出的warmup 热启动方法。<strong>Warmup</strong> 用来解决 预训练参数的引入，<u>如果开始就用很大的学习率将破坏预训练的模型参数，导致模型不收敛的问题。</u></p>
-</li>
-<li><p><strong>Warmup</strong> 根据调整 learning rate 的策略可以分成两种。其一是根据训练的 epochs / iteration 更新学习率，称为 <strong>Constant Warmup</strong> ，这种 warmup 的方法问题在于突然增大 lr 可能导致模型的 train loss 突然增大。</p>
-<p>Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour (<a href="https://arxiv.org/pdf/1706.02677v2.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1706.02677v2.pdf</a>) 论文中提出了 <strong>Gradual warmup</strong> 即从最开始的小学习率开始，每个iteration增大一点，直到最初设置的比较大的学习率。</p>
-</li>
-</ul>
-<p>下面给出 Gradual warmup 的实现方法：使用到 <code>from torch.optim.lr_scheduler import _LRScheduler</code> </p>
-<p>Pytorch 中给出了很多不同的常用的 LRScheduler 他们都继承相同的 <code>_LRScheduler</code> 。其本质就是将 parameter 进行 group 分组，然后使用 wrapper 让 LRScheduler 感知到当前的 epoches （_step_count 用于记录）。每次调用 get_lr 的方法获得不同 group 的 lr 进行更新。</p>
-<p><img src="/2020/09/02/tech-optimizer/1.png" alt></p>
-<p>实现过程核心就是完成 get_lr 函数的定义，在 <code>self.last_epoch &lt;= self.total_epoch</code> 的时候，模型采用热启动，逐渐增大每个 group 的 learning rate。在<code>self.last_epoch &gt; self.total_epoch</code> 的时候检查是否有after_scheduler 的存在，如果有的话，更新 after_scheduler  的 base_lrs 为当前的 base_lrs, 否则继续使用该 lr</p>
+                <h2 id="Intern-Experience-Kwai"><a href="#Intern-Experience-Kwai" class="headerlink" title="Intern Experience @Kwai"></a>Intern Experience @Kwai</h2><p><strong>Timeline @Kwai:</strong></p>
+<p>在 2020-9-2 日，我正式和组内 leader、部门 leader 以及 hrbp 提出了离职申请。</p>
 <ul>
-<li>鉴于上面已经提到了 ReduceLROnPlateau 策略，这里也简单提一下这个的实现方法。</li>
+<li>2020-3-20 提交实习生的 Resume 并完成线上性格评测以及机考（机考成绩 200/400 ）</li>
+<li>2020-4-9   进行两轮面试</li>
+<li>2020-4-17 收到 hr 电话通知，口头 offer get，确认入职时间等</li>
+<li>2020-4-23 收到正式的实习录取邮件，网上完成个人信息填写，信息注册</li>
+<li>2020-6-29 进入快手社区科学部，模型组，粗排子方向开展相应的工作</li>
+<li>2020-9-2 正式提出离职。</li>
 </ul>
-<p><code>optimizer = optim.Adam(model.parameters(), lr=self.args.learning_rate)</code></p>
-<p> <code>scheduler = ReduceLROnPlateau(optimizer, mode=&#39;min&#39;, factor=0.1, verbose=True, patience=self.args.patience)</code></p>
-<p>Example: Note： step 函数需要传入 valid loss。</p>
-<p><img src="/2020/09/02/tech-optimizer/2.png" style="zoom:50%;"></p>
-<h3 id="Tricks-Two-Parameters-groups"><a href="#Tricks-Two-Parameters-groups" class="headerlink" title="Tricks Two: Parameters groups"></a>Tricks Two: Parameters groups</h3><p>上面已经提到了在 optimizer 的使用中可以将不同的参数进行分组，使不同的参数获得不同的学习率。</p>
-<p>这里举例说明一下 parameters groups 的使用方法。</p>
-<p><img src="/2020/09/02/tech-optimizer/3.png" alt></p>
+<p><strong>Task Lisk:</strong> (对照着我的工作 wiki 进行回顾一下)</p>
+<ul>
+<li>2020/6/29 - 2020/7/13 特征重要性实验 （参考了组内 leader 的实验思路 wiki）<ul>
+<li>分别去掉现有模型的每个特征，训练一定时间（2-3天），对比模型核心指标 ctr、ltr、wtr wuauc(weighted AUC per user)相对于未移出模型的损失。<ul>
+<li>优点：不会引入网络残留的影响，消除属性之间相互的影响。</li>
+<li>缺点：实验代价大</li>
+</ul>
+</li>
+<li>仅在评估的时候去掉特征，对比模型核心指标相对于未移除前的损失。</li>
+<li>可视化特征的参数矩阵和特征 embedding<ul>
+<li>缺点：只是直观感觉，没有量化指标。</li>
+</ul>
+</li>
+<li><strong>新方法：为每个特征 embedding 增加一个DNN gate， 假设对预估指标更重要的特征会被“gate”更高比例的传入 DNN 中，重要性较低的特征会被“gate”更高比例的过滤</strong><ul>
+<li>能够随着训练一次性的评估所有特征的重要性。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>2020/7/13 -  2020/7/17 极速版 base 对齐任务并学习 mio-learner 纠错方法</li>
+<li>2020/7/17 - 2020/7/25 极速版模型拆分塔实验</li>
+<li>2020/7/25 - 2020/8/11 现有粗排模型总结工作</li>
+<li>2020/8/11 - 2020/8/25 同城模型合并任务，模型上线，线上配置检测任务，进行线上流量实验。</li>
+<li>2020/8/25 - 2020/9/1  极速版迁移mio-tf &amp; 拆分塔模型上线，进行线上流量实验。<ul>
+<li>解决了 lag 问题 （模型训练出现模型）</li>
+</ul>
+</li>
+</ul>
+<p><strong>推荐系统基础:</strong></p>
+<ul>
+<li><p>推荐算法的一些常用概念</p>
+<p>| 名词 | 解释                                                         |<br>| —— | —————————————————————————————— |<br>| 用户 | 使用某一个 App 的推荐功能的终端用户，如快手用户              |<br>| 物品 | 被某个推荐系统推荐给用户的标的物，如快手发现页的视频、淘宝首页的商品等 |<br>| 业务 | 一个具体的推荐场景，如快手发现页、同城页、关注页等           |</p>
+</li>
+<li><p>推荐系统的输入输出</p>
+<ul>
+<li>输入： 完成推荐，需要的原始数据大致为两类：<ul>
+<li>用户侧数据：即用户画像 (user profile) ，一般有两部分来源<ul>
+<li>静态用户信息：如性别、年龄、手机 app list 等，这些数据往往通过 server 等团队提供的服务里提供给推荐系统</li>
+<li>用户动态行为：如点击列表、点赞列表、兴趣标签等，这些数据往往通过 server 透传的用户行为日志，由推荐系统内部不断更新</li>
+</ul>
+</li>
+<li>物品侧数据：在推荐中台，主要以索引 (index) 形式存在。<ul>
+<li>来源：一般也有两种<ul>
+<li>静态物品信息：如上传时间、分类等，这些数据往往通过 server 或 mmu 等内容分析团队提供的服务里提供给推荐系统</li>
+<li>物品动态计数：如总点击数、点赞数等，这些数据往往通过 server 透传的用户行为日志，由推荐系统内部不断更新</li>
+</ul>
+</li>
+<li>索引的数据类型大致分为两种：<ul>
+<li>正排：id → list of : field name + field value 即根据物品 id 查询物品本身的各种属性</li>
+<li>倒排：field name + field value → term → list of id 即根据物品的某个属性和此属性的一个具体的值，生成一个 term，在倒排索引中查询符合条件的物品 id 列表，如：播放数 = 1000 的视频列表，分类 = “二次元” 的视频列表，等等</li>
+</ul>
+</li>
+<li>索引的更新方法大致有两种：<ul>
+<li>批量更新：必备，一般是定时任务，最主要的索引更新功能，并且是旧索引数据删除（如视频过期，商品下架等）目前唯一的实现渠道</li>
+<li>实时更新：可选，一般是消费一些离线事件，用于类似“主播关播”这种，需要实时响应（以免推荐出大堆已经关播的直播），且因为数据量太大导致批量更新时间长无法满足实时性的场景</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>输出 ： 物品列表。推荐系统对一次推荐请求的响应，一般返回 N 个被推荐的“用户可能感兴趣”的物品。</li>
+</ul>
+</li>
+</ul>
+<p><strong>业界数据特点:</strong></p>
+<ul>
+<li>类型一：预测任务相同（比如都是 ctr 预测），但是所用数据不服从同一分布等情况</li>
+<li>类型二：相同或相关的数据源，但是所做的任务不同</li>
+</ul>
+<p><strong>业务流程:</strong> (并不会透露公司内部信息)</p>
+<ul>
+<li>快手在机器学习岗位上使用了一套自研的分布式深度学习框架，封装了 tensorflow （所以说只会用PyTorch 的老铁可能会在开始遇到点麻烦，但这并不重要，因为大多数目前的模型不太会用到除了 DNN 以外的 Layer 结构），运行在公司 <a href="https://github.com/Qihoo360/XLearning" target="_blank" rel="noopener">xlearning</a> 平台。</li>
+<li><p>推荐整体结构参考 <a href="https://zhuanlan.zhihu.com/p/87578318" target="_blank" rel="noopener">知乎分享</a>，公司内部实际上又将排序这一步进行了进一步细分成了触发 + 粗排 + 精排 + 重排（删除用户的 hate 的 photo / 打散）。</p>
+<ul>
+<li>解决的核心问题：一是出于计算复杂度的限制。C = D * O，计算复杂度 C 等于候选视频数量 D 乘以单次视频评估复杂度O。我们可以在全量视频集合上使用简单算法做初步筛选，在少量视频集合上使用复杂模型做精选，这种计算范式兼顾效率和推荐效果。二是通过模块解耦，在ranking策略层面在不同模块有不同侧重点，方便各个模块针对性优化（比如召回模块侧重召回率，粗排保证高效，精排保证精准度等）。</li>
+</ul>
+</li>
+<li><p>精排的总结：（简 Reference Link: by NiuYaNan 的文档分享）</p>
+<ul>
+<li><p>Q: 为什么双列模型的点击后事件要与 click 预测共用底层网络结构</p>
+<p>A: 这种设计是由于双列业务中用户的双阶段交互体验决定的。click是样本中用户最稠密的反馈，click后行为数量上小一个或两个数量级，因此优化click有高ROI，用户click提升后，click后续行为也会被动提升。</p>
+<p>单列任务上，用户交互变成单阶段，所有目标等同重要。使用相同的特征embedding层，但将不同互不相干的预测目标使用不同的顶层网络，这将一定程度上增加模型表述能力，提升模型在预测任务上的效果</p>
+</li>
+<li><p>Q: 为什么单列要提多任务学习？</p>
+<p>A: 单列场景下，各个目标之间相关性较双列显著（由于所有行为都是单阶段行为）。单一目标预测性能提升不一定能够带来线上的收益。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>业界推荐 展望 Reference Link: by NiuYaNan 的文档分享</strong></p>
+<ul>
+<li>用户长期兴趣/长期行为序列建模。长期兴趣对用户画像来说非常重要，在快手的业务中也很关键，比如召回，ranking，搜索等。业界已经有不少在用户长期行为序列建模落地的实践。</li>
+<li>提升新回用户模型推荐能力。新回用户体验也是公司未来的战略重点，这是推荐模型的难点，也属于模型冷启动的范畴，比如如何突破样本固有的不平衡性，是我们要思考的问题。</li>
+<li>不同数据源融合。目前的模型融合是针对单列目标的模型融合，训练的模型并不会应用到双列任务。（核心原因，单列和双列中用户行为不尽相同体现在单列用户没有click行为，也看不到视频封面，可以参考回忆一下抖音里面单列模式只有上下滑，并不能根据视频封面选择）</li>
+</ul>
+<p><strong>技术提升: (Advanced C++ 11 Vim Linux)</strong> </p>
+<p>这一部分就不再这里总结了。主要是实习的时候读读 mio-learner 的 source code 的时候总结了一些用法罢了。</p>
+<p>关于使用的有趣的自动化技术见之前总结的 <a href="https://columbine21.github.io/2020/08/25/automation/">blog</a> </p>
 
             </div>
             <hr/>
@@ -513,7 +593,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://Columbine21.github.io/2020/09/02/tech-optimizer/">http://Columbine21.github.io/2020/09/02/tech-optimizer/</a>
+                    <a href="http://Columbine21.github.io/2020/09/02/kwai-internship-summary/">http://Columbine21.github.io/2020/09/02/kwai-internship-summary/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -551,12 +631,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Optimizer-Utilization/">
-                                    <span class="chip bg-color">Optimizer Utilization</span>
+                                <a href="/tags/Experience/">
+                                    <span class="chip bg-color">Experience</span>
                                 </a>
                             
-                                <a href="/tags/Pytorch-Usage/">
-                                    <span class="chip bg-color">Pytorch Usage</span>
+                                <a href="/tags/Kwai-social-science-department/">
+                                    <span class="chip bg-color">Kwai social science department</span>
                                 </a>
                             
                         </div>
@@ -597,9 +677,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/09/02/kwai-internship-summary/">
                     <div class="card-image">
@@ -620,9 +701,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-09-02
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-02
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -635,6 +716,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -657,32 +739,31 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/08/28/baselines/">
+                <a href="/2020/09/02/tech-optimizer/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="Baselines On MOSI Dataset">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Tech-Optimizer">
                         
-                        <span class="card-title">Baselines On MOSI Dataset</span>
+                        <span class="card-title">Tech-Optimizer</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            MOSI 数据集 Baseline 总结本文按照时间线从（时间早的论文中提出的）老模型到（刚刚提出的论文中的）新模型的模型在 MOSI 两个数据集上的模型效果进行总结。
-各个模型在 MOSEI 上的效果详见 MOSEI Baseline S
+                            Optimizer Utilize
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-02
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/MultiModal-Sentiment-Analysis/" class="post-category">
-                                    MultiModal Sentiment Analysis
+                            <a href="/categories/Technique-Summary/" class="post-category">
+                                    Technique Summary
                                 </a>
                             
                             
@@ -692,12 +773,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Baseline-Summary/">
-                        <span class="chip bg-color">Baseline Summary</span>
+                    <a href="/tags/Optimizer-Utilization/">
+                        <span class="chip bg-color">Optimizer Utilization</span>
                     </a>
                     
-                    <a href="/tags/MOSI-MOSEI/">
-                        <span class="chip bg-color">MOSI &amp; MOSEI</span>
+                    <a href="/tags/Pytorch-Usage/">
+                        <span class="chip bg-color">Pytorch Usage</span>
                     </a>
                     
                 </div>
