@@ -17,7 +17,9 @@ redirect_from:
 
 <span class='anchor' id='about-me'></span>
 
-Hi there, I am Ziqi Yuan (袁子麒 in Chinese), a Ph.D. student at the the THUIAR group with State Key Laboratory of Intelligent Technology and Systems, Department of Computer Science and Technology (DCST), Tsinghua University, Beijing, China. My supervisor is [Prof. Hua Xu](https://thu-xuhua.github.io/). My research mainly focused on Robustness of Multimodal Models (including MLLMs), and its Interpretability. I have published several papers at the top international AI journals and conferences, such as T-MM, T-ASLP, ACM MM, AAAI, and ACL. <a href='https://scholar.google.com/citations?user=m7b3r2kAAAAJ&hl=zh-CN'><img src="https://img.shields.io/endpoint?logo=Google%20Scholar&url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FColumbine21.github.io@google-scholar-stats%2Fgs_data_shieldsio.json&&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>.
+Hi there, I am Ziqi Yuan (袁子麒 in Chinese), a Ph.D. student at the the THUNLP group with State Key Laboratory of Intelligent Technology and Systems, Department of Computer Science and Technology (DCST), Tsinghua University, Beijing, China. My supervisor is [Prof. Zhiyuan Liu](https://nlp.csai.tsinghua.edu.cn/~lzy/). My research mainly focused on Robustness of Multimodal Models (including MLLMs), and its Interpretability. I have published several papers at the top international AI journals and conferences, such as T-MM, T-ASLP, ACM MM, AAAI, and ACL. <a href='https://scholar.google.com/citations?user=m7b3r2kAAAAJ&hl=zh-CN'><img src="https://img.shields.io/endpoint?logo=Google%20Scholar&url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fcolumbine21%2Fcolumbine21.github.io@google-scholar-stats%2Fgs_data_shieldsio.json&&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>.
+
+https://cdn.jsdelivr.net/gh/sunlicai/sunlicai.github.io@google-scholar-stats/gs_data_shieldsio.json
 
 Feel free to reach out if you’re interested in my work and want to explore potential collaborations: x@y, where x = yzq21 and y = mails.tsinghua.edu.cn.
 
